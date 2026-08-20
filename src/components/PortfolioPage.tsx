@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { ArrowUpRight, Instagram, Linkedin, Mail } from 'lucide-react'
+import { ArrowUpRight, Globe, Share2, Mail } from 'lucide-react'
 import type { PortfolioViewModel } from '../types'
 import { SmartGrid } from './SmartGrid'
 
@@ -13,7 +13,7 @@ export function PortfolioPage({ data }: { data: PortfolioViewModel }) {
           <div className="flex items-center gap-4 text-xs text-white/45">
             {links.map(([key, href]) => (
               <a key={key} href={href} target="_blank" rel="noreferrer" className="transition hover:text-white">
-                {key === 'instagram' ? <Instagram size={15} /> : key === 'linkedin' ? <Linkedin size={15} /> : key === 'email' ? <Mail size={15} /> : <ArrowUpRight size={15} />}
+                {key === 'instagram' || key === 'linkedin' ? <Share2 size={15} /> : key === 'email' ? <Mail size={15} /> : key === 'website' ? <Globe size={15} /> : <ArrowUpRight size={15} />}
                 <span className="sr-only">{key}</span>
               </a>
             ))}
