@@ -1,8 +1,3 @@
-import { defineConfig } from '@tanstack/react-start/config'
+import { defineConfig } from '@tanstack/start/config'
 
-export default defineConfig({
-  server: {
-    preset: 'vercel',
-  },
-})
-
+export default defineConfig({})
