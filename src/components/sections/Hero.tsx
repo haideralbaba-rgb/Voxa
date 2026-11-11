@@ -63,30 +63,36 @@ export function Hero() {
 
             <h1
               id="hero-heading"
+              aria-label={`${profile.headline} ${profile.headlineAccent}`}
               className="mt-7 text-display-xl font-semibold leading-[0.93] tracking-[-0.045em] text-[var(--fg)]"
             >
-              {words.map((word, index) => (
-                <span key={`${word}-${index}`} className="inline-block overflow-hidden pb-[0.06em] align-bottom">
+              <span aria-hidden className="contents">
+                {words.map((word, index) => (
+                  <span
+                    key={`${word}-${index}`}
+                    className="inline-block overflow-hidden pb-[0.06em] align-bottom"
+                  >
+                    <motion.span
+                      className="inline-block"
+                      initial={reduced ? false : { y: '110%', opacity: 0 }}
+                      animate={{ y: '0%', opacity: 1 }}
+                      transition={{ duration: 0.95, ease: EASE, delay: 0.18 + index * 0.055 }}
+                    >
+                      {word}
+                      {index < words.length - 1 ? '\u00A0' : ''}
+                    </motion.span>
+                  </span>
+                ))}
+                <span className="inline-block overflow-hidden pb-[0.08em] align-bottom">
                   <motion.span
-                    className="inline-block"
+                    className="serif-accent inline-block text-accent"
                     initial={reduced ? false : { y: '110%', opacity: 0 }}
                     animate={{ y: '0%', opacity: 1 }}
-                    transition={{ duration: 0.95, ease: EASE, delay: 0.18 + index * 0.055 }}
+                    transition={{ duration: 1.05, ease: EASE, delay: 0.18 + words.length * 0.055 }}
                   >
-                    {word}
-                    {index < words.length - 1 ? '\u00A0' : ''}
+                    {profile.headlineAccent}
                   </motion.span>
                 </span>
-              ))}
-              <span className="inline-block overflow-hidden pb-[0.08em] align-bottom">
-                <motion.span
-                  className="serif-accent inline-block text-accent"
-                  initial={reduced ? false : { y: '110%', opacity: 0 }}
-                  animate={{ y: '0%', opacity: 1 }}
-                  transition={{ duration: 1.05, ease: EASE, delay: 0.18 + words.length * 0.055 }}
-                >
-                  {profile.headlineAccent}
-                </motion.span>
               </span>
             </h1>
 
@@ -137,14 +143,13 @@ export function Hero() {
               className="mt-14 grid grid-cols-2 gap-x-6 gap-y-7 border-t border-[var(--hairline)] pt-7 sm:grid-cols-4"
             >
               {profile.stats.map((stat) => (
-                <div key={stat.label}>
-                  <dt className="sr-only">{stat.label}</dt>
+                <div key={stat.label} className="flex flex-col-reverse gap-2">
+                  <dt className="text-[12px] font-medium uppercase tracking-[0.1em] text-muted">
+                    {stat.label}
+                  </dt>
                   <dd className="text-[26px] font-semibold leading-none tracking-[-0.04em] text-[var(--fg)] md:text-[30px]">
                     {stat.value}
                   </dd>
-                  <p className="mt-2 text-[12px] font-medium uppercase tracking-[0.1em] text-muted">
-                    {stat.label}
-                  </p>
                 </div>
               ))}
             </motion.dl>
