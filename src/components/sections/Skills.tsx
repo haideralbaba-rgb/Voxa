@@ -1,10 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useLocale } from '@/components/providers/LocaleProvider'
+import { useMemo, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Braces, Boxes, Wrench, PenTool } from 'lucide-react'
 import type { SkillGroup, SkillGroupId } from '@/lib/types'
-import { profile, skillGroups } from '@/lib/data/profile'
+import { profile } from '@/lib/data/profile'
+import { localizeSkillGroups, profileAr } from '@/lib/i18n/content'
 import { cn } from '@/lib/utils'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
@@ -17,6 +19,9 @@ const icons: Record<SkillGroupId, typeof Braces> = {
 }
 
 export function Skills() {
+  const { t, locale } = useLocale()
+  const skillGroups = useMemo(() => localizeSkillGroups(locale), [locale])
+  const principles = locale === 'ar' ? profileAr.principles : profile.principles
   const [active, setActive] = useState<SkillGroupId | null>(null)
   // One open skill at a time — the panel expands in place with a layout
   // animation, so the surrounding rows slide instead of the page jumping.
@@ -30,14 +35,14 @@ export function Skills() {
     >
       <div className="container-page">
         <SectionHeading
-          index="03"
-          eyebrow="Capabilities"
+          index={t.skills.index}
+          eyebrow={t.skills.eyebrow}
           title={
             <span id="skills-heading">
               The stack, <span className="serif-accent text-accent">honestly</span> rated.
             </span>
           }
-          description="No “expert in everything”. Each level reflects work that shipped and survived contact with real users."
+          description={t.skills.description}
         />
 
         <div className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-[var(--hairline)] bg-[var(--hairline)] sm:grid-cols-2 lg:grid-cols-4">
@@ -100,10 +105,10 @@ export function Skills() {
         {/* Principles */}
         <div className="mt-16">
           <Reveal>
-            <h3 className="eyebrow">How I work</h3>
+            <h3 className="eyebrow">{t.skills.howIWork}</h3>
           </Reveal>
           <div className="mt-6 grid gap-8 md:grid-cols-3">
-            {profile.principles.map((principle, index) => (
+            {principles.map((principle, index) => (
               <Reveal key={principle.title} delay={index * 0.08}>
                 <div className="border-t border-[var(--hairline)] pt-4">
                   <span className="font-mono text-[10.5px] tracking-[0.12em] text-accent">
@@ -143,7 +148,7 @@ function SkillRow({
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={panelId}
-        className="flex w-full cursor-pointer items-baseline justify-between gap-2 text-left"
+        className="flex w-full cursor-pointer items-baseline justify-between gap-2 text-start"
       >
         <span className="text-[12.5px] font-medium text-[var(--fg)]/84 transition-colors duration-300 group-hover/skill:text-[var(--fg)]">
           {skill.name}

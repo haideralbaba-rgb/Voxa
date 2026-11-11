@@ -6,6 +6,8 @@ import { ArrowUpRight } from 'lucide-react'
 import type { Project } from '@/lib/types'
 import { Art } from '@/components/ui/Art'
 import { cn } from '@/lib/utils'
+import { useLocale } from '@/components/providers/LocaleProvider'
+import { categoryLabel } from '@/lib/i18n/labels'
 
 /**
  * Horizontal, draggable project rail for touch and narrow screens.
@@ -23,6 +25,7 @@ export function ProjectRail({
   onOpen: (project: Project) => void
 }) {
   const scrollerRef = useRef<HTMLDivElement | null>(null)
+  const { t, locale } = useLocale()
   const reduced = useReducedMotion()
   const { scrollXProgress } = useScroll({ container: scrollerRef })
   const progress = useSpring(scrollXProgress, { stiffness: 180, damping: 30, restDelta: 0.001 })
@@ -35,19 +38,19 @@ export function ProjectRail({
         ref={scrollerRef}
         className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-5 pb-4 md:hidden"
         role="list"
-        aria-label="Selected projects"
+        aria-label={t.work.eyebrow}
       >
         {projects.map((project, index) => (
           <article
             key={project.id}
             role="listitem"
-            className="w-[80vw] max-w-[22rem] shrink-0 snap-center first:pl-0"
+            className="w-[80vw] max-w-[22rem] shrink-0 snap-center first:ps-0"
           >
             <button
               type="button"
               onClick={() => onOpen(project)}
-              className="group relative block h-[24rem] w-full overflow-hidden rounded-[24px] border border-[var(--hairline)] text-left shadow-[var(--shadow-ambient)]"
-              aria-label={`Open case study: ${project.title}`}
+              className="group relative block h-[24rem] w-full overflow-hidden rounded-[24px] border border-[var(--hairline)] text-start shadow-[var(--shadow-ambient)]"
+              aria-label={`${t.caseStudy.openLabel}: ${project.title}`}
             >
               <Art
                 src={project.cover.src}
@@ -61,7 +64,7 @@ export function ProjectRail({
               <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/40 to-transparent" aria-hidden />
               <div className="absolute inset-x-4 bottom-4">
                 <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/60">
-                  {project.category} · {project.year}
+                  {categoryLabel(project.category, locale)} · <span className="ltr-data">{project.year}</span>
                 </span>
                 <h3 className="mt-1.5 text-[21px] font-semibold tracking-[-0.03em] text-white">
                   {project.title}
@@ -70,7 +73,7 @@ export function ProjectRail({
                   {project.tagline}
                 </p>
               </div>
-              <span className="absolute right-4 top-4 grid size-9 place-items-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md">
+              <span className="absolute end-4 top-4 grid size-9 place-items-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md">
                 <ArrowUpRight size={15} aria-hidden />
               </span>
             </button>

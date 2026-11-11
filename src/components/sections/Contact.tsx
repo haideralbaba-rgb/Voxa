@@ -3,17 +3,17 @@
 import { useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArrowUpRight, Check, Copy, Loader2, Mail, Send } from 'lucide-react'
-import { budgets, profile } from '@/lib/data/profile'
+import { profile } from '@/lib/data/profile'
+import { localizeBudgets, profileAr } from '@/lib/i18n/content'
 import type { ContactPayload, ContactResult } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { useSound } from '@/components/providers/SoundProvider'
 import { ShaderBackdrop } from '@/components/visual/ShaderBackdrop'
+import { useLocale } from '@/components/providers/LocaleProvider'
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
 const emptyForm: ContactPayload = { name: '', email: '', company: '', budget: '', message: '' }
-
-const budgetOptions = [...budgets]
 
 export function Contact() {
   const [form, setForm] = useState<ContactPayload>(emptyForm)
@@ -24,6 +24,8 @@ export function Contact() {
   const formRef = useRef<HTMLFormElement | null>(null)
   const reduced = useReducedMotion()
   const { play } = useSound()
+  const { t, locale } = useLocale()
+  const budgetOptions = localizeBudgets(locale)
 
   function update<K extends keyof ContactPayload>(key: K, value: ContactPayload[K]) {
     setForm((previous) => ({ ...previous, [key]: value }))
@@ -51,7 +53,7 @@ export function Contact() {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, locale }),
       })
       const data = (await response.json()) as ContactResult
       setResult(data)
@@ -70,7 +72,7 @@ export function Contact() {
       setForm(emptyForm)
     } catch {
       setStatus('error')
-      setResult({ ok: false, message: 'Network hiccup. Try again, or email me directly.' })
+      setResult({ ok: false, message: t.contact.errors.network })
     }
   }
 
@@ -123,7 +125,7 @@ export function Contact() {
               <button
                 type="button"
                 onClick={copyEmail}
-                className="group inline-flex h-11 items-center gap-2.5 rounded-full border border-[var(--hairline-strong)] bg-[var(--card)] pl-4 pr-3 text-[13.5px] font-medium transition-colors duration-300 hover:border-accent/45"
+                className="group inline-flex h-11 items-center gap-2.5 rounded-full border border-[var(--hairline-strong)] bg-[var(--card)] ps-4 pe-3 text-[13.5px] font-medium transition-colors duration-300 hover:border-accent/45"
               >
                 <Mail size={14} className="text-muted" aria-hidden />
                 {profile.email}
@@ -138,17 +140,21 @@ export function Contact() {
 
             <dl className="mt-10 grid grid-cols-2 gap-6 border-t border-[var(--hairline)] pt-6">
               <div>
-                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Location</dt>
-                <dd className="mt-1.5 text-[13.5px] font-medium">{profile.location}</dd>
-                <dd className="text-[11.5px] text-muted">{profile.timezone} · remote friendly</dd>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">{t.contact.location}</dt>
+                <dd className="mt-1.5 text-[13.5px] font-medium">
+                  {locale === "ar" ? profileAr.location : profile.location}
+                </dd>
+                <dd className="text-[11.5px] text-muted">
+                  <span className="ltr-data">{profile.timezone}</span> · {t.remote}
+                </dd>
               </div>
               <div>
-                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Availability</dt>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">{t.contact.availability}</dt>
                 <dd className="mt-1.5 flex items-center gap-1.5 text-[13.5px] font-medium">
                   <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden />
-                  Booking Q1 2027
+                  {t.contact.availabilityValue}
                 </dd>
-                <dd className="text-[11.5px] text-muted">Two slots per quarter</dd>
+                <dd className="text-[11.5px] text-muted">{t.contact.slots}</dd>
               </div>
             </dl>
 
@@ -194,7 +200,7 @@ export function Contact() {
                   >
                     <Check size={26} strokeWidth={2.2} aria-hidden />
                   </motion.span>
-                  <h3 className="mt-5 text-[19px] font-semibold tracking-[-0.02em]">Message sent</h3>
+                  <h3 className="mt-5 text-[19px] font-semibold tracking-[-0.02em]">{t.contact.successTitle}</h3>
                   <p className="mt-2 max-w-xs text-[13.5px] leading-6 text-muted">
                     {result?.message ?? 'Thanks — your note landed.'}
                   </p>
@@ -220,7 +226,7 @@ export function Contact() {
                   className="flex flex-col gap-4"
                 >
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <Field label="Name" htmlFor="contact-name" error={errors.name} required>
+                    <Field label={t.contact.name} htmlFor="contact-name" error={errors.name} required>
                       <input
                         id="contact-name"
                         name="name"
@@ -229,13 +235,13 @@ export function Contact() {
                         required
                         value={form.name}
                         onChange={(event) => update('name', event.target.value)}
-                        placeholder="Your name"
+                        placeholder={t.contact.namePlaceholder}
                         aria-invalid={Boolean(errors.name)}
                         aria-describedby={errors.name ? 'error-name' : undefined}
                         className={fieldClass('name')}
                       />
                     </Field>
-                    <Field label="Email" htmlFor="contact-email" error={errors.email} required>
+                    <Field label={t.contact.email} htmlFor="contact-email" error={errors.email} required>
                       <input
                         id="contact-email"
                         name="email"
@@ -245,7 +251,7 @@ export function Contact() {
                         required
                         value={form.email}
                         onChange={(event) => update('email', event.target.value)}
-                        placeholder="you@company.com"
+                        placeholder={t.contact.emailPlaceholder}
                         aria-invalid={Boolean(errors.email)}
                         aria-describedby={errors.email ? 'error-email' : undefined}
                         className={fieldClass('email')}
@@ -253,7 +259,7 @@ export function Contact() {
                     </Field>
                   </div>
 
-                  <Field label="Company" htmlFor="contact-company" hint="Optional">
+                  <Field label={t.contact.company} htmlFor="contact-company" hint={t.contact.optional}>
                     <input
                       id="contact-company"
                       name="company"
@@ -261,14 +267,14 @@ export function Contact() {
                       autoComplete="organization"
                       value={form.company}
                       onChange={(event) => update('company', event.target.value)}
-                      placeholder="Studio or company"
+                      placeholder={t.contact.companyPlaceholder}
                       className={fieldClass('company')}
                     />
                   </Field>
 
                   <fieldset>
                     <legend className="mb-2 text-[11px] font-medium uppercase tracking-[0.1em] text-muted">
-                      Budget range
+                      {t.contact.budget}
                     </legend>
                     <div className="flex flex-wrap gap-1.5">
                       {budgetOptions.map((option) => {
@@ -294,7 +300,7 @@ export function Contact() {
                   </fieldset>
 
                   <Field
-                    label="Project"
+                    label={t.contact.message}
                     htmlFor="contact-message"
                     error={errors.message}
                     hint={`${form.message.length}/2000`}
@@ -308,7 +314,7 @@ export function Contact() {
                       maxLength={2000}
                       value={form.message}
                       onChange={(event) => update('message', event.target.value)}
-                      placeholder="What are you building, who is it for, and when does it need to ship?"
+                      placeholder={t.contact.messagePlaceholder}
                       aria-invalid={Boolean(errors.message)}
                       aria-describedby={errors.message ? 'error-message' : undefined}
                       className={cn(fieldClass('message'), 'resize-none leading-6')}
@@ -333,11 +339,11 @@ export function Contact() {
                       {status === 'submitting' ? (
                         <>
                           <Loader2 size={15} className="animate-spin" aria-hidden />
-                          Sending
+                          {t.contact.sending}
                         </>
                       ) : (
                         <>
-                          Send message
+                          {t.contact.send}
                           <Send
                             size={14}
                             className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -377,7 +383,7 @@ function Field({
       <div className="flex items-baseline justify-between gap-2">
         <label htmlFor={htmlFor} className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted">
           {label}
-          {required ? <span className="ml-0.5 text-accent">*</span> : null}
+          {required ? <span className="ms-0.5 text-accent">*</span> : null}
         </label>
         {hint ? <span className="font-mono text-[9.5px] text-muted">{hint}</span> : null}
       </div>

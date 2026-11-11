@@ -4,6 +4,7 @@ import { useRef, useState } from 'react'
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
 import { ArrowDown, ArrowUpRight, Download, MapPin } from 'lucide-react'
 import { profile } from '@/lib/data/profile'
+import { profileAr } from '@/lib/i18n/content'
 import { ButtonLink } from '@/components/ui/Button'
 import { Art } from '@/components/ui/Art'
 import { Counter } from '@/components/ui/Counter'
@@ -11,30 +12,42 @@ import { Orb } from '@/components/visual/Orb'
 import { ShaderBackdrop } from '@/components/visual/ShaderBackdrop'
 import { DURATION, EASE, SPRING } from '@/lib/motion'
 import { HeroBackdrop } from './HeroBackdrop'
+import { useLocale } from '@/components/providers/LocaleProvider'
 
 function AvailabilityBadge() {
+  const { t } = useLocale()
   return (
-    <span className="inline-flex items-center gap-2.5 rounded-full border border-[var(--hairline)] bg-[var(--card)]/70 py-1.5 pl-2 pr-3.5 backdrop-blur-md">
+    <span className="inline-flex items-center gap-2.5 rounded-full border border-[var(--hairline)] bg-[var(--card)]/70 py-1.5 ps-2 pe-3.5 backdrop-blur-md">
       <span className="relative grid size-4 place-items-center" aria-hidden>
         <span className="absolute size-2 rounded-full bg-emerald-500" />
         <span className="absolute size-2 animate-pulse-ring rounded-full bg-emerald-500/70" />
       </span>
       <span className="text-[12.5px] font-medium tracking-[-0.01em] text-[var(--fg)]/76">
-        {profile.availabilityLabel}
+        {t.availability}
       </span>
     </span>
   )
 }
 
 /** Headline words rise out of a clipped box, one after another. */
-function Headline({ reduced }: { reduced: boolean | null }) {
-  const words = profile.headline.split(' ')
+function Headline({
+  reduced,
+  locale,
+}: {
+  reduced: boolean | null
+  locale: 'ar' | 'en'
+}) {
+  const { t } = useLocale()
+  const words = t.heroBefore.split(' ')
+  // Arabic words rise from the left of their own box, which is the reading
+  // direction; `dir` on the heading keeps the line order correct either way.
   const accentDelay = 0.16 + words.length * 0.05
 
   return (
     <h1
       id="hero-heading"
-      aria-label={`${profile.headline} ${profile.headlineAccent}`}
+      key={locale}
+      aria-label={`${t.heroBefore} ${t.heroAccent}`}
       className="mt-7 text-display-xl font-semibold leading-[0.92] tracking-[-0.045em] text-[var(--fg)]"
     >
       <span aria-hidden className="contents">
@@ -65,7 +78,7 @@ function Headline({ reduced }: { reduced: boolean | null }) {
             animate={{ y: '0%' }}
             transition={{ duration: DURATION.crawl, ease: EASE.soft, delay: accentDelay }}
           >
-            {profile.headlineAccent}
+            {t.heroAccent}
           </motion.span>
         </span>
       </span>
@@ -75,6 +88,7 @@ function Headline({ reduced }: { reduced: boolean | null }) {
 
 export function Hero() {
   const reduced = useReducedMotion()
+  const { t, locale } = useLocale()
   const containerRef = useRef<HTMLElement | null>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -113,7 +127,7 @@ export function Hero() {
               <AvailabilityBadge />
             </motion.div>
 
-            <Headline reduced={reduced} />
+            <Headline reduced={reduced} locale={locale} />
 
             <motion.p
               initial={reduced ? false : { opacity: 0, y: 18, filter: 'blur(6px)' }}
@@ -121,7 +135,7 @@ export function Hero() {
               transition={{ duration: DURATION.slow, ease: EASE.out, delay: 0.5 }}
               className="mt-7 max-w-xl text-[15.5px] leading-[1.75] text-muted md:text-[17px]"
             >
-              {profile.lede}
+              {t.heroLede}
             </motion.p>
 
             <motion.div
@@ -131,7 +145,7 @@ export function Hero() {
               className="mt-9 flex flex-wrap items-center gap-3"
             >
               <ButtonLink href="#work" size="lg">
-                View selected work
+                {t.ctaPrimary}
                 <ArrowDown
                   size={16}
                   className="transition-transform duration-300 group-hover:translate-y-0.5"
@@ -139,7 +153,7 @@ export function Hero() {
                 />
               </ButtonLink>
               <ButtonLink href="#contact" size="lg" variant="secondary">
-                Start a project
+                {t.ctaSecondary}
                 <ArrowUpRight
                   size={16}
                   className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
@@ -151,7 +165,7 @@ export function Hero() {
                 className="group inline-flex h-13 items-center gap-2 rounded-full px-4 text-[14px] font-medium text-[var(--fg)]/62 transition-colors duration-300 hover:text-[var(--fg)]"
               >
                 <Download size={15} aria-hidden />
-                Résumé
+                {t.resume}
               </a>
             </motion.div>
 
@@ -161,9 +175,9 @@ export function Hero() {
               transition={{ duration: 0.9, delay: 0.78 }}
               className="mt-14 grid grid-cols-2 gap-x-6 gap-y-7 border-t border-[var(--hairline)] pt-7 sm:grid-cols-4"
             >
-              {profile.stats.map((stat) => (
+              {t.stats.map((stat) => (
                 <div key={stat.label} className="flex flex-col-reverse gap-2">
-                  <dt className="text-[12px] font-medium uppercase tracking-[0.1em] text-muted">
+                  <dt className="text-[12px] font-medium tracking-[0.06em] text-muted">
                     {stat.label}
                   </dt>
                   <dd className="text-[26px] font-semibold leading-none tracking-[-0.04em] text-[var(--fg)] md:text-[30px]">
@@ -210,7 +224,7 @@ export function Hero() {
                   <div>
                     <p className="text-[13px] font-medium text-white">{profile.name}</p>
                     <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/55">
-                      {profile.role}
+                      {locale === 'ar' ? profileAr.role : profile.role}
                     </p>
                   </div>
                   <span className="grid size-7 place-items-center rounded-full bg-white/15 text-white">
@@ -221,7 +235,7 @@ export function Hero() {
 
               {/* The site's one 3D object, floating off the portrait so the
                   composition has a second light source. */}
-              <div className="pointer-events-none absolute -right-12 -top-16 hidden lg:block">
+              <div className="pointer-events-none absolute -end-12 -top-16 hidden lg:block">
                 <Orb tone="chromatic" size={104} interactive={false} />
               </div>
 
@@ -229,7 +243,7 @@ export function Hero() {
                 initial={reduced ? false : { opacity: 0, x: -14, y: 8 }}
                 animate={{ opacity: 1, x: 0, y: 0 }}
                 transition={{ duration: DURATION.slow, ease: EASE.out, delay: 0.9 }}
-                className="surface absolute -left-4 top-8 hidden items-center gap-2 rounded-full py-2 pl-2.5 pr-4 md:flex"
+                className="surface absolute -start-4 top-8 hidden items-center gap-2 rounded-full py-2 ps-2.5 pe-4 md:flex"
               >
                 <span className="grid size-6 place-items-center rounded-full bg-[var(--fg)] font-mono text-[10px] font-semibold text-[var(--bg)]">
                   10
@@ -241,13 +255,17 @@ export function Hero() {
                 initial={reduced ? false : { opacity: 0, x: 14, y: -8 }}
                 animate={{ opacity: 1, x: 0, y: 0 }}
                 transition={{ duration: DURATION.slow, ease: EASE.out, delay: 1.02 }}
-                className="surface absolute -right-3 bottom-24 hidden flex-col gap-1 rounded-2xl px-3.5 py-3 md:flex"
+                className="surface absolute -end-3 bottom-24 hidden flex-col gap-1 rounded-2xl px-3.5 py-3 md:flex"
               >
                 <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                  Based in
+                  {t.basedIn}
                 </span>
-                <span className="text-[12.5px] font-medium text-[var(--fg)]">{profile.location}</span>
-                <span className="text-[11px] text-muted">{profile.timezone} · remote friendly</span>
+                <span className="text-[12.5px] font-medium text-[var(--fg)]">
+                  {locale === 'ar' ? profileAr.location : profile.location}
+                </span>
+                <span className="text-[11px] text-muted">
+                  <span className="ltr-data">{profile.timezone}</span> · {t.remote}
+                </span>
               </motion.div>
             </motion.div>
           </motion.div>
@@ -265,6 +283,7 @@ export function Hero() {
  * trick used by the agency sites on 60fps' motion gallery.
  */
 function ClientsMarquee() {
+  const { t } = useLocale()
   const reduced = useReducedMotion()
   const { scrollY } = useScroll()
   // Scroll velocity, smoothed: the strip leans into the direction of travel.
@@ -278,7 +297,7 @@ function ClientsMarquee() {
   return (
     <div className="container-page mt-20 md:mt-28">
       <div className="flex items-center gap-4">
-        <span className="eyebrow shrink-0">Trusted by</span>
+        <span className="eyebrow shrink-0">{t.trustedBy}</span>
         <span className="h-px flex-1 bg-[var(--hairline)]" aria-hidden />
       </div>
       <div className="marquee-mask relative mt-6 overflow-hidden">

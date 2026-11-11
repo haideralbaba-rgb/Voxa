@@ -7,6 +7,8 @@ import type { Project } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { TiltCard } from './TiltCard'
 import { useSound } from '@/components/providers/SoundProvider'
+import { useLocale } from '@/components/providers/LocaleProvider'
+import { categoryLabel } from '@/lib/i18n/labels'
 
 interface ProjectCardProps {
   project: Project
@@ -19,6 +21,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project, onOpen, size = 'standard', index }: ProjectCardProps) {
   const reduced = useReducedMotion()
   const { play } = useSound()
+  const { t, locale } = useLocale()
   const isFeature = size === 'feature'
 
   return (
@@ -69,7 +72,7 @@ export function ProjectCard({ project, onOpen, size = 'standard', index }: Proje
           <div className="pointer-events-none relative z-10 flex items-start justify-between p-5">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-black/32 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-white/85 backdrop-blur-md">
               <span className="size-1.5 rounded-full" style={{ backgroundColor: project.accent }} aria-hidden />
-              {project.category}
+              {categoryLabel(project.category, locale)}
             </span>
             <span className="font-mono text-[10.5px] tracking-[0.14em] text-white/55">{project.year}</span>
           </div>
@@ -89,7 +92,7 @@ export function ProjectCard({ project, onOpen, size = 'standard', index }: Proje
           </motion.h3>
           <p
             className={cn(
-              'max-w-[42ch] pr-8 text-white/64',
+              'max-w-[42ch] pe-8 text-white/64',
               isFeature ? 'text-[14px] leading-6 md:text-[15px]' : 'text-[13px] leading-[1.6]',
             )}
           >
@@ -108,7 +111,7 @@ export function ProjectCard({ project, onOpen, size = 'standard', index }: Proje
         </div>
 
         <span
-          className="pointer-events-none absolute bottom-5 right-5 z-10 grid size-10 place-items-center rounded-full border border-white/20 bg-white/12 text-white backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105 group-hover:bg-white group-hover:text-black"
+          className="pointer-events-none absolute bottom-5 end-5 z-10 grid size-10 place-items-center rounded-full border border-white/20 bg-white/12 text-white backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105 group-hover:bg-white group-hover:text-black"
           aria-hidden
         >
           <ArrowUpRight size={17} />
@@ -123,7 +126,7 @@ export function ProjectCard({ project, onOpen, size = 'standard', index }: Proje
           }}
           onPointerEnter={() => play('hover')}
           className="absolute inset-0 z-20 cursor-pointer rounded-[26px] focus-visible:outline-offset-[-3px]"
-          aria-label={`Open case study: ${project.title} — ${project.tagline}`}
+          aria-label={`${t.caseStudy.openLabel}: ${project.title} — ${project.tagline}`}
         />
       </motion.div>
       </TiltCard>

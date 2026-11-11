@@ -5,11 +5,13 @@ import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScro
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, ArrowUpRight } from 'lucide-react'
-import { navItems, profile } from '@/lib/data/profile'
+import { profile } from '@/lib/data/profile'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from './ThemeToggle'
 import { SoundToggle } from '@/components/ui/SoundToggle'
 import { CommandPalette } from './CommandPalette'
+import { LanguageToggle } from '@/components/ui/LanguageToggle'
+import { useLocale } from '@/components/providers/LocaleProvider'
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false)
@@ -17,6 +19,8 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState<string>('')
   const pathname = usePathname()
+  const { t } = useLocale()
+  const navItems = t.nav
   const { scrollY } = useScroll()
   const reduced = useReducedMotion()
   const panelRef = useRef<HTMLDivElement | null>(null)
@@ -50,7 +54,7 @@ export function SiteHeader() {
     )
     sections.forEach((section) => observer.observe(section))
     return () => observer.disconnect()
-  }, [])
+  }, [navItems])
 
   // Lock body scroll and trap focus while the mobile sheet is open.
   useEffect(() => {
@@ -113,7 +117,7 @@ export function SiteHeader() {
           >
             <Link
               href="/#top"
-              className="group flex items-center gap-2.5 rounded-full pl-1 text-[15px] font-semibold tracking-[-0.02em]"
+              className="group flex items-center gap-2.5 rounded-full ps-1 text-[15px] font-semibold tracking-[-0.02em]"
               aria-label={`${profile.name} — back to top`}
             >
               <span className="relative grid size-8 place-items-center rounded-full bg-[var(--fg)] text-[var(--bg)]">
@@ -126,7 +130,7 @@ export function SiteHeader() {
               </span>
             </Link>
 
-            <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
+            <nav aria-label={t.menu} className="hidden items-center gap-1 lg:flex">
               {navItems.map((item) => {
                 // Section highlighting only applies to the one-page home.
                 const isActive = pathname === '/' && active === item.href
@@ -155,13 +159,14 @@ export function SiteHeader() {
 
             <div className="flex items-center gap-1.5">
               <CommandPalette />
+              <LanguageToggle />
               <SoundToggle className="hidden sm:inline-flex" />
               <ThemeToggle />
               <Link
                 href="/#contact"
                 className="hidden h-9 items-center gap-1.5 rounded-full bg-[var(--fg)] px-4 text-[13px] font-medium text-[var(--bg)] transition-opacity duration-300 hover:opacity-88 sm:inline-flex"
               >
-                Let&apos;s talk
+                {t.letsTalk}
                 <ArrowUpRight size={14} strokeWidth={2} aria-hidden />
               </Link>
               <button
@@ -170,7 +175,7 @@ export function SiteHeader() {
                 onClick={() => setOpen((value) => !value)}
                 aria-expanded={open}
                 aria-controls="mobile-nav"
-                aria-label={open ? 'Close menu' : 'Open menu'}
+                aria-label={open ? t.close : t.menu}
                 className="grid size-9 place-items-center rounded-full border border-[var(--hairline)] text-[var(--fg)]/80 transition-colors hover:text-[var(--fg)] lg:hidden"
               >
                 {open ? <X size={16} /> : <Menu size={16} />}
@@ -204,7 +209,7 @@ export function SiteHeader() {
               className="container-page absolute inset-x-0 top-0 pt-24"
               role="dialog"
               aria-modal="true"
-              aria-label="Site navigation"
+              aria-label={t.menu}
             >
               <nav className="surface overflow-hidden rounded-3xl p-2">
                 {navItems.map((item, index) => (

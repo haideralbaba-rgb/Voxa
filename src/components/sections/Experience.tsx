@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useLocale } from '@/components/providers/LocaleProvider'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
 import { ArrowUpRight, MapPin } from 'lucide-react'
-import { experience } from '@/lib/data/profile'
+import { localizeExperience } from '@/lib/i18n/content'
+import type { ExperienceItem } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 
@@ -25,6 +27,8 @@ function tenure(start: string, end: string | null): string {
 }
 
 export function Experience() {
+  const { t, locale } = useLocale()
+  const experience = useMemo(() => localizeExperience(locale), [locale])
   const listRef = useRef<HTMLOListElement | null>(null)
   const reduced = useReducedMotion()
   const { scrollYProgress } = useScroll({
@@ -42,31 +46,41 @@ export function Experience() {
     >
       <div className="container-page">
         <SectionHeading
-          index="02"
-          eyebrow="Career"
+          index={t.experience.index}
+          eyebrow={t.experience.eyebrow}
           title={
             <span id="experience-heading">
               A decade of <span className="serif-accent text-accent">finishing</span> things.
             </span>
           }
-          description="Agency sprints, product orgs, and a studio of my own. Select a role to expand the detail — every entry is the version I would defend in an interview."
+          description={t.experience.description}
         />
 
         <div className="relative mt-14">
           {/* The rail */}
           <div
-            className="absolute left-[15px] top-2 hidden h-[calc(100%-1rem)] w-px bg-[var(--hairline)] md:left-[7.5rem] md:block"
+            className="absolute start-[15px] top-2 hidden h-[calc(100%-1rem)] w-px bg-[var(--hairline)] md:start-[7.5rem] md:block"
             aria-hidden
           />
           <motion.div
             style={reduced ? undefined : { scaleY, transformOrigin: 'top' }}
-            className="absolute left-[15px] top-2 hidden h-[calc(100%-1rem)] w-px bg-gradient-to-b from-accent via-accent/70 to-accent/10 md:left-[7.5rem] md:block"
+            className="absolute start-[15px] top-2 hidden h-[calc(100%-1rem)] w-px bg-gradient-to-b from-accent via-accent/70 to-accent/10 md:start-[7.5rem] md:block"
             aria-hidden
           />
 
           <ol ref={listRef} className="flex flex-col">
             {experience.map((item, index) => (
-              <TimelineRow key={item.id} item={item} index={index} defaultOpen={index === 0} />
+              <TimelineRow
+                key={item.id}
+                item={item}
+                index={index}
+                defaultOpen={index === 0}
+                labels={{
+                  showDetails: t.experience.showDetails,
+                  showLess: t.experience.showLess,
+                  current: t.experience.current,
+                }}
+              />
             ))}
           </ol>
         </div>
@@ -96,8 +110,10 @@ function TimelineRow({
   item,
   index,
   defaultOpen,
+  labels,
 }: {
-  item: (typeof experience)[number]
+  labels: { showDetails: string; showLess: string; current: string }
+  item: ExperienceItem
   index: number
   defaultOpen: boolean
 }) {
@@ -142,7 +158,7 @@ function TimelineRow({
 
       {/* Dot */}
       <span
-        className="absolute left-0 top-2.5 grid size-[30px] place-items-center rounded-full border border-[var(--hairline)] bg-[var(--bg)] md:left-[7.5rem] md:-translate-x-1/2"
+        className="absolute start-0 top-2.5 grid size-[30px] place-items-center rounded-full border border-[var(--hairline)] bg-[var(--bg)] md:start-[7.5rem] ltr:md:-translate-x-1/2 rtl:md:translate-x-1/2"
         aria-hidden
       >
         <motion.span
@@ -155,12 +171,12 @@ function TimelineRow({
         ) : null}
       </span>
 
-      <div className="pl-11 md:pl-0">
+      <div className="ps-11 md:ps-0">
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
-          className="flex w-full cursor-pointer flex-col gap-1 text-left"
+          className="flex w-full cursor-pointer flex-col gap-1 text-start"
         >
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <h3 className="text-[19px] font-semibold tracking-[-0.025em] text-[var(--fg)] md:text-[22px]">
@@ -169,7 +185,7 @@ function TimelineRow({
             <span className="text-[14px] font-medium text-accent">{item.company}</span>
             {isCurrent ? (
               <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.12em] text-emerald-600 dark:text-emerald-400">
-                Current
+                {labels.current}
               </span>
             ) : null}
           </div>
@@ -193,7 +209,7 @@ function TimelineRow({
           className="overflow-hidden"
           aria-hidden={!open}
         >
-          <ul className="mt-4 flex flex-col gap-2.5 border-l border-[var(--hairline)] pl-4">
+          <ul className="mt-4 flex flex-col gap-2.5 border-s border-[var(--hairline)] ps-4">
             {item.highlights.map((highlight) => (
               <li key={highlight} className="flex items-start gap-2.5 text-[13px] leading-[1.65] text-[var(--fg)]/72">
                 <span className="mt-[7px] size-1 shrink-0 rounded-full bg-accent/70" aria-hidden />
@@ -201,7 +217,7 @@ function TimelineRow({
               </li>
             ))}
           </ul>
-          <div className="mt-4 flex flex-wrap gap-1.5 pl-4">
+          <div className="mt-4 flex flex-wrap gap-1.5 ps-4">
             {item.stack.map((tech) => (
               <span
                 key={tech}
@@ -220,7 +236,7 @@ function TimelineRow({
           aria-hidden="true"
           tabIndex={-1}
         >
-          {open ? 'Show less' : 'Show details'}
+          {open ? labels.showLess : labels.showDetails}
           <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3 }} aria-hidden>
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
               <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />

@@ -1,8 +1,8 @@
 'use client'
 
+import { useLocale } from '@/components/providers/LocaleProvider'
 import { motion, useReducedMotion } from 'motion/react'
-import { ArrowUpRight, Feather, Gauge, Layers, Waves } from 'lucide-react'
-import { ToolMarquee } from './ToolMarquee'
+import { Feather, Gauge, Layers, Waves } from 'lucide-react'
 
 /**
  * Craft.
@@ -52,6 +52,7 @@ const pillars = [
 ] as const
 
 export function Craft() {
+  const { t } = useLocale()
   const reduced = useReducedMotion()
 
   return (
@@ -64,9 +65,9 @@ export function Craft() {
         <div className="flex flex-col gap-8 border-t border-[var(--hairline)] pt-8 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
             <div className="mb-5 flex items-center gap-3">
-              <span className="font-mono text-[11px] tracking-[0.16em] text-accent">05</span>
+              <span className="font-mono text-[11px] tracking-[0.16em] text-accent">{t.craft.index}</span>
               <span className="h-px w-8 bg-[var(--hairline-strong)]" aria-hidden />
-              <span className="eyebrow">Craft</span>
+              <span className="eyebrow">{t.craft.eyebrow}</span>
             </div>
             <h2 id="craft-heading" className="text-display-md font-semibold">
               The craft is the <span className="serif-accent text-accent">budget</span>.
@@ -77,15 +78,6 @@ export function Craft() {
               commitments hold this page together.
             </p>
           </div>
-          <a
-            href="https://horizonx.so/explore"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-[var(--hairline-strong)] px-4 text-[13px] font-medium transition-colors hover:border-accent/50"
-          >
-            The rest of the shelf
-            <ArrowUpRight size={14} aria-hidden />
-          </a>
         </div>
 
         <div className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-[var(--hairline)] bg-[var(--hairline)] md:grid-cols-2">
@@ -104,7 +96,7 @@ export function Craft() {
                   <span className="grid size-10 place-items-center rounded-xl border border-[var(--hairline)] bg-[var(--card)] text-[var(--fg)]/70 transition-colors duration-500 group-hover:border-accent/30 group-hover:text-accent">
                     <Icon size={17} strokeWidth={1.7} aria-hidden />
                   </span>
-                  <div className="text-right">
+                  <div className="text-end">
                     <p className="text-[26px] font-semibold leading-none tracking-[-0.04em] text-[var(--fg)]">
                       {pillar.metric}
                     </p>
@@ -134,17 +126,6 @@ export function Craft() {
         </div>
       </div>
 
-      <div className="mt-20">
-        <div className="container-page mb-4 flex items-center justify-between gap-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--fg)]/35">
-            Credits · techniques referenced
-          </p>
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--fg)]/25">
-            Scroll speed leans the strip
-          </p>
-        </div>
-        <ToolMarquee />
-      </div>
     </section>
   )
 }

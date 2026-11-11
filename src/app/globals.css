@@ -44,35 +44,83 @@
   src: url('/fonts/jetbrains-mono-var.woff2') format('woff2');
 }
 
+/* Arabic faces. Kufi carries display type (headlines, eyebrows) because its
+   geometry holds up at large sizes; the sans carries body copy where the
+   variable weight axis matters more than character. Subsets: Arabic + Latin. */
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/arabic-sans-var.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
+}
+
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/arabic-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F, U+2074, U+20AC, U+2122;
+}
+
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/arabic-kufi-500.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
+}
+
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/arabic-kufi-700.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-serif: 'Instrument Serif', 'Iowan Old Style', 'Times New Roman', serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  /* Arabic stack: the sans leads, Inter is the Latin fallback so brand names
+     and stack labels keep their designed shapes inside Arabic sentences. */
+  --font-arabic: 'Noto Sans Arabic', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-arabic-display: 'Noto Kufi Arabic', 'Noto Sans Arabic', 'Inter', ui-sans-serif, sans-serif;
 
   --text-display-xl: clamp(2.85rem, 7.1vw, 6.4rem);
   --text-display-lg: clamp(2.35rem, 5.4vw, 4.4rem);
   --text-display-md: clamp(1.85rem, 3.6vw, 2.9rem);
   --text-display-sm: clamp(1.45rem, 2.5vw, 2rem);
 
-  --color-ink-50: #f7f7f8;
-  --color-ink-100: #efeff1;
-  --color-ink-200: #e2e2e6;
-  --color-ink-300: #c9c9d0;
-  --color-ink-400: #9a9aa4;
-  --color-ink-500: #71717c;
-  --color-ink-600: #52525b;
-  --color-ink-700: #3d3d45;
-  --color-ink-800: #27272d;
-  --color-ink-900: #18181c;
-  --color-ink-950: #0d0d10;
-  --color-ink-1000: #08080a;
+  /* Warm paper / deep ink. The neutrals carry a small amount of hue on
+     purpose: a pure grey page looks like a template, a warm one looks printed. */
+  --color-ink-50: #f6f3ec;
+  --color-ink-100: #efeae0;
+  --color-ink-200: #e2dbcc;
+  --color-ink-300: #cdc5b4;
+  --color-ink-400: #a8a296;
+  --color-ink-500: #6b655a;
+  --color-ink-600: #5a554c;
+  --color-ink-700: #3d3d38;
+  --color-ink-800: #24262a;
+  --color-ink-900: #161817;
+  --color-ink-950: #101211;
+  --color-ink-1000: #0a0c0b;
 
-  /* accent is sized for AA on small text in both themes; accent-soft is decorative */
-  --color-accent: #a8502c;
-  --color-accent-soft: #e2a184;
-  --color-accent-deep: #8c3f20;
+  /* Accent is sized for AA on small text in both themes.
+     Light: 5.15:1 on paper. Dark: 8.67:1 on ink. */
+  --color-accent: #b4400f;
+  --color-accent-soft: #e8a179;
+  --color-accent-deep: #9c3a0d;
+  /* Secondary hue — the contrast partner. Petrol/teal, never decorative-only. */
+  --color-tide: #1f6b6d;
 
   --ease-apple: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-swift: cubic-bezier(0.32, 0.72, 0, 1);
@@ -204,38 +252,54 @@ html[data-route-transition]::view-transition-new(root) {
 @layer base {
   :root {
     --bg: var(--color-ink-50);
-    --bg-elevated: #ffffff;
-    --fg: var(--color-ink-950);
-    --fg-muted: #66666f;
-    --hairline: rgb(0 0 0 / 0.09);
-    --hairline-strong: rgb(0 0 0 / 0.16);
-    --glass: rgb(255 255 255 / 0.72);
-    --card: #ffffff;
-    --card-hover: #fbfbfc;
-    --shadow-ambient: 0 1px 1px rgb(16 16 20 / 0.03), 0 2px 6px rgb(16 16 20 / 0.04),
-      0 18px 40px -20px rgb(16 16 20 / 0.16);
-    --shadow-lift: 0 1px 1px rgb(16 16 20 / 0.04), 0 4px 10px rgb(16 16 20 / 0.05),
-      0 30px 70px -28px rgb(16 16 20 / 0.28);
+    --bg-elevated: #fffdf8;
+    --fg: #14120f;
+    --fg-muted: #5a554c;
+    --hairline: rgb(20 18 15 / 0.11);
+    --hairline-strong: rgb(20 18 15 / 0.22);
+    --rule: rgb(20 18 15 / 0.16);
+    --glass: rgb(250 247 240 / 0.78);
+    --card: #fffdf8;
+    --card-hover: #faf6ec;
+    /* The page ground: a printed sheet with a horizon of light across the top. */
+    --backdrop-base: #f6f3ec;
+    --backdrop-horizon: radial-gradient(120% 80% at 50% -10%, rgb(255 250 240 / 0.95), transparent 62%);
+    --backdrop-wash: radial-gradient(70% 55% at 88% 8%, rgb(180 64 15 / 0.11), transparent 68%);
+    --backdrop-tide: radial-gradient(60% 50% at 6% 34%, rgb(31 107 109 / 0.1), transparent 70%);
+    --grid-line: rgb(20 18 15 / 0.045);
+    --grain-alpha: 0.05;
+    --shadow-ambient: 0 1px 1px rgb(60 44 20 / 0.05), 0 2px 6px rgb(60 44 20 / 0.05),
+      0 18px 40px -20px rgb(60 44 20 / 0.22);
+    --shadow-lift: 0 1px 1px rgb(60 44 20 / 0.06), 0 6px 14px rgb(60 44 20 / 0.07),
+      0 36px 80px -30px rgb(60 44 20 / 0.34);
     color-scheme: light;
   }
 
   .dark {
     --bg: var(--color-ink-1000);
-    --color-accent: #e08a5f;
-    --color-accent-soft: #f0b79b;
-    --color-accent-deep: #c9663f;
-    --bg-elevated: var(--color-ink-950);
-    --fg: #f4f4f6;
-    --fg-muted: var(--color-ink-400);
-    --hairline: rgb(255 255 255 / 0.1);
-    --hairline-strong: rgb(255 255 255 / 0.2);
-    --glass: rgb(10 10 12 / 0.66);
-    --card: #111114;
-    --card-hover: #16161a;
-    --shadow-ambient: 0 1px 1px rgb(0 0 0 / 0.55), 0 3px 8px rgb(0 0 0 / 0.35),
-      0 20px 48px -22px rgb(0 0 0 / 0.75);
-    --shadow-lift: 0 1px 1px rgb(0 0 0 / 0.65), 0 6px 16px rgb(0 0 0 / 0.4),
-      0 40px 90px -32px rgb(0 0 0 / 0.9);
+    --color-accent: #fb923c;
+    --color-accent-soft: #fdba74;
+    --color-accent-deep: #ea7c1f;
+    --color-tide: #5eb8b4;
+    --bg-elevated: #101211;
+    --fg: #f3efe6;
+    --fg-muted: #a8a296;
+    --hairline: rgb(243 239 230 / 0.12);
+    --hairline-strong: rgb(243 239 230 / 0.24);
+    --rule: rgb(243 239 230 / 0.18);
+    --glass: rgb(10 12 11 / 0.72);
+    --card: #121514;
+    --card-hover: #181b1a;
+    --backdrop-base: #0a0c0b;
+    --backdrop-horizon: radial-gradient(120% 80% at 50% -10%, rgb(40 46 44 / 0.9), transparent 62%);
+    --backdrop-wash: radial-gradient(70% 55% at 88% 6%, rgb(251 146 60 / 0.16), transparent 66%);
+    --backdrop-tide: radial-gradient(60% 50% at 4% 40%, rgb(94 184 180 / 0.13), transparent 70%);
+    --grid-line: rgb(243 239 230 / 0.05);
+    --grain-alpha: 0.07;
+    --shadow-ambient: 0 1px 1px rgb(0 0 0 / 0.6), 0 3px 8px rgb(0 0 0 / 0.4),
+      0 20px 48px -22px rgb(0 0 0 / 0.8);
+    --shadow-lift: 0 1px 1px rgb(0 0 0 / 0.7), 0 8px 18px rgb(0 0 0 / 0.45),
+      0 44px 96px -32px rgb(0 0 0 / 0.95);
     color-scheme: dark;
   }
 
@@ -250,7 +314,9 @@ html[data-route-transition]::view-transition-new(root) {
   }
 
   body {
-    background-color: var(--bg);
+    /* Transparent on purpose: <CanvasBackdrop> paints the document ground
+       behind everything, so the page and the backdrop can never disagree. */
+    background-color: transparent;
     color: var(--fg);
     font-family: var(--font-sans);
     font-feature-settings: 'cv02' 1, 'cv03' 1, 'cv04' 1, 'cv11' 1, 'ss03' 1;
@@ -260,6 +326,78 @@ html[data-route-transition]::view-transition-new(root) {
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
+  }
+
+  /* ------------------------------------------------------------------
+     Arabic typography
+     Arabic is cursive and connected: Latin letter-spacing severs joins and
+     tracking-negative settings crush the counters. Line height needs more
+     room for the descenders and the diacritics above the baseline.
+     ------------------------------------------------------------------ */
+  html[lang='ar'] body {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+    word-spacing: 0.02em;
+    line-height: 1.75;
+    font-feature-settings: 'ss01' 1, 'cv01' 1;
+  }
+
+  html[lang='ar'] h1,
+  html[lang='ar'] h2,
+  html[lang='ar'] h3,
+  html[lang='ar'] h4 {
+    font-family: var(--font-arabic-display);
+    letter-spacing: 0;
+    line-height: 1.28;
+    font-weight: 700;
+    text-wrap: balance;
+  }
+
+  /* The serif italic accent is a Latin-only idea. In Arabic the accent is
+     carried by colour and weight instead — an italic Arabic is an invention. */
+  html[lang='ar'] .serif-accent {
+    font-family: var(--font-arabic-display);
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  /* Mono is Latin-only in practice; keep numerals and tags in it. */
+  html[lang='ar'] .font-mono,
+  html[lang='ar'] code,
+  html[lang='ar'] kbd {
+    font-family: var(--font-mono);
+    letter-spacing: 0;
+  }
+
+  /* Uppercase tracking is meaningless for Arabic script; drop it wholesale
+     rather than auditing every eyebrow. */
+  html[lang='ar'] .eyebrow,
+  html[lang='ar'] .tracking-\[0\.16em\],
+  html[lang='ar'] .tracking-\[0\.18em\],
+  html[lang='ar'] .tracking-\[0\.12em\],
+  html[lang='ar'] .tracking-\[0\.14em\] {
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* Arbitrary Tailwind tracking (`tracking-[0.14em]`, `tracking-[-0.02em]`) is
+     written for Latin display type. Arabic letters join, so any tracking breaks
+     the word shape; neutralise every such utility under Arabic. */
+  html[lang='ar'] [class*='tracking-['] {
+    letter-spacing: 0 !important;
+  }
+
+  /* Direction-aware glyphs: in RTL a "back" arrow points right. */
+  [dir='rtl'] .flip-rtl {
+    transform: scaleX(-1);
+  }
+
+  /* Punctuation and numerals that must stay LTR inside RTL prose. */
+  [dir='rtl'] .ltr-data {
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
   }
 
   ::selection {
@@ -407,13 +545,12 @@ html[data-route-transition]::view-transition-new(root) {
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    opacity: 0.035;
+    opacity: var(--grain-alpha);
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   .dark .grain-overlay {
-    opacity: 0.05;
     mix-blend-mode: soft-light;
   }
 
@@ -437,6 +574,29 @@ html[data-route-transition]::view-transition-new(root) {
     75% {
       transform: translate3d(-1%, 2%, 0);
     }
+  }
+
+  /* The page ground's hairline grid. Masked to the horizon so it fades out
+     before the reader reaches the content. */
+  .canvas-grid {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 96px 96px;
+    background-position: center top;
+    mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%);
+  }
+
+  /* A woven texture for the paper/ink ground: two crossing 1px gradients at low
+     alpha. No bitmap, no request, and it survives any zoom level. */
+  .canvas-weave {
+    opacity: 0.35;
+    background-image:
+      repeating-linear-gradient(45deg, var(--grid-line) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(-45deg, var(--grid-line) 0 1px, transparent 1px 3px);
+    mask-image: radial-gradient(120% 90% at 50% 0%, #000 10%, transparent 70%);
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 10%, transparent 70%);
   }
 
   .grid-lines {

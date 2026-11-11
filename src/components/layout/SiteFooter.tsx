@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useLocale } from '@/components/providers/LocaleProvider'
 import { ArrowUp, ArrowUpRight } from 'lucide-react'
-import { navItems, profile } from '@/lib/data/profile'
+import { profile } from '@/lib/data/profile'
+import { profileAr } from '@/lib/i18n/content'
 
 function useLocalTime(timeZoneOffsetHours: number) {
   const [time, setTime] = useState<string>('')
@@ -28,6 +30,8 @@ function useLocalTime(timeZoneOffsetHours: number) {
 }
 
 export function SiteFooter() {
+  const { t, locale } = useLocale()
+  const navItems = t.nav
   const time = useLocalTime(3)
   const year = new Date().getFullYear()
 
@@ -36,7 +40,7 @@ export function SiteFooter() {
       <div className="container-page py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <Link href="/#top" className="inline-flex items-center gap-2.5" aria-label="Back to top">
+            <Link href="/#top" className="inline-flex items-center gap-2.5" aria-label={t.backToTop}>
               <span className="grid size-8 place-items-center rounded-full bg-[var(--fg)] font-mono text-[12px] font-semibold text-[var(--bg)]">
                 HA
               </span>
@@ -46,19 +50,19 @@ export function SiteFooter() {
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-[13px] leading-[1.7] text-muted">
-              {profile.role}, building calm interfaces for brands with a point of view. Currently in{' '}
-              {profile.location}.
+              {locale === 'ar' ? profileAr.role : profile.role} —{' '}
+              {locale === 'ar' ? profileAr.location : profile.location}.
             </p>
             <div className="mt-5 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
               <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden />
-              <span>Local time</span>
+              <span>{t.footer.localTime}</span>
               <span className="text-[var(--fg)]/70">{time || '—:—'}</span>
               <span>{profile.timezone}</span>
             </div>
           </div>
 
-          <nav aria-label="Footer" className="flex flex-col gap-2.5">
-            <h2 className="eyebrow mb-1">Sections</h2>
+          <nav aria-label={t.footer.sections} className="flex flex-col gap-2.5">
+            <h2 className="eyebrow mb-1">{t.footer.sections}</h2>
             {navItems.map((item) => (
               <a
                 key={item.href}
@@ -71,7 +75,7 @@ export function SiteFooter() {
           </nav>
 
           <div className="flex flex-col gap-2.5">
-            <h2 className="eyebrow mb-1">Elsewhere</h2>
+            <h2 className="eyebrow mb-1">{t.footer.elsewhere}</h2>
             {profile.socials.map((social) => (
               <a
                 key={social.label}
@@ -99,17 +103,17 @@ export function SiteFooter() {
 
         <div className="mt-12 flex flex-col-reverse items-start justify-between gap-4 border-t border-[var(--hairline)] pt-6 sm:flex-row sm:items-center">
           <p className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted">
-            © {year} {profile.name} · Built with Next.js, Tailwind & motion
+            © {year} {profile.name} · {t.footer.builtWith}
           </p>
           <div className="flex items-center gap-4">
             <span className="hidden font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted sm:inline">
-              Designed &amp; coded by hand
+              {t.footer.designedBy}
             </span>
             <Link
               href="/#top"
               className="group inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--hairline)] px-3.5 text-[12px] font-medium text-[var(--fg)]/70 transition-colors hover:border-[var(--hairline-strong)] hover:text-[var(--fg)]"
             >
-              Top
+              {t.top}
               <ArrowUp size={13} className="transition-transform duration-300 group-hover:-translate-y-0.5" aria-hidden />
             </Link>
           </div>

@@ -4,31 +4,35 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArrowUpRight, LayoutGrid } from 'lucide-react'
 import type { Project, ProjectCategory } from '@/lib/types'
-import { projects } from '@/lib/data/projects'
+import { localizeProjects } from '@/lib/i18n/content'
 import { cn } from '@/lib/utils'
 import { ButtonLink } from '@/components/ui/Button'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { ProjectCard } from './ProjectCard'
 import { CaseStudyPanel } from './CaseStudyPanel'
 import { ProjectRail } from './ProjectRail'
+import { useLocale } from '@/components/providers/LocaleProvider'
 
 type Filter = 'All' | ProjectCategory
 
 const filters: Filter[] = ['All', 'Brand', 'Product', 'Commerce', 'Editorial', 'Motion']
 
 export function ProjectShowcase({ initialSlug }: { initialSlug?: string }) {
+  const { t, locale } = useLocale()
   const [filter, setFilter] = useState<Filter>('All')
   const [openSlug, setOpenSlug] = useState<string | null>(() => initialSlug ?? null)
   const reduced = useReducedMotion()
 
+  const projects = useMemo(() => localizeProjects(locale), [locale])
+
   const visible = useMemo(
     () => (filter === 'All' ? projects : projects.filter((project) => project.category === filter)),
-    [filter],
+    [filter, projects],
   )
 
   const openProject = useMemo<Project | null>(
     () => projects.find((project) => project.slug === openSlug) ?? null,
-    [openSlug],
+    [openSlug, projects],
   )
 
   const neighbours = useMemo(() => {
@@ -38,7 +42,7 @@ export function ProjectShowcase({ initialSlug }: { initialSlug?: string }) {
       previous: projects[(index - 1 + projects.length) % projects.length],
       next: projects[(index + 1) % projects.length],
     }
-  }, [openProject])
+  }, [openProject, projects])
 
   const open = useCallback((project: Project) => {
     setOpenSlug(project.slug)
@@ -60,33 +64,34 @@ export function ProjectShowcase({ initialSlug }: { initialSlug?: string }) {
     }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
-  }, [openSlug])
+  }, [openSlug, projects])
 
   return (
     <section id="work" aria-labelledby="work-heading" className="relative scroll-mt-24 py-20 md:py-28">
       <div className="container-page">
         <SectionHeading
-          index="01"
-          eyebrow="Selected work"
+          index={t.work.index}
+          eyebrow={t.work.eyebrow}
           title={
             <span id="work-heading">
-              Six builds, one <span className="serif-accent text-accent">obsession</span>.
+              {t.work.titleA}{' '}
+              <span className="serif-accent text-accent">{t.work.titleB}</span>
             </span>
           }
-          description="Open any card for the full case study — the brief, the architecture decisions, and what actually moved after launch."
+          description={t.work.description}
           action={
             <ButtonLink href="#contact" variant="secondary" size="md">
-              Have something similar?
+              {t.work.haveSimilar}
               <ArrowUpRight size={15} aria-hidden />
             </ButtonLink>
           }
         />
 
         {/* Filters */}
-        <div className="mt-10 flex flex-wrap items-center gap-2" role="group" aria-label="Filter projects by category">
-          <span className="mr-1 hidden items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted sm:flex">
+        <div className="mt-10 flex flex-wrap items-center gap-2" role="group" aria-label={t.work.filter}>
+          <span className="me-1 hidden items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted sm:flex">
             <LayoutGrid size={13} aria-hidden />
-            Filter
+            {t.work.filter}
           </span>
           {filters.map((item) => {
             const active = filter === item
@@ -112,7 +117,7 @@ export function ProjectShowcase({ initialSlug }: { initialSlug?: string }) {
                 ) : (
                   <span className="absolute inset-0 rounded-full border border-[var(--hairline)]" aria-hidden />
                 )}
-                <span className="relative">{item}</span>
+                <span className="relative">{t.work.filters[item] ?? item}</span>
                 <span className={cn('relative font-mono text-[10px]', active ? 'text-[var(--bg)]/55' : 'text-muted')}>
                   {count}
                 </span>

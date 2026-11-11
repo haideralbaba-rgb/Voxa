@@ -3,9 +3,10 @@
 import { Art } from '@/components/ui/Art'
 import { Counter } from '@/components/ui/Counter'
 import { motion, useReducedMotion } from 'motion/react'
-import { profile } from '@/lib/data/profile'
+import { useLocale } from '@/components/providers/LocaleProvider'
 
 export function AboutStrip() {
+  const { t } = useLocale()
   const reduced = useReducedMotion()
 
   return (
@@ -31,8 +32,8 @@ export function AboutStrip() {
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" aria-hidden />
-              <p className="absolute bottom-3.5 left-4 font-mono text-[10px] uppercase tracking-[0.14em] text-white/70">
-                Fig. 01 — studio wall, 2025
+              <p className="absolute bottom-3.5 start-4 font-mono text-[10px] uppercase tracking-[0.14em] text-white/70">
+                Studio wall, 2025
               </p>
             </div>
           </motion.div>
@@ -40,17 +41,16 @@ export function AboutStrip() {
           <div>
             <div className="mb-5 flex items-center gap-3">
               <span className="font-mono text-[11px] tracking-[0.16em] text-accent">—</span>
-              <span className="eyebrow">About</span>
+              <span className="eyebrow">{t.about.eyebrow}</span>
             </div>
             <h2
               id="about-heading"
               className="text-display-sm font-semibold leading-[1.15] tracking-[-0.035em] md:text-[clamp(1.75rem,3vw,2.5rem)]"
             >
-              Ten years between the Figma file and the{' '}
-              <span className="serif-accent text-accent">production build</span>.
+              {t.about.title}
             </h2>
             <div className="mt-5 flex flex-col gap-4">
-              {profile.bio.map((paragraph) => (
+              {t.about.body.map((paragraph) => (
                 <p key={paragraph.slice(0, 24)} className="max-w-2xl text-[14.5px] leading-[1.8] text-muted">
                   {paragraph}
                 </p>
@@ -58,7 +58,7 @@ export function AboutStrip() {
             </div>
 
             <dl className="mt-8 grid grid-cols-2 gap-x-8 gap-y-5 border-t border-[var(--hairline)] pt-6 sm:grid-cols-4">
-              {profile.stats.map((stat) => (
+              {t.stats.map((stat) => (
                 <div key={stat.label}>
                   <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted">
                     {stat.label}
