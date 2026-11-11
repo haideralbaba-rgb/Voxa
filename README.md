@@ -131,9 +131,23 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 ```
 
-The contact route validates every submission and, without a webhook or Supabase
-credentials, logs the enquiry server-side and returns a truthful success message
-rather than silently dropping it.
+### Contact pipeline
+
+1. The route handler validates the payload with Zod and returns per-field errors.
+2. If Supabase is configured, the enquiry is inserted into `public.portfolio_messages`.
+   RLS grants `INSERT` only — the publishable key can never read messages back.
+3. If `CONTACT_WEBHOOK_URL` is set, the enquiry is forwarded (Slack, Resend, Make…).
+4. If neither is configured, the enquiry is logged server-side and the UI says so
+   honestly instead of pretending a delivery happened.
+5. If storage is configured but fails, the response asks the visitor to email
+   directly rather than claiming success.
+
+Owner reads use the `portfolio_messages_for_owner()` function (SECURITY DEFINER,
+gated on the owner email), so the dashboard/service role is the only reader.
+
+The site is deployed on Vercel with the production env vars already set:
+`NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`,
+`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 
 ## Editing content
 
