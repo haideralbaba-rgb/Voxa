@@ -1,8 +1,7 @@
 'use client'
 
 import { motion, useReducedMotion } from 'motion/react'
-import { ArrowUpRight, Feather, Gauge, Layers, Waves } from 'lucide-react'
-import { ToolMarquee } from './ToolMarquee'
+import { Feather, Gauge, Layers, Waves } from 'lucide-react'
 
 /**
  * Craft.
@@ -77,15 +76,6 @@ export function Craft() {
               commitments hold this page together.
             </p>
           </div>
-          <a
-            href="https://horizonx.so/explore"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-[var(--hairline-strong)] px-4 text-[13px] font-medium transition-colors hover:border-accent/50"
-          >
-            The rest of the shelf
-            <ArrowUpRight size={14} aria-hidden />
-          </a>
         </div>
 
         <div className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-[var(--hairline)] bg-[var(--hairline)] md:grid-cols-2">
@@ -134,17 +124,6 @@ export function Craft() {
         </div>
       </div>
 
-      <div className="mt-20">
-        <div className="container-page mb-4 flex items-center justify-between gap-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--fg)]/35">
-            Credits · techniques referenced
-          </p>
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--fg)]/25">
-            Scroll speed leans the strip
-          </p>
-        </div>
-        <ToolMarquee />
-      </div>
     </section>
   )
 }

@@ -3,6 +3,7 @@ import { themeScript } from '@/lib/theme-script'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { MotionProvider } from '@/components/providers/MotionProvider'
 import { SoundProvider } from '@/components/providers/SoundProvider'
+import { CanvasBackdrop } from '@/components/visual/CanvasBackdrop'
 import { profile } from '@/lib/data/profile'
 import './globals.css'
 
@@ -83,6 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-dvh antialiased">
+        <CanvasBackdrop />
         <div className="grain-overlay" aria-hidden />
         <ThemeProvider>
           <MotionProvider>

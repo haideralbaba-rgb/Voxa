@@ -12,14 +12,12 @@ import {
   Link2,
   Mail,
   Search,
-  Sparkles,
   Sun,
   Volume2,
 } from 'lucide-react'
 import { profile } from '@/lib/data/profile'
 import { projects } from '@/lib/data/projects'
 import { storyboardScenes } from '@/lib/data/storyboard'
-import { toolEntries } from '@/lib/data/toolkit'
 import { useSound } from '@/components/providers/SoundProvider'
 import { useTheme } from '@/components/providers/ThemeProvider'
 import { withViewTransition } from '@/lib/view-transition'
@@ -27,7 +25,7 @@ import { cn } from '@/lib/utils'
 
 interface CommandItem {
   id: string
-  group: 'Jump to' | 'Work' | 'Storyboard' | 'Shelf' | 'Actions' | 'Elsewhere'
+  group: 'Jump to' | 'Work' | 'Storyboard' | 'Actions' | 'Elsewhere'
   label: string
   hint?: string
   icon: React.ComponentType<{ size?: number; className?: string; 'aria-hidden'?: boolean }>
@@ -106,21 +104,6 @@ export function CommandPalette() {
         hint: scene.mechanic,
         icon: BookOpen,
         run: () => go('#story'),
-      })
-    }
-
-    for (const entry of toolEntries.slice(0, 12)) {
-      items.push({
-        id: `shelf-${entry.id}`,
-        group: 'Shelf',
-        label: entry.name,
-        hint: entry.technique,
-        icon: Sparkles,
-        keywords: entry.borrowed,
-        run: () => {
-          close()
-          window.open(entry.href, '_blank', 'noopener,noreferrer')
-        },
       })
     }
 

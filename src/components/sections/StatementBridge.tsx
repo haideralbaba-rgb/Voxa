@@ -23,24 +23,34 @@ export function StatementBridge() {
   return (
     <section ref={ref} aria-label="Approach" className="relative border-t border-[var(--hairline)] py-20 md:py-28">
       <div className="container-page">
-        <div className="grid gap-8 lg:grid-cols-[1fr_18rem] lg:items-end">
-          <h2 className="max-w-3xl text-[clamp(1.9rem,4.4vw,3.6rem)] font-semibold leading-[1.06] tracking-[-0.04em]">
-            {words.map((word, index) => (
-              <Word
-                key={`${word}-${index}`}
-                progress={progress}
-                index={index}
-                total={words.length}
-                reduced={Boolean(reduced)}
-                accent={index >= 5}
-              >
-                {word}
-              </Word>
-            ))}
-          </h2>
+        <div className="grid gap-10 lg:grid-cols-[1fr_18rem] lg:items-end">
+          {/* A pull quote, set as type: the section exists to give the eye one
+              beat of rest between the work grid and the film. */}
+          <blockquote>
+            <p className="max-w-3xl text-[clamp(2rem,4.6vw,3.75rem)] font-medium leading-[1.04] tracking-[-0.045em] text-balance">
+              {words.map((word, index) => (
+                <Word
+                  key={`${word}-${index}`}
+                  progress={progress}
+                  index={index}
+                  total={words.length}
+                  reduced={Boolean(reduced)}
+                  accent={index >= 5}
+                >
+                  {word}
+                </Word>
+              ))}
+            </p>
+            <footer className="mt-8 flex items-center gap-3">
+              <span className="h-px w-10" style={{ backgroundColor: 'var(--color-accent)' }} aria-hidden />
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+                Working principle · 01
+              </span>
+            </footer>
+          </blockquote>
 
           <ScrubReveal className="lg:pb-2" offset={['start 90%', 'start 60%']}>
-            <p className="text-[13.5px] leading-[1.75] text-muted">
+            <p className="border-l-2 pl-4 text-[13.5px] leading-[1.8] text-[var(--fg)]/78" style={{ borderColor: 'var(--color-tide)' }}>
               Every transition here answers a question the visitor was already asking: where did
               that card come from, what changed, and can I go back. Motion earns its place or it
               gets cut.
