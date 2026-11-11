@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img">
+  
+  <defs>
+    <linearGradient id="bg-halo-03" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a0c0d"/>
+      <stop offset="0.55" stop-color="#b0453f"/>
+      <stop offset="1" stop-color="#f0b3ae"/>
+    </linearGradient>
+    <radialGradient id="glow-halo-03" cx="0.28" cy="0.18" r="0.85">
+      <stop offset="0" stop-color="#f0b3ae" stop-opacity="0.95"/>
+      <stop offset="0.45" stop-color="#b0453f" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#1a0c0d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2-halo-03" cx="0.85" cy="0.9" r="0.7">
+      <stop offset="0" stop-color="#1a0c0d" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#1a0c0d" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft-halo-03" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="46"/>
+    </filter>
+    <filter id="blur-halo-03" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <filter id="grain-halo-03" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <filter id="shadow-halo-03" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="26" stdDeviation="34" flood-color="#1a0c0d" flood-opacity="0.5"/>
+    </filter>
+    <linearGradient id="glass-halo-03" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="sheen-halo-03" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.02"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.14"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#1a0c0d"/>
+  <rect width="1600" height="1000" fill="url(#glow-halo-03)" opacity="0.7"/>
+  <g filter="url(#soft-halo-03)" opacity="0.5">
+    <ellipse cx="1200" cy="180" rx="380" ry="260" fill="#b0453f" fill-opacity="0.7"/>
+    <ellipse cx="220" cy="880" rx="360" ry="240" fill="#f0b3ae" fill-opacity="0.4"/>
+  </g>
+  <g font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="15" letter-spacing="3.4" fill="rgba(255,255,255,0.68)">
+    <text x="72" y="86">HALO / SCHEDULE</text>
+    <text x="1528" y="86" text-anchor="end">LIVE</text>
+  </g>
+  <text x="96" y="212" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="64" font-weight="600" letter-spacing="-3" fill="#fff">Screenings</text>
+  <text x="1504" y="206" text-anchor="end" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-style="italic" fill="#fff" fill-opacity="0.7">Nine nights</text>
+  <g transform="translate(96 300)">
+      <rect width="440" height="280" rx="26" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.16"/>
+      <rect x="24" y="24" width="392" height="164" rx="18" fill="url(#bg-halo-03)" fill-opacity="0.85"/>
+      <g opacity="0.65"><circle cx="330" cy="60" r="54" fill="#fff" fill-opacity="0.45" filter="url(#blur-halo-03)"/></g>
+      <rect x="24" y="212" width="180" height="12" rx="6" fill="#fff" fill-opacity="0.62"/>
+      <rect x="24" y="236" width="120" height="9" rx="4.5" fill="#fff" fill-opacity="0.28"/>
+      <text x="416" y="246" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="12" fill="#fff" fill-opacity="0.5">01</text>
+    </g><g transform="translate(580 300)">
+      <rect width="440" height="280" rx="26" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.16"/>
+      <rect x="24" y="24" width="392" height="164" rx="18" fill="url(#bg-halo-03)" fill-opacity="0.6"/>
+      <g opacity="0.65"><circle cx="330" cy="60" r="54" fill="#fff" fill-opacity="0.45" filter="url(#blur-halo-03)"/></g>
+      <rect x="24" y="212" width="168" height="12" rx="6" fill="#fff" fill-opacity="0.62"/>
+      <rect x="24" y="236" width="112" height="9" rx="4.5" fill="#fff" fill-opacity="0.28"/>
+      <text x="416" y="246" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="12" fill="#fff" fill-opacity="0.5">02</text>
+    </g><g transform="translate(1064 300)">
+      <rect width="440" height="280" rx="26" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.16"/>
+      <rect x="24" y="24" width="392" height="164" rx="18" fill="url(#bg-halo-03)" fill-opacity="0.45"/>
+      <g opacity="0.65"><circle cx="330" cy="60" r="54" fill="#fff" fill-opacity="0.45" filter="url(#blur-halo-03)"/></g>
+      <rect x="24" y="212" width="156" height="12" rx="6" fill="#fff" fill-opacity="0.62"/>
+      <rect x="24" y="236" width="104" height="9" rx="4.5" fill="#fff" fill-opacity="0.28"/>
+      <text x="416" y="246" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="12" fill="#fff" fill-opacity="0.5">03</text>
+    </g><g transform="translate(96 620)">
+      <rect width="440" height="280" rx="26" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.16"/>
+      <rect x="24" y="24" width="392" height="164" rx="18" fill="url(#bg-halo-03)" fill-opacity="0.7"/>
+      <g opacity="0.65"><circle cx="330" cy="60" r="54" fill="#fff" fill-opacity="0.45" filter="url(#blur-halo-03)"/></g>
+      <rect x="24" y="212" width="144" height="12" rx="6" fill="#fff" fill-opacity="0.62"/>
+      <rect x="24" y="236" width="96" height="9" rx="4.5" fill="#fff" fill-opacity="0.28"/>
+      <text x="416" y="246" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="12" fill="#fff" fill-opacity="0.5">04</text>
+    </g><g transform="translate(580 620)">
+      <rect width="440" height="280" rx="26" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.16"/>
+      <rect x="24" y="24" width="392" height="164" rx="18" fill="url(#bg-halo-03)" fill-opacity="0.5"/>
+      <g opacity="0.65"><circle cx="330" cy="60" r="54" fill="#fff" fill-opacity="0.45" filter="url(#blur-halo-03)"/></g>
+      <rect x="24" y="212" width="132" height="12" rx="6" fill="#fff" fill-opacity="0.62"/>
+      <rect x="24" y="236" width="88" height="9" rx="4.5" fill="#fff" fill-opacity="0.28"/>
+      <text x="416" y="246" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="12" fill="#fff" fill-opacity="0.5">05</text>
+    </g><g transform="translate(1064 620)">
+      <rect width="440" height="280" rx="26" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.16"/>
+      <rect x="24" y="24" width="392" height="164" rx="18" fill="url(#bg-halo-03)" fill-opacity="0.9"/>
+      <g opacity="0.65"><circle cx="330" cy="60" r="54" fill="#fff" fill-opacity="0.45" filter="url(#blur-halo-03)"/></g>
+      <rect x="24" y="212" width="120" height="12" rx="6" fill="#fff" fill-opacity="0.62"/>
+      <rect x="24" y="236" width="80" height="9" rx="4.5" fill="#fff" fill-opacity="0.28"/>
+      <text x="416" y="246" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="12" fill="#fff" fill-opacity="0.5">06</text>
+    </g>
+  <rect width="1600" height="1000" filter="url(#grain-halo-03)" opacity="0.18" style="mix-blend-mode:overlay"/>
+</svg>

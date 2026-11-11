@@ -1,31 +1,159 @@
-# VOXA Portfolio Platform
+# VOXA — Personal Portfolio
 
-A cinematic multi-tenant portfolio platform built for digital creators with TanStack Start + Lovable Cloud (Postgres/RLS/Auth/Storage).
+A production-ready personal portfolio for **Haider Albaba**, Product Engineer & Interaction Designer.
+Built with Next.js (App Router), TypeScript (strict), Tailwind CSS v4 and `motion/react`.
 
-## Architecture
+The centrepiece is an App Store “Today”-style work showcase: cards expand into full case
+studies with a shared-element (`layoutId`) transition, deep-linkable URLs, keyboard
+navigation and a focus trap.
 
-- `src/start.ts` — global request middleware, CSRF, tenant context
-- `src/server/tenant.ts` — hostname → tenant resolver
-- `src/server/data.ts` — typed server functions and public portfolio reads
-- `src/server/supabase.ts` — server-side Supabase/Lovable Cloud client with cookie session support
-- `src/components/SmartGrid.tsx` — media-first masonry grid
-- `src/routes/*` — TanStack file-based routes
-- `supabase/migrations/0001_voxa.sql` — schema + RLS + storage bucket
+---
 
-## Environment
+## Stack
 
-Set:
+| Layer      | Choice                                                              |
+| ---------- | ------------------------------------------------------------------- |
+| Framework  | Next.js 16 — App Router, Server Components, route handlers           |
+| Language   | TypeScript 5.9, `strict` + `noUncheckedIndexedAccess`                |
+| Styling    | Tailwind CSS v4 (`@theme`, `@utility`), CSS custom-property tokens   |
+| Motion     | `motion/react` (Framer Motion) — layout, reveal, gesture, presence   |
+| Icons      | `lucide-react` (tree-shaken via `optimizePackageImports`)            |
+| Content    | Typed local data (`src/lib/data`) — trivially swappable for a CMS    |
+| Data (opt) | Supabase — contact enquiries + schema migration included             |
+| Fonts      | Self-hosted Inter / Instrument Serif / JetBrains Mono (no CLS, no FOUT) |
+| Deploy     | Vercel (zero config)                                                |
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`
-- `PLATFORM_HOST`
+## Getting started
 
-The Lovable Cloud project should expose the same Supabase-compatible URL/key pair. The database schema is intentionally Postgres/RLS-first because Lovable Cloud uses Postgres and Supabase-specific services underneath. See Lovable security guidance and TanStack Start server-function/middleware docs.
+```bash
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # production build
+npm run start      # serve the production build
+npm run typecheck  # tsc --noEmit
+npx eslint .       # lint
+```
 
-## Tenant resolution
+Regenerate the design assets at any time:
 
-- Production subdomain: `username.<PLATFORM_HOST>`
-- Custom domain: verified record in `portfolio_domains`
-- Local/preview fallback: `/u/:username`
+```bash
+npm run art      # 24 project scenes + avatar → public/images
+npm run resume   # public/resume.pdf from scripts/generate-resume.mjs
+```
 
-Real wildcard DNS and custom domains still require the hosting/DNS layer. Lovable documents native custom domain support, while the application-side resolver remains data-driven.
+## Project structure
+
+```
+src/
+├─ app/
+│  ├─ layout.tsx              # metadata, fonts, theme bootstrap, JSON-LD
+│  ├─ page.tsx                # home: composes the section architecture
+│  ├─ globals.css             # design tokens, utilities, component layer
+│  ├─ not-found.tsx
+│  ├─ icon.svg  robots.ts  sitemap.ts
+│  ├─ api/contact/route.ts    # validated enquiry endpoint (Zod)
+│  └─ work/[slug]/page.tsx    # statically rendered, shareable case-study pages
+├─ components/
+│  ├─ layout/                 # SiteHeader, SiteFooter, ThemeToggle
+│  ├─ sections/               # Hero, AboutStrip, Experience, Skills, Testimonials, Contact
+│  ├─ projects/               # ProjectShowcase, ProjectCard, CaseStudyPanel
+│  ├─ providers/              # ThemeProvider (useSyncExternalStore)
+│  └─ ui/                     # Button, Badge, Reveal, SectionHeading, Art
+├─ lib/
+│  ├─ types.ts                # all domain interfaces
+│  ├─ data/                   # profile.ts, projects.ts — the content layer
+│  ├─ supabase/               # optional server/client clients
+│  └─ utils.ts
+└─ scripts/                   # deterministic art + résumé generators
+supabase/migrations/          # contact enquiries schema, RLS
+```
+
+## Design system
+
+All colour, type and motion decisions live in `src/app/globals.css`:
+
+- **Tokens** — `--bg`, `--fg`, `--fg-muted`, `--card`, `--hairline`, `--glass`,
+  shadows and a four-step display type scale, each defined for light and `.dark`.
+- **Accent** — `#a8502c` (light) / `#e08a5f` (dark), both ≥ 4.5:1 on their own
+  surface, so accent-coloured 11px labels still pass AA.
+- **Utilities** — `container-page`, `surface`, `hairline`, `glass-nav`, `eyebrow`,
+  `text-muted`, `no-scrollbar`, plus the `.card-sheen` gradient border.
+- **Dark mode** — class-based (`.dark`), resolved before first paint by an inline
+  script in `<head>`; the provider mirrors the DOM with `useSyncExternalStore`
+  so there is no hydration flicker and no cascading `setState` in effects.
+
+## Interaction notes
+
+- **Card → case study** — `layoutId` pairs (`project-media-*`, `project-title-*`)
+  morph the card artwork and title into the overlay. The overlay is a real
+  `role="dialog"` with `aria-modal`, Escape-to-close, focus trap, focus restore,
+  and scroll lock. Reduced-motion users get a plain crossfade.
+- **Deep links** — opening a study pushes `/work/<slug>`. Those URLs are
+  statically generated with their own metadata, OpenGraph image and canonical —
+  so a shared link previews correctly and works without JavaScript.
+- **Navigation** — the header highlights the section in view via
+  `IntersectionObserver`; the mobile sheet traps focus and closes on Escape.
+- **Timeline** — the rail fills with scroll progress (`useScroll` + `useSpring`),
+  and each role expands inline as a disclosure.
+- **Testimonials** — auto-advancing carousel that pauses on hover/focus, with
+  `aria-live` updates and a manual selector.
+- **Contact** — client validation with inline field errors, a `Zod`-validated
+  route handler, and honest success/error states.
+
+## Accessibility
+
+- Semantic landmarks, one `h1` per page, ordered headings, skip link.
+- All interactive controls are real `<button>`/`<a>` elements with labels;
+  filters use `aria-pressed`, carousels use `aria-roledescription`.
+- Focus-visible ring is a 2px accent outline with offset, never removed.
+- Charts and artwork carry descriptive `alt` text; decorative layers are `aria-hidden`.
+- `prefers-reduced-motion` disables scroll reveals, marquees, autoplay and parallax.
+- Contrast checked against WCAG 2.2 AA for body and small text in both themes.
+
+## Performance
+
+- Home page is statically prerendered; the only dynamic route is `/api/contact`.
+- Fonts are self-hosted woff2 with `font-display: swap` and `preconnect`-free delivery.
+- SVGs are served as vectors (`Art` wrapper marks them `unoptimized`); raster
+  images added later still go through `next/image` with AVIF/WebP and srcset.
+- Above-the-fold artwork uses `priority`; everything else lazy-loads.
+- `optimizePackageImports` keeps icon/motion bundles to what is used.
+
+## Environment variables
+
+Copy `.env.example` → `.env.local`. Everything is optional — the site builds and
+runs with zero configuration.
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://your-domain.com   # canonical + OG URLs
+CONTACT_WEBHOOK_URL=                           # forwards enquiries (Slack, Resend, …)
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+```
+
+The contact route validates every submission and, without a webhook or Supabase
+credentials, logs the enquiry server-side and returns a truthful success message
+rather than silently dropping it.
+
+## Editing content
+
+Everything a visitor reads comes from two files:
+
+- `src/lib/data/profile.ts` — bio, stats, nav, experience, skills, testimonials.
+- `src/lib/data/projects.ts` — the six case studies (cover, gallery, architecture,
+  metrics, stack, links).
+
+Types live in `src/lib/types.ts`; adding a field there will surface every place
+that needs it.
+
+## Deployment
+
+Push to GitHub and import the repo on Vercel — the framework is auto-detected.
+Set `NEXT_PUBLIC_SITE_URL` in the project environment so canonical URLs and the
+sitemap point at the production domain.
+
+## Licence
+
+Source is provided for this portfolio. Client names, metrics and testimonials are
+representative content and should be replaced with verified details before a
+public launch.
