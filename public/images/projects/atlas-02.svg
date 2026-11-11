@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" width="1200" height="1500" role="img">
+  
+  <defs>
+    <linearGradient id="bg-atlas-02" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111a10"/>
+      <stop offset="0.55" stop-color="#6f8f5e"/>
+      <stop offset="1" stop-color="#c4ddb4"/>
+    </linearGradient>
+    <radialGradient id="glow-atlas-02" cx="0.28" cy="0.18" r="0.85">
+      <stop offset="0" stop-color="#c4ddb4" stop-opacity="0.95"/>
+      <stop offset="0.45" stop-color="#6f8f5e" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#111a10" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2-atlas-02" cx="0.85" cy="0.9" r="0.7">
+      <stop offset="0" stop-color="#111a10" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#111a10" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft-atlas-02" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="46"/>
+    </filter>
+    <filter id="blur-atlas-02" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <filter id="grain-atlas-02" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <filter id="shadow-atlas-02" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="26" stdDeviation="34" flood-color="#111a10" flood-opacity="0.5"/>
+    </filter>
+    <linearGradient id="glass-atlas-02" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="sheen-atlas-02" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.02"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.14"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1500" fill="#f3f1ec"/>
+  <g>
+    <rect x="64" y="188" width="1072" height="560" fill="url(#bg-atlas-02)"/>
+    <g filter="url(#soft-atlas-02)" opacity="0.8">
+      <ellipse cx="330" cy="380" rx="240" ry="200" fill="#ffffff" fill-opacity="0.4"/>
+      <ellipse cx="880" cy="640" rx="260" ry="220" fill="#111a10" fill-opacity="0.4"/>
+    </g>
+    <circle cx="600" cy="470" r="150" fill="none" stroke="#fff" stroke-opacity="0.35" stroke-width="2"/>
+    <circle cx="600" cy="470" r="96" fill="#fff" fill-opacity="0.16"/>
+    <path d="M420 640 L600 340 L780 640 Z" fill="#fff" fill-opacity="0.12" stroke="#fff" stroke-opacity="0.3"/>
+    <rect width="1200" height="900" filter="url(#grain-atlas-02)" opacity="0.14" style="mix-blend-mode:overlay"/>
+  </g>
+  <g font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" fill="#16161a">
+    <text x="64" y="92" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="14" letter-spacing="3.2" fill="rgba(0,0,0,0.55)">ATLAS / FOUNDATIONS</text>
+    <text x="1136" y="92" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="14" letter-spacing="3.2" fill="rgba(0,0,0,0.55)">12 RULES</text>
+    <line x1="64" y1="120" x2="1136" y2="120" stroke="rgba(0,0,0,0.2)"/>
+    <text x="64" y="838" font-family="Georgia, 'Times New Roman', serif" font-size="104" font-style="italic" letter-spacing="-3">Principles</text>
+    <text x="64" y="892" font-size="19" fill="rgba(0,0,0,0.55)">Clarity before cleverness</text>
+    <line x1="64" y1="940" x2="1136" y2="940" stroke="rgba(0,0,0,0.16)"/>
+  </g>
+  <g fill="rgba(0,0,0,0.22)">
+    <rect x="64" y="980" width="470" height="9" rx="4.5"/><rect x="64" y="1006" width="470" height="9" rx="4.5"/><rect x="64" y="1032" width="470" height="9" rx="4.5"/><rect x="64" y="1058" width="470" height="9" rx="4.5"/><rect x="64" y="1084" width="380" height="9" rx="4.5"/><rect x="64" y="1110" width="470" height="9" rx="4.5"/><rect x="64" y="1136" width="470" height="9" rx="4.5"/><rect x="64" y="1162" width="470" height="9" rx="4.5"/><rect x="64" y="1188" width="470" height="9" rx="4.5"/><rect x="64" y="1214" width="380" height="9" rx="4.5"/><rect x="64" y="1240" width="470" height="9" rx="4.5"/><rect x="64" y="1266" width="470" height="9" rx="4.5"/><rect x="64" y="1292" width="470" height="9" rx="4.5"/><rect x="64" y="1318" width="470" height="9" rx="4.5"/><rect x="64" y="1344" width="380" height="9" rx="4.5"/><rect x="64" y="1370" width="470" height="9" rx="4.5"/>
+  </g>
+  <g fill="rgba(0,0,0,0.22)">
+    <rect x="666 y="980" width="470" height="9" rx="4.5"/><rect x="666 y="1006" width="470" height="9" rx="4.5"/><rect x="666 y="1032" width="470" height="9" rx="4.5"/><rect x="666 y="1058" width="470" height="9" rx="4.5"/><rect x="666 y="1084" width="470" height="9" rx="4.5"/><rect x="666 y="1110" width="300" height="9" rx="4.5"/><rect x="666 y="1136" width="470" height="9" rx="4.5"/><rect x="666 y="1162" width="470" height="9" rx="4.5"/><rect x="666 y="1188" width="470" height="9" rx="4.5"/><rect x="666 y="1214" width="470" height="9" rx="4.5"/><rect x="666 y="1240" width="470" height="9" rx="4.5"/><rect x="666 y="1266" width="300" height="9" rx="4.5"/><rect x="666 y="1292" width="470" height="9" rx="4.5"/><rect x="666 y="1318" width="470" height="9" rx="4.5"/><rect x="666 y="1344" width="470" height="9" rx="4.5"/><rect x="666 y="1370" width="470" height="9" rx="4.5"/>
+  </g>
+  <rect x="64" y="1420" width="240" height="14" rx="7" fill="#6f8f5e"/>
+  <text x="1136" y="1434" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" letter-spacing="3" fill="rgba(0,0,0,0.5)">FOUNDATIONS</text>
+</svg>

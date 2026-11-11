@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1400" width="900" height="1400" role="img">
+  
+  <defs>
+    <linearGradient id="bg-manuscript-03" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#191226"/>
+      <stop offset="0.55" stop-color="#8c6fa8"/>
+      <stop offset="1" stop-color="#d6c6e6"/>
+    </linearGradient>
+    <radialGradient id="glow-manuscript-03" cx="0.28" cy="0.18" r="0.85">
+      <stop offset="0" stop-color="#d6c6e6" stop-opacity="0.95"/>
+      <stop offset="0.45" stop-color="#8c6fa8" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#191226" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2-manuscript-03" cx="0.85" cy="0.9" r="0.7">
+      <stop offset="0" stop-color="#191226" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#191226" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft-manuscript-03" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="46"/>
+    </filter>
+    <filter id="blur-manuscript-03" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <filter id="grain-manuscript-03" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <filter id="shadow-manuscript-03" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="26" stdDeviation="34" flood-color="#191226" flood-opacity="0.5"/>
+    </filter>
+    <linearGradient id="glass-manuscript-03" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="sheen-manuscript-03" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.02"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.14"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1400" fill="url(#bg-manuscript-03)"/>
+  <rect width="900" height="1400" fill="url(#glow-manuscript-03)" opacity="0.8"/>
+  <g filter="url(#soft-manuscript-03)" opacity="0.7">
+    <ellipse cx="450" cy="410" rx="300" ry="260" fill="#fff" fill-opacity="0.3"/>
+  </g>
+  <g font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="15" letter-spacing="3.4" fill="rgba(255,255,255,0.68)">
+    <text x="72" y="86">READER APP</text>
+    <text x="828" y="86" text-anchor="end">PWA</text>
+  </g>
+  <g filter="url(#shadow-manuscript-03)">
+    <rect x="250" y="210" width="400" height="900" rx="52" fill="#0c0c0f" stroke="#ffffff" stroke-opacity="0.28"/>
+    <rect x="262" y="222" width="376" height="876" rx="42" fill="#15151a"/>
+    <rect x="406" y="236" width="88" height="22" rx="11" fill="#000"/>
+    <g transform="translate(290 302)">
+      <text font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#ffffff" fill-opacity="0.92">Reader</text>
+      <text y="24" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="10" letter-spacing="2" fill="rgba(255,255,255,0.45)">TODAY · 09:41</text>
+      <rect y="52" width="320" height="188" rx="24" fill="url(#bg-manuscript-03)"/>
+      <g filter="url(#blur-manuscript-03)" opacity="0.55">
+        <circle cx="60" cy="60" r="70" fill="#fff" fill-opacity="0.5"/>
+      </g>
+      <text y="216" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-style="italic" fill="#fff" fill-opacity="0.95">Longform</text>
+      <g transform="translate(0 268)" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" fill="#fff">
+        <text font-size="13" fill-opacity="0.5">Balance</text>
+        <text y="38" font-size="34" font-weight="600" letter-spacing="-1.4">$ 12,480.20</text>
+      </g>
+      <g transform="translate(0 350)">
+        <rect x="0" y="84" width="26" height="46" rx="13" fill="#fff" fill-opacity="0.18"/><rect x="42" y="52" width="26" height="78" rx="13" fill="#fff" fill-opacity="0.18"/><rect x="84" y="68" width="26" height="62" rx="13" fill="#fff" fill-opacity="0.18"/><rect x="126" y="26" width="26" height="104" rx="13" fill="#fff" fill-opacity="0.18"/><rect x="168" y="42" width="26" height="88" rx="13" fill="#fff" fill-opacity="0.18"/><rect x="210" y="2" width="26" height="128" rx="13" fill="#fff" fill-opacity="0.95"/><rect x="252" y="34" width="26" height="96" rx="13" fill="#fff" fill-opacity="0.18"/>
+        <line y1="134" x2="320" y2="134" stroke="#fff" stroke-opacity="0.12"/>
+      </g>
+      <g transform="translate(0 512)">
+        <g transform="translate(0 0)">
+          <rect width="320" height="50" rx="16" fill="#ffffff" fill-opacity="0.06"/>
+          <circle cx="26" cy="25" r="13" fill="#8c6fa8" fill-opacity="0.85"/>
+          <text x="50" y="30" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="13" fill="#fff" fill-opacity="0.8">Deposit</text>
+          <text x="294" y="30" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="12" fill="#fff" fill-opacity="0.5">+2.4k</text>
+        </g><g transform="translate(0 62)">
+          <rect width="320" height="50" rx="16" fill="#ffffff" fill-opacity="0.06"/>
+          <circle cx="26" cy="25" r="13" fill="#8c6fa8" fill-opacity="0.6499999999999999"/>
+          <text x="50" y="30" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="13" fill="#fff" fill-opacity="0.8">Groceries</text>
+          <text x="294" y="30" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="12" fill="#fff" fill-opacity="0.5">-86</text>
+        </g><g transform="translate(0 124)">
+          <rect width="320" height="50" rx="16" fill="#ffffff" fill-opacity="0.06"/>
+          <circle cx="26" cy="25" r="13" fill="#8c6fa8" fill-opacity="0.44999999999999996"/>
+          <text x="50" y="30" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="13" fill="#fff" fill-opacity="0.8">Invoice</text>
+          <text x="294" y="30" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="12" fill="#fff" fill-opacity="0.5">+1.1k</text>
+        </g>
+      </g>
+    </g>
+    <rect x="296" y="1064" width="308" height="34" rx="17" fill="#ffffff" fill-opacity="0.1"/>
+  </g>
+  <text x="450" y="1322" text-anchor="middle" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" letter-spacing="3.4" fill="#fff" fill-opacity="0.62">READING MODE</text>
+  <rect width="900" height="1400" filter="url(#grain-manuscript-03)" opacity="0.16" style="mix-blend-mode:overlay"/>
+</svg>

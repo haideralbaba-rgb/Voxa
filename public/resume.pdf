@@ -1,0 +1,97 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 5 0 R /F2 6 0 R /F3 7 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 4828 >>
+stream
+BT 0.086 0.086 0.102 rg /F2 26 Tf 52 787.89 Td (Haider Albaba) Tj ET
+BT 0.643 0.306 0.173 rg /F2 11 Tf 52 763.89 Td (Product Engineer & Interaction Designer) Tj ET
+BT 0.45 0.45 0.48 rg /F1 8.2 Tf 52 749.89 Td (Karbala, Iraq  |  hello@haideralbaba.com  |  haideralbaba.com  |  github.com/haideralbaba-rgb) Tj ET
+BT 0.45 0.45 0.48 rg /F2 7.6 Tf 52 729.89 Td (PROFILE) Tj ET
+0.85 0.85 0.86 RG 0.6 w 52 726.89 m 543.28 726.89 l S
+BT 0.086 0.086 0.102 rg /F1 9.6 Tf 52 709.89 Td (Ten years designing and building digital products across MENA and Europe. I work end to end: positioning and) Tj ET
+BT 0.086 0.086 0.102 rg /F1 9.6 Tf 52 695.89 Td (design systems through to production TypeScript, motion and performance. Founder of VOXA Studio.) Tj ET
+BT 0.45 0.45 0.48 rg /F2 7.6 Tf 52 661.89 Td (EXPERIENCE) Tj ET
+0.85 0.85 0.86 RG 0.6 w 52 658.89 m 543.28 658.89 l S
+BT 0.086 0.086 0.102 rg /F2 10.6 Tf 52 637.89 Td (Founder & Principal Engineer) Tj ET
+BT 0.643 0.306 0.173 rg /F2 9.6 Tf 52 624.89 Td (VOXA Studio - Karbala, IQ) Tj ET
+BT 0.45 0.45 0.48 rg /F1 8.2 Tf 52 613.89 Td (2023 - Present) Tj ET
+0.643 0.306 0.173 rg 54 604.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 600.89 Td (Shipped 17 client launches with a median Lighthouse performance score of 97.) Tj ET
+0.643 0.306 0.173 rg 54 593.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 589.89 Td (Built a shared Next.js + Tailwind starter that cut project kickoff from two weeks to three days.) Tj ET
+0.643 0.306 0.173 rg 54 582.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 578.89 Td (Grew retained revenue to a stable three-client retainer book, 60% inbound.) Tj ET
+BT 0.086 0.086 0.102 rg /F2 10.6 Tf 52 559.89 Td (Senior Product Engineer) Tj ET
+BT 0.643 0.306 0.173 rg /F2 9.6 Tf 52 546.89 Td (Northwind Labs - Dubai, AE) Tj ET
+BT 0.45 0.45 0.48 rg /F1 8.2 Tf 52 535.89 Td (2021 - 2023) Tj ET
+0.643 0.306 0.173 rg 54 526.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 522.89 Td (Led the design-systems guild: 240 screens migrated to a token-driven system, 38% fewer UI defects.) Tj ET
+0.643 0.306 0.173 rg 54 515.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 511.89 Td (Cut marketing site time-to-interactive from 4.8s to 1.2s; trial signups up 22%.) Tj ET
+0.643 0.306 0.173 rg 54 504.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 500.89 Td (Mentored five engineers and introduced an accessibility budget enforced in CI.) Tj ET
+BT 0.086 0.086 0.102 rg /F2 10.6 Tf 52 481.89 Td (Frontend Engineer) Tj ET
+BT 0.643 0.306 0.173 rg /F2 9.6 Tf 52 468.89 Td (Meridian Commerce - Amman, JO) Tj ET
+BT 0.45 0.45 0.48 rg /F1 8.2 Tf 52 457.89 Td (2019 - 2021) Tj ET
+0.643 0.306 0.173 rg 54 448.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 444.89 Td (Owned the storefront for a headless commerce platform processing $14M GMV annually.) Tj ET
+0.643 0.306 0.173 rg 54 437.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 433.89 Td (Rebuilt checkout as composable steps; cart abandonment dropped 19%.) Tj ET
+BT 0.086 0.086 0.102 rg /F2 10.6 Tf 52 414.89 Td (Freelance Designer & Developer) Tj ET
+BT 0.643 0.306 0.173 rg /F2 9.6 Tf 52 401.89 Td (Independent - Karbala, IQ) Tj ET
+BT 0.45 0.45 0.48 rg /F1 8.2 Tf 52 390.89 Td (2016 - 2019) Tj ET
+0.643 0.306 0.173 rg 54 381.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 377.89 Td (Delivered 30+ brand and web projects solo, from naming workshop to DNS.) Tj ET
+BT 0.45 0.45 0.48 rg /F2 7.6 Tf 52 342.89 Td (SELECTED WORK) Tj ET
+0.85 0.85 0.86 RG 0.6 w 52 339.89 m 543.28 339.89 l S
+0.643 0.306 0.173 rg 54 326.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 322.89 Td (Aperture Studio - identity and gallery engine; LCP 1.1s, booking enquiries +266%.) Tj ET
+0.643 0.306 0.173 rg 54 315.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 311.89 Td (Orbit Analytics - real-time analytics surface sustaining 60fps at 40k events per minute.) Tj ET
+0.643 0.306 0.173 rg 54 304.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 300.89 Td (Atlas Design System - 94% adoption across 60 engineers, UI defects down 38%.) Tj ET
+0.643 0.306 0.173 rg 54 293.29 2.4 2.4 re f
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 64 289.89 Td (Saffron & Co - Arabic-first storefront; conversion +23%, checkout in 11 seconds.) Tj ET
+BT 0.45 0.45 0.48 rg /F2 7.6 Tf 52 258.89 Td (SKILLS) Tj ET
+0.85 0.85 0.86 RG 0.6 w 52 255.89 m 543.28 255.89 l S
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 52 238.89 Td (Frontend - TypeScript, React 19, Next.js App Router, Tailwind CSS v4, motion/react, WCAG 2.2.) Tj ET
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 52 225.89 Td (Backend & Platform - Node.js, PostgreSQL, Supabase \(Auth, Storage, RLS\), tRPC/GraphQL, Vercel Edge.) Tj ET
+BT 0.086 0.086 0.102 rg /F1 9.2 Tf 52 212.89 Td (Design - Figma variables, design systems, typography, art direction, prototyping.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>
+endobj
+8 0 obj
+<< /Title (Haider Albaba  Product Engineer) /Author (Haider Albaba) /Creator (voxa-portfolio) >>
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000267 00000 n 
+0000005147 00000 n 
+0000005244 00000 n 
+0000005346 00000 n 
+0000005451 00000 n 
+trailer
+<< /Size 9 /Root 1 0 R /Info 8 0 R >>
+startxref
+5564
+%%EOF
