@@ -82,6 +82,34 @@
   --animate-pulse-ring: pulse-ring 2.4s var(--ease-swift) infinite;
 }
 
+/* Ambient shader drift — three fields on incommensurable periods so the
+   composition never visibly repeats. */
+@keyframes shader-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(4%, -3%, 0) scale(1.08);
+  }
+  66% {
+    transform: translate3d(-3%, 4%, 0) scale(0.96);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.shader-drift {
+  animation: shader-drift 26s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shader-drift {
+    animation: none !important;
+  }
+}
+
 @keyframes marquee {
   from {
     transform: translate3d(0, 0, 0);

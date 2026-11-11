@@ -6,6 +6,8 @@ import { ArrowUpRight, Check, Copy, Loader2, Mail, Send } from 'lucide-react'
 import { budgets, profile } from '@/lib/data/profile'
 import type { ContactPayload, ContactResult } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { useSound } from '@/components/providers/SoundProvider'
+import { ShaderBackdrop } from '@/components/visual/ShaderBackdrop'
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
@@ -21,6 +23,7 @@ export function Contact() {
   const [copied, setCopied] = useState(false)
   const formRef = useRef<HTMLFormElement | null>(null)
   const reduced = useReducedMotion()
+  const { play } = useSound()
 
   function update<K extends keyof ContactPayload>(key: K, value: ContactPayload[K]) {
     setForm((previous) => ({ ...previous, [key]: value }))
@@ -31,6 +34,7 @@ export function Contact() {
   async function copyEmail() {
     try {
       await navigator.clipboard.writeText(profile.email)
+      play('copy')
       setCopied(true)
       window.setTimeout(() => setCopied(false), 2200)
     } catch {
@@ -52,6 +56,7 @@ export function Contact() {
       const data = (await response.json()) as ContactResult
       setResult(data)
       if (!response.ok || !data.ok) {
+        play('error')
         setStatus('error')
         setErrors(data.fieldErrors ?? {})
         const firstField = data.fieldErrors ? Object.keys(data.fieldErrors)[0] : undefined
@@ -60,6 +65,7 @@ export function Contact() {
         }
         return
       }
+      play('success')
       setStatus('success')
       setForm(emptyForm)
     } catch {
@@ -82,16 +88,20 @@ export function Contact() {
       aria-labelledby="contact-heading"
       className="relative scroll-mt-24 overflow-hidden border-t border-[var(--hairline)] py-20 md:py-28"
     >
-      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
-        <div className="absolute bottom-[-14rem] left-1/2 h-[26rem] w-[52rem] -translate-x-1/2 rounded-full bg-accent/12 blur-[110px]" />
-      </div>
+      {/* Copper filaments on dark silk — the contact section gets the warmest
+          of the ambient rigs, low enough to sit under the form. */}
+      <ShaderBackdrop
+        variant="silk"
+        intensity={0.55}
+        className="pointer-events-none absolute inset-0 -z-10"
+      />
 
       <div className="container-page">
         <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
           {/* Left: pitch + direct contact */}
           <div>
             <div className="mb-5 flex items-center gap-3">
-              <span className="font-mono text-[11px] tracking-[0.16em] text-accent">05</span>
+              <span className="font-mono text-[11px] tracking-[0.16em] text-accent">08</span>
               <span className="h-px w-8 bg-[var(--hairline-strong)]" aria-hidden />
               <span className="eyebrow">Contact</span>
             </div>

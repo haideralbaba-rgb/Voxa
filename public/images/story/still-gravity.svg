@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" width="1200" height="1500" role="img">
+  <defs>
+    <filter id="blur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="60"/></filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <linearGradient id="vign" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0.35"/><stop offset="0.4" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/>
+    </linearGradient>
+
+  </defs>
+  <rect width="1200" height="1500" fill="#08080a"/>
+
+  <ellipse cx="600" cy="420" rx="420" ry="300" fill="#150f2c" filter="url(#blur)" opacity="0.95"/>
+  <line x1="660" y1="380" x2="1040" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="655" y1="380" x2="1007" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="642" y1="380" x2="911" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="623" y1="380" x2="768" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="600" y1="380" x2="600" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="577" y1="380" x2="432" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="558" y1="380" x2="289" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="545" y1="380" x2="193" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="540" y1="380" x2="160" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="545" y1="380" x2="193" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="558" y1="380" x2="289" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="577" y1="380" x2="432" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="600" y1="380" x2="600" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="623" y1="380" x2="768" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="642" y1="380" x2="911" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/><line x1="655" y1="380" x2="1007" y2="1200" stroke="#a78bfa" stroke-opacity="0.12"/>
+  <ellipse cx="600" cy="380" rx="60" ry="17" fill="none" stroke="#a78bfa" stroke-opacity="0.50" stroke-width="1.6"/><ellipse cx="600" cy="455" rx="95" ry="27" fill="none" stroke="#a78bfa" stroke-opacity="0.47" stroke-width="1.6"/><ellipse cx="600" cy="529" rx="129" ry="37" fill="none" stroke="#a78bfa" stroke-opacity="0.44" stroke-width="1.6"/><ellipse cx="600" cy="604" rx="164" ry="47" fill="none" stroke="#a78bfa" stroke-opacity="0.41" stroke-width="1.6"/><ellipse cx="600" cy="678" rx="198" ry="57" fill="none" stroke="#a78bfa" stroke-opacity="0.38" stroke-width="1.6"/><ellipse cx="600" cy="753" rx="233" ry="66" fill="none" stroke="#a78bfa" stroke-opacity="0.35" stroke-width="1.6"/><ellipse cx="600" cy="827" rx="267" ry="76" fill="none" stroke="#a78bfa" stroke-opacity="0.33" stroke-width="1.6"/><ellipse cx="600" cy="902" rx="302" ry="86" fill="none" stroke="#a78bfa" stroke-opacity="0.30" stroke-width="1.6"/><ellipse cx="600" cy="976" rx="336" ry="96" fill="none" stroke="#a78bfa" stroke-opacity="0.27" stroke-width="1.6"/><ellipse cx="600" cy="1051" rx="371" ry="106" fill="none" stroke="#a78bfa" stroke-opacity="0.24" stroke-width="1.6"/><ellipse cx="600" cy="1125" rx="405" ry="116" fill="none" stroke="#a78bfa" stroke-opacity="0.21" stroke-width="1.6"/><ellipse cx="600" cy="1200" rx="440" ry="126" fill="none" stroke="#a78bfa" stroke-opacity="0.18" stroke-width="1.6"/>
+  <ellipse cx="600" cy="380" rx="60" ry="26" fill="#e9d5ff" opacity="0.85" filter="url(#soft)"/>
+
+  <rect width="1200" height="1500" fill="url(#vign)"/>
+  <rect width="1200" height="1500" filter="url(#grain)" opacity="0.06"/>
+</svg>

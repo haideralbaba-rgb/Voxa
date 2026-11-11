@@ -163,3 +163,38 @@ export interface ContactResult {
   message: string
   fieldErrors?: Partial<Record<keyof ContactPayload, string>>
 }
+
+/* ------------------------------------------------------------------
+   Storyboard
+   ------------------------------------------------------------------ */
+export type SceneKey =
+  | 'title'
+  | 'grid'
+  | 'tunnel'
+  | 'bloom'
+  | 'orbit'
+  | 'wave'
+  | 'axiom'
+  | 'glyphs'
+  | 'gravity'
+  | 'resolution'
+
+export type SceneBackdrop = 'ink' | 'gradient' | 'light'
+
+export interface StoryboardScene {
+  id: SceneKey
+  /** Chapter number printed in the HUD, e.g. "01". */
+  index: string
+  kind: string
+  title: string
+  /** Two lines of director's note — why the shot exists, not what it looks like. */
+  note: [string, string]
+  /** The catalogue mechanic this shot is built on, and where it came from. */
+  mechanic: string
+  credit: string
+  /** Spec chips shown in the HUD. */
+  spec: string[]
+  duration: number
+  backdrop: SceneBackdrop
+  accent: string
+}

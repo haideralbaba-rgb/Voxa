@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" width="1200" height="1500" role="img">
+  <defs>
+    <filter id="blur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="60"/></filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <linearGradient id="vign" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0.35"/><stop offset="0.4" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/>
+    </linearGradient>
+
+  </defs>
+  <rect width="1200" height="1500" fill="#08080a"/>
+
+  <ellipse cx="600" cy="620" rx="560" ry="380" fill="#1a2030" filter="url(#blur)" opacity="0.95"/>
+  <path d="M60 900 C 320 420, 760 1080, 1140 560" stroke="#e08a5f" stroke-opacity="0.45" stroke-width="2" fill="none"/>
+  <g transform="translate(120 760) rotate(-18)"><rect width="150" height="190" rx="16" fill="#141420" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(210 680) rotate(-17)"><rect width="150" height="190" rx="16" fill="#141420" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(300 607) rotate(-15)"><rect width="150" height="190" rx="16" fill="#141420" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(390 550) rotate(-11)"><rect width="150" height="190" rx="16" fill="#141420" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(480 513) rotate(-6)"><rect width="150" height="190" rx="16" fill="#141420" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(570 500) rotate(-0)"><rect width="150" height="190" rx="16" fill="#141420" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(660 513) rotate(6)"><rect width="150" height="190" rx="16" fill="#141420" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(750 550) rotate(11)"><rect width="150" height="190" rx="16" fill="#141420" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(840 607) rotate(15)"><rect width="150" height="190" rx="16" fill="#141420" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(930 680) rotate(17)"><rect width="150" height="190" rx="16" fill="#141420" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(1020 760) rotate(18)"><rect width="150" height="190" rx="16" fill="#141420" stroke="#ffffff" stroke-opacity="0.16"/></g>
+
+  <rect width="1200" height="1500" fill="url(#vign)"/>
+  <rect width="1200" height="1500" filter="url(#grain)" opacity="0.06"/>
+</svg>

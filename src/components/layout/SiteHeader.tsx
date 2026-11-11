@@ -8,6 +8,8 @@ import { Menu, X, ArrowUpRight } from 'lucide-react'
 import { navItems, profile } from '@/lib/data/profile'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from './ThemeToggle'
+import { SoundToggle } from '@/components/ui/SoundToggle'
+import { CommandPalette } from './CommandPalette'
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false)
@@ -152,6 +154,8 @@ export function SiteHeader() {
             </nav>
 
             <div className="flex items-center gap-1.5">
+              <CommandPalette />
+              <SoundToggle className="hidden sm:inline-flex" />
               <ThemeToggle />
               <Link
                 href="/#contact"
