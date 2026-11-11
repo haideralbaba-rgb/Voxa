@@ -4,9 +4,11 @@ import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import { Moon, Sun } from 'lucide-react'
 import { useTheme } from '@/components/providers/ThemeProvider'
 import { cn } from '@/lib/utils'
+import { useLocale } from '@/components/providers/LocaleProvider'
 
 export function ThemeToggle({ className }: { className?: string }) {
   const { resolved, toggle } = useTheme()
+  const { t } = useLocale()
   const reduced = useReducedMotion()
   const isDark = resolved === 'dark'
 
@@ -18,9 +20,9 @@ export function ThemeToggle({ className }: { className?: string }) {
         // Wipe outward from the button itself, not the page centre.
         toggle({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
       }}
-      aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+      aria-label={isDark ? t.themeToLight : t.themeToDark}
       aria-pressed={isDark}
-      title={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+      title={isDark ? t.themeToLight : t.themeToDark}
       className={cn(
         'relative grid size-9 place-items-center rounded-full border border-[var(--hairline)] text-[var(--fg)]/70 transition-colors duration-300 hover:border-[var(--hairline-strong)] hover:text-[var(--fg)]',
         className,

@@ -1,5 +1,6 @@
 'use client'
 
+import { useLocale } from '@/components/providers/LocaleProvider'
 import { motion, useReducedMotion } from 'motion/react'
 import { Feather, Gauge, Layers, Waves } from 'lucide-react'
 
@@ -51,6 +52,7 @@ const pillars = [
 ] as const
 
 export function Craft() {
+  const { t } = useLocale()
   const reduced = useReducedMotion()
 
   return (
@@ -63,9 +65,9 @@ export function Craft() {
         <div className="flex flex-col gap-8 border-t border-[var(--hairline)] pt-8 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
             <div className="mb-5 flex items-center gap-3">
-              <span className="font-mono text-[11px] tracking-[0.16em] text-accent">05</span>
+              <span className="font-mono text-[11px] tracking-[0.16em] text-accent">{t.craft.index}</span>
               <span className="h-px w-8 bg-[var(--hairline-strong)]" aria-hidden />
-              <span className="eyebrow">Craft</span>
+              <span className="eyebrow">{t.craft.eyebrow}</span>
             </div>
             <h2 id="craft-heading" className="text-display-md font-semibold">
               The craft is the <span className="serif-accent text-accent">budget</span>.
@@ -94,7 +96,7 @@ export function Craft() {
                   <span className="grid size-10 place-items-center rounded-xl border border-[var(--hairline)] bg-[var(--card)] text-[var(--fg)]/70 transition-colors duration-500 group-hover:border-accent/30 group-hover:text-accent">
                     <Icon size={17} strokeWidth={1.7} aria-hidden />
                   </span>
-                  <div className="text-right">
+                  <div className="text-end">
                     <p className="text-[26px] font-semibold leading-none tracking-[-0.04em] text-[var(--fg)]">
                       {pillar.metric}
                     </p>

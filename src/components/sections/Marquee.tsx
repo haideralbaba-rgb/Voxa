@@ -2,6 +2,7 @@
 
 import { useReducedMotion } from 'motion/react'
 import { Asterisk } from 'lucide-react'
+import { useLocale } from '@/components/providers/LocaleProvider'
 
 /**
  * The band.
@@ -15,14 +16,14 @@ import { Asterisk } from 'lucide-react'
  * built from tokens, so the strip is never a colour pasted on top of the theme.
  */
 export function Marquee({
-  items,
   speed = 46,
   tone = 'invert',
 }: {
-  items: string[]
   speed?: number
   tone?: 'invert' | 'accent'
 }) {
+  const { t } = useLocale()
+  const items = t.marquee
   const reduced = useReducedMotion()
   const doubled = [...items, ...items]
 

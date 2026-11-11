@@ -1,5 +1,6 @@
 'use client'
 
+import { useLocale } from '@/components/providers/LocaleProvider'
 import { Art } from '@/components/ui/Art'
 import { useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -11,6 +12,7 @@ import { TechPill } from '@/components/ui/Badge'
 import { ScrubReveal } from '@/components/ui/ScrubReveal'
 import { ChapterScroller } from '@/components/ui/ChapterScroller'
 import { withViewTransition } from '@/lib/view-transition'
+import { categoryLabel } from '@/lib/i18n/labels'
 
 const EASE = [0.32, 0.72, 0, 1] as const
 
@@ -48,7 +50,7 @@ function GalleryFrame({ item, project }: { item: GalleryItem; project: Project }
             <span className="size-2 rounded-full bg-[var(--fg)]/15" />
             <span className="size-2 rounded-full bg-[var(--fg)]/15" />
             <span className="size-2 rounded-full bg-[var(--fg)]/15" />
-            <span className="ml-2 h-4 flex-1 rounded-full bg-[var(--fg)]/[0.05]" />
+            <span className="ms-2 h-4 flex-1 rounded-full bg-[var(--fg)]/[0.05]" />
           </div>
         ) : null}
         <ScrubReveal
@@ -80,6 +82,7 @@ interface CaseStudyPanelProps {
 
 export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }: CaseStudyPanelProps) {
   const router = useRouter()
+  const { t, locale } = useLocale()
   const reduced = useReducedMotion()
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const closeRef = useRef<HTMLButtonElement | null>(null)
@@ -186,7 +189,7 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                     }}
                     className="hidden h-9 items-center gap-1.5 rounded-full border border-[var(--hairline)] bg-[var(--card)] px-3.5 text-[12.5px] font-medium text-[var(--fg)]/78 transition-colors duration-300 hover:border-[var(--hairline-strong)] hover:text-[var(--fg)] sm:inline-flex"
                   >
-                    <span>Open page</span>
+                    <span>{t.caseStudy.openPage}</span>
                     <ArrowUpRight size={14} aria-hidden />
                   </a>
                   <button
@@ -195,7 +198,7 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                   onClick={onClose}
                   className="group inline-flex h-9 items-center gap-2 rounded-full border border-[var(--hairline)] bg-[var(--card)] px-3.5 text-[12.5px] font-medium text-[var(--fg)]/78 transition-colors duration-300 hover:border-[var(--hairline-strong)] hover:text-[var(--fg)]"
                 >
-                  <span className="hidden sm:inline">Close</span>
+                  <span className="hidden sm:inline">{t.caseStudy.close}</span>
                   <X size={15} className="transition-transform duration-300 group-hover:rotate-90" aria-hidden />
                   </button>
                 </div>
@@ -223,7 +226,7 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                 <div className="relative -mt-24 px-5 pb-8 md:-mt-32 md:px-10">
                   <span className="inline-flex items-center gap-2 rounded-full border border-[var(--hairline-strong)] bg-[var(--bg)]/60 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--fg)]/72 backdrop-blur-md">
                     <span style={{ backgroundColor: project.accent }} className="size-1.5 rounded-full" aria-hidden />
-                    {project.category} · {project.role}
+                    {categoryLabel(project.category, locale)} · {project.role}
                   </span>
                   <motion.h2
                     id="case-study-title"
@@ -293,8 +296,8 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
               <div className="px-5 py-10 md:px-10 md:py-12">
                 {/* Architecture — sticky chapters, scroll-driven */}
                 <ChapterScroller
-                  label="How it was built"
-                  title="The brief, the decisions, the outcome."
+                  label={t.caseStudy.built}
+                  title={t.caseStudy.builtTitle}
                   chapters={project.architecture.map((block, i) => ({
                     index: String(i + 1),
                     title: block.title,
@@ -304,7 +307,7 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                 />
 
                 {/* Gallery */}
-                <h3 className="eyebrow mt-14">Selected screens</h3>
+                <h3 className="eyebrow mt-14">{t.caseStudy.screens}</h3>
                 <div className="mt-6 grid gap-6 sm:grid-cols-2">
                   {gallery.map((item, index) => (
                     <div
@@ -322,7 +325,7 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                 {/* Stack + awards */}
                 <div className="mt-14 grid gap-8 border-t border-[var(--hairline)] pt-8 md:grid-cols-[1fr_auto] md:items-start">
                   <div>
-                    <h3 className="eyebrow">Stack</h3>
+                    <h3 className="eyebrow">{t.caseStudy.stack}</h3>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {project.stack.map((tech) => (
                         <TechPill key={tech}>{tech}</TechPill>
@@ -330,8 +333,8 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                     </div>
                   </div>
                   {project.awards?.length ? (
-                    <div className="md:max-w-xs md:text-right">
-                      <h3 className="eyebrow">Recognition</h3>
+                    <div className="md:max-w-xs md:text-end">
+                      <h3 className="eyebrow">{t.caseStudy.recognition}</h3>
                       <ul className="mt-4 space-y-1.5">
                         {project.awards.map((award) => (
                           <li key={award} className="text-[13px] leading-6 text-muted">
@@ -350,16 +353,16 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                   <button
                     type="button"
                     onClick={() => onNavigate(previous.slug)}
-                    className="group flex items-center gap-4 px-5 py-7 text-left transition-colors duration-300 hover:bg-[var(--card)] md:px-10"
+                    className="group flex items-center gap-4 px-5 py-7 text-start transition-colors duration-300 hover:bg-[var(--card)] md:px-10"
                   >
                     <ArrowLeft
                       size={17}
-                      className="text-muted transition-transform duration-300 group-hover:-translate-x-1"
+                      className="flip-rtl text-muted transition-transform duration-300 group-hover:-translate-x-1"
                       aria-hidden
                     />
                     <span>
                       <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
-                        Previous
+                        {t.caseStudy.previous}
                       </span>
                       <span className="mt-1 block text-[15px] font-medium tracking-[-0.02em] text-[var(--fg)]">
                         {previous.title}
@@ -369,11 +372,11 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                   <button
                     type="button"
                     onClick={() => onNavigate(next.slug)}
-                    className="group flex items-center justify-end gap-4 px-5 py-7 text-right transition-colors duration-300 hover:bg-[var(--card)] md:px-10"
+                    className="group flex items-center justify-end gap-4 px-5 py-7 text-end transition-colors duration-300 hover:bg-[var(--card)] md:px-10"
                   >
                     <span>
                       <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
-                        Next
+                        {t.caseStudy.next}
                       </span>
                       <span className="mt-1 block text-[15px] font-medium tracking-[-0.02em] text-[var(--fg)]">
                         {next.title}
@@ -381,7 +384,7 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                     </span>
                     <ArrowRight
                       size={17}
-                      className="text-muted transition-transform duration-300 group-hover:translate-x-1"
+                      className="flip-rtl text-muted transition-transform duration-300 group-hover:translate-x-1"
                       aria-hidden
                     />
                   </button>

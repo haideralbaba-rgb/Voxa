@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import {
   motion,
   useMotionValueEvent,
@@ -11,9 +11,12 @@ import {
   type MotionValue,
 } from 'motion/react'
 import { Film, MoveDown } from 'lucide-react'
-import { storyboardScenes } from '@/lib/data/storyboard'
+import { localizeStoryboard } from '@/lib/i18n/content'
+import type { StoryboardScene } from '@/lib/types'
+import type { Copy } from '@/lib/i18n/copy'
 import { cn } from '@/lib/utils'
 import { ScenePlate } from './ScenePlate'
+import { useLocale } from '@/components/providers/LocaleProvider'
 
 /**
  * Storyboard — one continuous film, driven entirely by scroll position.
@@ -27,6 +30,8 @@ import { ScenePlate } from './ScenePlate'
 export function Storyboard() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const reduced = useReducedMotion()
+  const { t, locale } = useLocale()
+  const storyboardScenes = useMemo(() => localizeStoryboard(locale), [locale])
   const total = storyboardScenes.length
 
   const { scrollYProgress } = useScroll({
@@ -60,7 +65,7 @@ export function Storyboard() {
     window.scrollTo({ top: top + (scrollable * (index + 0.5)) / total, behavior: 'smooth' })
   }, [total])
 
-  if (reduced) return <StoryboardStatic />
+  if (reduced) return <StoryboardStatic scenes={storyboardScenes} t={t} />
 
   const scene = storyboardScenes[active] ?? storyboardScenes[0]!
 
@@ -102,10 +107,10 @@ export function Storyboard() {
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-[var(--hairline)] bg-[var(--glass)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--fg)]/70 backdrop-blur-md">
               <Film size={12} aria-hidden />
-              Storyboard · {String(active + 1).padStart(2, '0')} / {total}
+              {t.storyboard.hud} · {String(active + 1).padStart(2, '0')} / {total}
             </span>
             <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--fg)]/40 sm:inline">
-              vol. 01 — the reel
+              {t.storyboard.volume}
             </span>
           </div>
           <motion.span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--fg)]/45 tabular-nums">
@@ -151,22 +156,24 @@ export function Storyboard() {
               </div>
 
               <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--fg)]/40">
-                <span>Mechanic</span>
+                <span>{t.storyboard.mechanic}</span>
                 <span style={{ color: scene.accent }}>{scene.mechanic}</span>
                 <span aria-hidden>·</span>
-                <span>via {scene.credit}</span>
+                <span>
+                  {t.storyboard.via} {scene.credit}
+                </span>
               </p>
             </div>
 
             {/* Scene rail */}
-            <div className="pointer-events-auto flex items-end gap-1.5" role="tablist" aria-label="Storyboard scenes">
+            <div className="pointer-events-auto flex items-end gap-1.5" role="tablist" aria-label={t.storyboard.scenes}>
               {storyboardScenes.map((item, index) => (
                 <button
                   key={item.id}
                   type="button"
                   role="tab"
                   aria-selected={index === active}
-                  aria-label={`Scene ${item.index}: ${item.title}`}
+                  aria-label={`${t.storyboard.scene} ${item.index}: ${item.title}`}
                   onClick={() => jumpTo(index)}
                   className="group relative flex h-10 w-5 cursor-pointer items-end justify-center sm:w-6"
                 >
@@ -188,10 +195,10 @@ export function Storyboard() {
           <div className="mt-6 flex items-center justify-between gap-4 border-t border-[var(--hairline)] pt-4">
             <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--fg)]/35">
               <MoveDown size={12} className="animate-bounce" aria-hidden />
-              Scroll to advance the film
+              {t.storyboard.scroll}
             </span>
             <span className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--fg)]/30 sm:inline">
-              10 scenes · 42s · scrubbable both ways
+              {t.storyboard.meta}
             </span>
           </div>
         </div>
@@ -208,7 +215,7 @@ function SceneLayer({
   progress,
   mounted,
 }: {
-  scene: (typeof storyboardScenes)[number]
+  scene: StoryboardScene
   index: number
   total: number
   progress: MotionValue<number>
@@ -249,18 +256,18 @@ function SceneLayer({
  * Reduced-motion presentation: the same ten frames, read as a contact sheet.
  * No scroll hijack, no pinning, everything visible immediately.
  */
-function StoryboardStatic() {
+function StoryboardStatic({ scenes, t }: { scenes: StoryboardScene[]; t: Copy }) {
   return (
-    <section id="story" aria-label="Storyboard" className="relative border-t border-[var(--hairline)] py-20 md:py-28">
+    <section id="story" aria-label={t.storyboard.title} className="relative border-t border-[var(--hairline)] py-20 md:py-28">
       <div className="container-page">
         <div className="flex items-center gap-3">
           <span className="font-mono text-[11px] tracking-[0.16em] text-accent">00</span>
           <span className="h-px w-8 bg-[var(--hairline-strong)]" aria-hidden />
-          <span className="eyebrow">Storyboard</span>
+          <span className="eyebrow">{t.storyboard.title}</span>
         </div>
-        <h2 className="mt-5 max-w-2xl text-display-md font-semibold">Ten frames, one continuous move.</h2>
+        <h2 className="mt-5 max-w-2xl text-display-md font-semibold">{t.storyboard.staticTitle}</h2>
         <ol className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {storyboardScenes.map((scene) => (
+          {scenes.map((scene) => (
             <li key={scene.id} className="surface rounded-2xl p-4">
               <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: scene.accent }}>
                 {scene.index} · {scene.kind}

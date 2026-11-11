@@ -1,6 +1,7 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useLocale } from '@/components/providers/LocaleProvider'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   AnimatePresence,
   motion,
@@ -9,7 +10,7 @@ import {
   useTransform,
 } from 'motion/react'
 import { ArrowLeft, ArrowRight, Quote } from 'lucide-react'
-import { testimonials } from '@/lib/data/profile'
+import { localizeTestimonials } from '@/lib/i18n/content'
 import { cn } from '@/lib/utils'
 import { EASE, SPRING } from '@/lib/motion'
 import { SectionHeading } from '@/components/ui/SectionHeading'
@@ -25,6 +26,8 @@ const SWIPE_THRESHOLD = 90
  * fiddly. Motion's drag + spring handles both.
  */
 export function TestimonialStack() {
+  const { t, locale } = useLocale()
+  const testimonials = useMemo(() => localizeTestimonials(locale), [locale])
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
   const [exiting, setExiting] = useState<'left' | 'right' | null>(null)
@@ -42,7 +45,7 @@ export function TestimonialStack() {
       x.set(0)
       setExiting(null)
     }, 220)
-  }, [x])
+  }, [testimonials.length, x])
 
   useEffect(() => {
     if (paused || reduced) return
@@ -62,31 +65,32 @@ export function TestimonialStack() {
     >
       <div className="container-page">
         <SectionHeading
-          index="04"
-          eyebrow="Testimonials"
+          index={t.testimonials.index}
+          eyebrow={t.testimonials.eyebrow}
           title={
             <span id="testimonials-heading">
-              What the <span className="serif-accent text-accent">room</span> says.
+              {t.testimonials.titleA}{' '}
+              <span className="serif-accent text-accent">{t.testimonials.titleB}</span>
             </span>
           }
-          description="Unedited notes from product leads, founders and creative directors I have shipped beside."
+          description={t.testimonials.description}
           action={
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => go(-1)}
-                aria-label="Previous testimonial"
+                aria-label={t.testimonials.previous}
                 className="grid size-10 place-items-center rounded-full border border-[var(--hairline-strong)] text-[var(--fg)]/70 transition-all duration-300 hover:border-[var(--fg)]/40 hover:text-[var(--fg)]"
               >
-                <ArrowLeft size={15} aria-hidden />
+                <ArrowLeft size={15} aria-hidden className="flip-rtl" />
               </button>
               <button
                 type="button"
                 onClick={() => go(1)}
-                aria-label="Next testimonial"
+                aria-label={t.testimonials.next}
                 className="grid size-10 place-items-center rounded-full border border-[var(--hairline-strong)] text-[var(--fg)]/70 transition-all duration-300 hover:border-[var(--fg)]/40 hover:text-[var(--fg)]"
               >
-                <ArrowRight size={15} aria-hidden />
+                <ArrowRight size={15} aria-hidden className="flip-rtl" />
               </button>
             </div>
           }
@@ -104,7 +108,7 @@ export function TestimonialStack() {
             className="relative h-[23rem] select-none sm:h-[20rem]"
             role="group"
             aria-roledescription="card stack"
-            aria-label="Client testimonials — swipe or use the arrow buttons"
+            aria-label={t.testimonials.eyebrow}
             tabIndex={0}
             onKeyDown={(event) => {
               if (event.key === 'ArrowRight') {
@@ -198,7 +202,7 @@ export function TestimonialStack() {
 
           {/* Queue */}
           <div className="flex flex-col justify-center gap-2">
-            <p className="eyebrow mb-1">Up next</p>
+            <p className="eyebrow mb-1">{t.testimonials.upNext}</p>
             {[next, third].map((item) => (
               <div
                 key={item.id}

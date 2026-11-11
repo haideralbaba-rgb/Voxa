@@ -1,30 +1,37 @@
+'use client'
+
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { projects } from '@/lib/data/projects'
+import { useLocale } from '@/components/providers/LocaleProvider'
 
 export default function NotFound() {
+  const { t } = useLocale()
+
   return (
     <main className="container-page flex min-h-dvh flex-col justify-center py-24">
-      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">404 — Off the grid</p>
-      <h1 className="mt-5 max-w-3xl text-display-lg font-semibold leading-[0.98] tracking-[-0.045em]">
-        This page never made it past <span className="serif-accent text-accent">review</span>.
-      </h1>
-      <p className="mt-5 max-w-md text-[15px] leading-7 text-muted">
-        The link may be old, or the case study may have moved. Here is where I would start.
+      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+        404 — {t.notFound.eyebrow}
       </p>
+      <h1 className="mt-5 max-w-3xl text-display-lg font-semibold leading-[0.98] tracking-[-0.045em]">
+        {t.notFound.titleA}{' '}
+        <span className="serif-accent text-accent">{t.notFound.titleB}</span>
+        {t.notFound.titleC}
+      </h1>
+      <p className="mt-5 max-w-md text-[15px] leading-7 text-muted">{t.notFound.body}</p>
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <Link
           href="/"
           className="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--fg)] px-5 text-[14px] font-medium text-[var(--bg)] transition-opacity hover:opacity-90"
         >
-          <ArrowLeft size={15} aria-hidden />
-          Back to the portfolio
+          <ArrowLeft size={15} aria-hidden className="rtl:-scale-x-100" />
+          {t.notFound.back}
         </Link>
       </div>
 
       <div className="mt-14 border-t border-[var(--hairline)] pt-6">
-        <p className="eyebrow">Try a case study</p>
+        <p className="eyebrow">{t.notFound.tryCase}</p>
         <ul className="mt-4 flex flex-wrap gap-2">
           {projects.slice(0, 4).map((project) => (
             <li key={project.id}>

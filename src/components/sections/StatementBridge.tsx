@@ -3,8 +3,9 @@
 import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
 import { ScrubReveal } from '@/components/ui/ScrubReveal'
+import { useLocale } from '@/components/providers/LocaleProvider'
 
-const words = ['Design', 'is', 'how', 'it', 'feels', 'when', 'it', 'moves.']
+
 
 /**
  * The bridge between the hero and the work grid.
@@ -15,13 +16,15 @@ const words = ['Design', 'is', 'how', 'it', 'feels', 'when', 'it', 'moves.']
  * on Apple's product pages.
  */
 export function StatementBridge() {
+  const { t } = useLocale()
+  const words = t.principle.text.split(' ')
   const ref = useRef<HTMLElement | null>(null)
   const reduced = useReducedMotion()
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 85%', 'start 35%'] })
   const progress = useSpring(scrollYProgress, { stiffness: 180, damping: 36, restDelta: 0.001 })
 
   return (
-    <section ref={ref} aria-label="Approach" className="relative border-t border-[var(--hairline)] py-20 md:py-28">
+    <section ref={ref} aria-label={t.principle.label} className="relative border-t border-[var(--hairline)] py-20 md:py-28">
       <div className="container-page">
         <div className="grid gap-10 lg:grid-cols-[1fr_18rem] lg:items-end">
           {/* A pull quote, set as type: the section exists to give the eye one
@@ -35,7 +38,7 @@ export function StatementBridge() {
                   index={index}
                   total={words.length}
                   reduced={Boolean(reduced)}
-                  accent={index >= 5}
+                  accent={index >= Math.ceil(words.length * 0.55)}
                 >
                   {word}
                 </Word>
@@ -43,17 +46,16 @@ export function StatementBridge() {
             </p>
             <footer className="mt-8 flex items-center gap-3">
               <span className="h-px w-10" style={{ backgroundColor: 'var(--color-accent)' }} aria-hidden />
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-                Working principle · 01
-              </span>
+              <span className="font-mono text-[10px] tracking-[0.18em] text-muted">{t.principle.label}</span>
             </footer>
           </blockquote>
 
           <ScrubReveal className="lg:pb-2" offset={['start 90%', 'start 60%']}>
-            <p className="border-l-2 pl-4 text-[13.5px] leading-[1.8] text-[var(--fg)]/78" style={{ borderColor: 'var(--color-tide)' }}>
-              Every transition here answers a question the visitor was already asking: where did
-              that card come from, what changed, and can I go back. Motion earns its place or it
-              gets cut.
+            <p
+              className="border-s-2 ps-4 text-[13.5px] leading-[1.85] text-[var(--fg)]/78"
+              style={{ borderColor: 'var(--color-tide)' }}
+            >
+              {t.principle.annotation}
             </p>
           </ScrubReveal>
         </div>

@@ -16,16 +16,18 @@ import {
   Volume2,
 } from 'lucide-react'
 import { profile } from '@/lib/data/profile'
-import { projects } from '@/lib/data/projects'
+import { localizeProjects } from '@/lib/i18n/content'
+import { categoryLabel } from '@/lib/i18n/labels'
 import { storyboardScenes } from '@/lib/data/storyboard'
 import { useSound } from '@/components/providers/SoundProvider'
+import { useLocale } from '@/components/providers/LocaleProvider'
 import { useTheme } from '@/components/providers/ThemeProvider'
 import { withViewTransition } from '@/lib/view-transition'
 import { cn } from '@/lib/utils'
 
 interface CommandItem {
   id: string
-  group: 'Jump to' | 'Work' | 'Storyboard' | 'Actions' | 'Elsewhere'
+  group: string
   label: string
   hint?: string
   icon: React.ComponentType<{ size?: number; className?: string; 'aria-hidden'?: boolean }>
@@ -51,6 +53,9 @@ export function CommandPalette() {
   const reduced = useReducedMotion()
   const { play } = useSound()
   const { toggle: toggleTheme } = useTheme()
+  const { t, locale } = useLocale()
+  const p = t.palette
+  const projects = useMemo(() => localizeProjects(locale), [locale])
 
   const close = useCallback(() => setOpen(false), [])
 
@@ -73,7 +78,7 @@ export function CommandPalette() {
     for (const nav of profile.nav) {
       items.push({
         id: `nav-${nav.href}`,
-        group: 'Jump to',
+        group: p.groups.jump,
         label: nav.label,
         hint: nav.href,
         icon: ArrowRight,
@@ -84,9 +89,9 @@ export function CommandPalette() {
     for (const project of projects) {
       items.push({
         id: `work-${project.slug}`,
-        group: 'Work',
+        group: p.groups.work,
         label: project.title,
-        hint: `${project.category} · ${project.year}`,
+        hint: `${categoryLabel(project.category, locale)} · ${project.year}`,
         icon: Layers,
         keywords: project.stack.join(' '),
         run: () => {
@@ -99,7 +104,7 @@ export function CommandPalette() {
     for (const scene of storyboardScenes) {
       items.push({
         id: `scene-${scene.id}`,
-        group: 'Storyboard',
+        group: p.groups.storyboard,
         label: `${scene.index} · ${scene.title}`,
         hint: scene.mechanic,
         icon: BookOpen,
@@ -110,9 +115,9 @@ export function CommandPalette() {
     items.push(
       {
         id: 'action-theme',
-        group: 'Actions',
-        label: 'Switch theme',
-        hint: 'Light / dark',
+        group: p.groups.actions,
+        label: p.switchTheme,
+        hint: p.themeHint,
         icon: Sun,
         run: () => {
           toggleTheme()
@@ -121,9 +126,9 @@ export function CommandPalette() {
       },
       {
         id: 'action-sound',
-        group: 'Actions',
-        label: 'Toggle interface sound',
-        hint: 'Off by default',
+        group: p.groups.actions,
+        label: p.sound,
+        hint: p.soundHint,
         icon: Volume2,
         run: () => {
           close()
@@ -132,9 +137,9 @@ export function CommandPalette() {
       },
       {
         id: 'action-email',
-        group: 'Elsewhere',
+        group: p.groups.elsewhere,
         label: profile.email,
-        hint: 'Email',
+        hint: p.emailHint,
         icon: Mail,
         run: () => {
           close()
@@ -143,7 +148,7 @@ export function CommandPalette() {
       },
       ...profile.socials.slice(0, 2).map<CommandItem>((social) => ({
         id: `social-${social.label}`,
-        group: 'Elsewhere',
+        group: p.groups.elsewhere,
         label: social.label,
         hint: social.handle,
         icon: Link2,
@@ -155,7 +160,7 @@ export function CommandPalette() {
     )
 
     return items
-  }, [close, go, router, toggleTheme])
+  }, [close, go, locale, p, projects, router, toggleTheme])
 
   const results = useMemo(() => {
     const needle = query.trim().toLowerCase()
@@ -246,11 +251,11 @@ export function CommandPalette() {
         type="button"
         onClick={() => setOpen(true)}
         className="group hidden h-9 items-center gap-2 rounded-full border border-[var(--hairline)] px-3 text-[12px] font-medium text-[var(--fg)]/60 transition-colors duration-300 hover:border-[var(--hairline-strong)] hover:text-[var(--fg)] md:inline-flex"
-        aria-label="Open command palette"
+        aria-label={p.open}
       >
         <Search size={13} aria-hidden />
-        <span className="hidden lg:inline">Search</span>
-        <kbd className="ml-1 inline-flex items-center gap-0.5 rounded border border-[var(--hairline)] bg-[var(--fg)]/[0.04] px-1.5 py-0.5 font-mono text-[9.5px] text-[var(--fg)]/50">
+        <span className="hidden lg:inline">{t.search}</span>
+        <kbd className="ms-1 inline-flex items-center gap-0.5 rounded border border-[var(--hairline)] bg-[var(--fg)]/[0.04] px-1.5 py-0.5 font-mono text-[9.5px] text-[var(--fg)]/50">
           <Command size={8} aria-hidden />K
         </kbd>
       </button>
@@ -265,11 +270,11 @@ export function CommandPalette() {
             transition={{ duration: 0.2 }}
             role="dialog"
             aria-modal="true"
-            aria-label="Command palette"
+            aria-label={p.title}
           >
             <button
               type="button"
-              aria-label="Close search"
+              aria-label={p.close}
               onClick={close}
               className="absolute inset-0 cursor-default bg-black/45 backdrop-blur-[3px]"
             />
@@ -292,8 +297,8 @@ export function CommandPalette() {
                     play('click')
                   }}
                   onKeyDown={onInputKeyDown}
-                  placeholder="Jump to a section, a case study, a technique…"
-                  aria-label="Search the site"
+                  placeholder={p.placeholder}
+                  aria-label={p.search}
                   aria-controls="palette-results"
                   autoComplete="off"
                   spellCheck={false}
@@ -308,12 +313,12 @@ export function CommandPalette() {
                 ref={listRef}
                 id="palette-results"
                 role="listbox"
-                aria-label="Results"
+                aria-label={t.palette.results}
                 className="max-h-[52vh] overflow-y-auto overscroll-contain p-2"
               >
                 {grouped.length === 0 ? (
                   <li className="px-3 py-8 text-center text-[13px] text-muted">
-                    Nothing matches “{query}”.
+                    {p.nothing} “{query}”.
                   </li>
                 ) : null}
 
@@ -340,7 +345,7 @@ export function CommandPalette() {
                                 item.run()
                               }}
                               className={cn(
-                                'flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors duration-150',
+                                'flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-start transition-colors duration-150',
                                 active ? 'bg-[var(--fg)]/[0.07]' : 'hover:bg-[var(--fg)]/[0.04]',
                               )}
                             >
@@ -368,8 +373,10 @@ export function CommandPalette() {
               </ul>
 
               <div className="flex items-center justify-between border-t border-[var(--hairline)] px-4 py-2.5 font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--fg)]/35">
-                <span>↑ ↓ navigate · ↵ open</span>
-                <span className="hidden sm:inline">{flat.length} results</span>
+                <span>{p.navigate}</span>
+                <span className="hidden sm:inline">
+                  {flat.length} {p.results}
+                </span>
               </div>
             </motion.div>
           </motion.div>

@@ -1,4 +1,5 @@
 import { SiteHeader } from '@/components/layout/SiteHeader'
+import { SkipLink } from '@/components/layout/SkipLink'
 import { ScrollProgress } from '@/components/ui/ScrollProgress'
 import { PageTransition } from '@/components/layout/PageTransition'
 import { SiteFooter } from '@/components/layout/SiteFooter'
@@ -17,12 +18,7 @@ import { AboutStrip } from '@/components/sections/AboutStrip'
 export default function HomePage() {
   return (
     <>
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-[var(--fg)] focus:px-4 focus:py-2 focus:text-[13px] focus:font-medium focus:text-[var(--bg)]"
-      >
-        Skip to content
-      </a>
+      <SkipLink />
       <ScrollProgress />
       <SiteHeader />
       <PageTransition>
@@ -30,10 +26,7 @@ export default function HomePage() {
         <Hero />
         <ProjectShowcase />
         <StatementBridge />
-        <Marquee
-          items={['Product engineering', 'Interaction design', 'Design systems', 'Motion', 'Brand']}
-          speed={48}
-        />
+        <Marquee />
         <Storyboard />
         <Craft />
         <AboutStrip />

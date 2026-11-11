@@ -1,30 +1,38 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getSupabaseServer } from '@/lib/supabase/server'
+import { COPY, type Locale } from '@/lib/i18n/copy'
 
 export const runtime = 'nodejs'
 
-const contactSchema = z.object({
-  name: z.string().trim().min(2, 'Please share your name.').max(80),
-  email: z.string().trim().toLowerCase().email('That email looks invalid.'),
-  company: z.string().trim().max(120).optional().or(z.literal('')),
-  budget: z.string().trim().max(40).optional().or(z.literal('')),
-  message: z
-    .string()
-    .trim()
-    .min(20, 'A little more context helps — at least 20 characters.')
-    .max(2000, 'Please keep it under 2000 characters.'),
-})
+/**
+ * Validation messages are localized server-side: the client sends the active
+ * locale, and the Arabic table is the default so an uncatalogued message can
+ * never leak English into an RTL page.
+ */
+const schemaFor = (locale: Locale) => {
+  const m = COPY[locale].contact.errors
+  return z.object({
+    name: z.string().trim().min(2, m.name).max(80),
+    email: z.string().trim().toLowerCase().email(m.email),
+    company: z.string().trim().max(120).optional().or(z.literal('')),
+    budget: z.string().trim().max(40).optional().or(z.literal('')),
+    message: z.string().trim().min(20, m.messageMin).max(2000, m.messageMax),
+  })
+}
 
 export async function POST(request: Request) {
   let payload: unknown
   try {
     payload = await request.json()
   } catch {
-    return NextResponse.json({ ok: false, message: 'Invalid request body.' }, { status: 400 })
+    return NextResponse.json({ ok: false, message: COPY.ar.contact.errors.body }, { status: 400 })
   }
 
-  const parsed = contactSchema.safeParse(payload)
+  const requested = (payload as { locale?: string } | null)?.locale
+  const locale: Locale = requested === 'en' ? 'en' : 'ar'
+  const messages = COPY[locale].contact.errors
+  const parsed = schemaFor(locale).safeParse(payload)
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {}
     for (const issue of parsed.error.issues) {
@@ -32,7 +40,7 @@ export async function POST(request: Request) {
       if (!fieldErrors[key]) fieldErrors[key] = issue.message
     }
     return NextResponse.json(
-      { ok: false, message: 'Please check the highlighted fields.', fieldErrors },
+      { ok: false, message: messages.checkFields, fieldErrors },
       { status: 422 },
     )
   }
@@ -67,7 +75,7 @@ export async function POST(request: Request) {
       })
     } catch {
       return NextResponse.json(
-        { ok: false, message: 'Could not reach the inbox. Please email me directly.' },
+        { ok: false, message: messages.unreachable },
         { status: 502 },
       )
     }
@@ -83,8 +91,6 @@ export async function POST(request: Request) {
   return NextResponse.json({
     ok: true,
     // Be honest: if storage was configured and failed, ask for an email too.
-    message: storageFailed
-      ? 'Thanks — I received your note. If you do not hear back within a day, please email me directly.'
-      : 'Thanks — your note landed. I reply within one working day.',
+    message: storageFailed ? messages.successFallback : messages.success,
   })
 }
