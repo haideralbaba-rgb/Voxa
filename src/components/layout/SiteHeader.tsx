@@ -10,6 +10,7 @@ import { ThemeToggle } from './ThemeToggle'
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false)
+  const [hidden, setHidden] = useState(false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState<string>('')
   const { scrollY } = useScroll()
@@ -17,7 +18,16 @@ export function SiteHeader() {
   const panelRef = useRef<HTMLDivElement | null>(null)
   const toggleRef = useRef<HTMLButtonElement | null>(null)
 
-  useMotionValueEvent(scrollY, 'change', (value) => setScrolled(value > 24))
+  // Hide on the way down, reveal instantly on the way up — the pattern that
+  // keeps a fixed header out of the reading path without ever stranding the
+  // visitor.
+  useMotionValueEvent(scrollY, 'change', (value) => {
+    const previous = scrollY.getPrevious() ?? 0
+    setScrolled(value > 24)
+    if (value < 120) setHidden(false)
+    else if (value - previous > 3) setHidden(true)
+    else if (previous - value > 3) setHidden(false)
+  })
 
   // Highlight the section currently in view.
   useEffect(() => {
@@ -79,8 +89,8 @@ export function SiteHeader() {
     <>
       <motion.header
         initial={reduced ? false : { y: -28, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+        animate={{ y: hidden && !open ? '-115%' : 0, opacity: 1 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: hidden ? 0 : 0.15 }}
         className="fixed inset-x-0 top-0 z-50"
       >
         <div

@@ -10,6 +10,7 @@ import { ButtonLink } from '@/components/ui/Button'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { ProjectCard } from './ProjectCard'
 import { CaseStudyPanel } from './CaseStudyPanel'
+import { ProjectRail } from './ProjectRail'
 
 type Filter = 'All' | ProjectCategory
 
@@ -120,8 +121,16 @@ export function ProjectShowcase({ initialSlug }: { initialSlug?: string }) {
           })}
         </div>
 
-        {/* Grid: one hero project, then a flowing 3-up */}
-        <motion.div layout={!reduced} className="mt-8 grid auto-rows-auto gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Touch: a draggable, snapping rail. Pointer: the bento grid. */}
+        <div className="mt-8">
+          <ProjectRail projects={visible} onOpen={open} />
+        </div>
+
+        {/* Desktop bento: one hero card spanning two tracks, then a flowing 3-up */}
+        <motion.div
+          layout={!reduced}
+          className="mt-5 hidden auto-rows-auto gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-3"
+        >
           <AnimatePresence mode="popLayout" initial={false}>
             {visible.map((project, index) => {
               const isFeature = filter === 'All' && index === 0

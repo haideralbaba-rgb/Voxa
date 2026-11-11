@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from 'motion/react'
 import { ArrowUpRight } from 'lucide-react'
 import type { Project } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { TiltCard } from './TiltCard'
 
 interface ProjectCardProps {
   project: Project
@@ -19,7 +20,8 @@ export function ProjectCard({ project, onOpen, size = 'standard', index }: Proje
   const isFeature = size === 'feature'
 
   return (
-    <article className="flex flex-1">
+    <article className="flex flex-1 [perspective:1200px]">
+      <TiltCard className="flex flex-1" intensity={isFeature ? 4 : 6}>
       <motion.div
         initial={reduced ? false : { opacity: 0, y: 26 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -115,6 +117,7 @@ export function ProjectCard({ project, onOpen, size = 'standard', index }: Proje
           aria-label={`Open case study: ${project.title} — ${project.tagline}`}
         />
       </motion.div>
+      </TiltCard>
     </article>
   )
 }

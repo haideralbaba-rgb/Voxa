@@ -1,5 +1,6 @@
 import { cn, formatIndex } from '@/lib/utils'
 import { Reveal } from './Reveal'
+import { LineReveal, ScrubReveal } from './ScrubReveal'
 
 interface SectionHeadingProps {
   index: string
@@ -38,9 +39,13 @@ export function SectionHeading({
           <span className="h-px w-8 bg-[var(--hairline-strong)]" aria-hidden />
           <span className="eyebrow">{eyebrow}</span>
         </div>
-        <h2 className="text-display-md font-semibold text-[var(--fg)]">{title}</h2>
+        <h2 className="text-display-md font-semibold text-[var(--fg)]">
+          <LineReveal>{title}</LineReveal>
+        </h2>
         {description ? (
-          <p className="mt-4 max-w-xl text-[15px] leading-7 text-muted md:text-base">{description}</p>
+          <ScrubReveal className="mt-4 max-w-xl">
+            <p className="text-[15px] leading-7 text-muted md:text-base">{description}</p>
+          </ScrubReveal>
         ) : null}
       </Reveal>
       {action ? (

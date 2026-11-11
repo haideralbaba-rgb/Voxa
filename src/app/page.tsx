@@ -1,10 +1,12 @@
 import { SiteHeader } from '@/components/layout/SiteHeader'
+import { ScrollProgress } from '@/components/ui/ScrollProgress'
+import { PageTransition } from '@/components/layout/PageTransition'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { Hero } from '@/components/sections/Hero'
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase'
 import { Experience } from '@/components/sections/Experience'
 import { Skills, StackStrip } from '@/components/sections/Skills'
-import { Testimonials } from '@/components/sections/Testimonials'
+import { TestimonialStack } from '@/components/sections/TestimonialStack'
 import { Contact } from '@/components/sections/Contact'
 import { AboutStrip } from '@/components/sections/AboutStrip'
 
@@ -17,17 +19,20 @@ export default function HomePage() {
       >
         Skip to content
       </a>
+      <ScrollProgress />
       <SiteHeader />
+      <PageTransition>
       <main id="main">
         <Hero />
         <ProjectShowcase />
         <AboutStrip />
         <Experience />
         <Skills />
-        <Testimonials />
+        <TestimonialStack />
         <Contact />
         <StackStrip />
       </main>
+      </PageTransition>
       <SiteFooter />
     </>
   )

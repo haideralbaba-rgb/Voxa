@@ -13,7 +13,11 @@ export function ThemeToggle({ className }: { className?: string }) {
   return (
     <button
       type="button"
-      onClick={toggle}
+      onClick={(event) => {
+        const rect = event.currentTarget.getBoundingClientRect()
+        // Wipe outward from the button itself, not the page centre.
+        toggle({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
+      }}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
       aria-pressed={isDark}
       title={`Switch to ${isDark ? 'light' : 'dark'} theme`}

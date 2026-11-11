@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { themeScript } from '@/lib/theme-script'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
+import { MotionProvider } from '@/components/providers/MotionProvider'
 import { profile } from '@/lib/data/profile'
 import './globals.css'
 
@@ -81,7 +82,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-dvh antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+        <div className="grain-overlay" aria-hidden />
+        <ThemeProvider>
+          <MotionProvider>{children}</MotionProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
