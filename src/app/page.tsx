@@ -4,6 +4,7 @@ import { PageTransition } from '@/components/layout/PageTransition'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { Hero } from '@/components/sections/Hero'
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase'
+import { StatementBridge } from '@/components/sections/StatementBridge'
 import { Experience } from '@/components/sections/Experience'
 import { Skills, StackStrip } from '@/components/sections/Skills'
 import { TestimonialStack } from '@/components/sections/TestimonialStack'
@@ -25,6 +26,7 @@ export default function HomePage() {
       <main id="main">
         <Hero />
         <ProjectShowcase />
+        <StatementBridge />
         <AboutStrip />
         <Experience />
         <Skills />

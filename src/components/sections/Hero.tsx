@@ -6,6 +6,7 @@ import { ArrowDown, ArrowUpRight, Download, MapPin } from 'lucide-react'
 import { profile } from '@/lib/data/profile'
 import { ButtonLink } from '@/components/ui/Button'
 import { Art } from '@/components/ui/Art'
+import { Counter } from '@/components/ui/Counter'
 import { DURATION, EASE, SPRING } from '@/lib/motion'
 import { HeroBackdrop } from './HeroBackdrop'
 
@@ -160,7 +161,7 @@ export function Hero() {
                     {stat.label}
                   </dt>
                   <dd className="text-[26px] font-semibold leading-none tracking-[-0.04em] text-[var(--fg)] md:text-[30px]">
-                    {stat.value}
+                    <Counter value={stat.value} />
                   </dd>
                 </div>
               ))}
@@ -278,7 +279,7 @@ function ClientsMarquee() {
           {row.map((client, index) => (
             <span
               key={`${client}-${index}`}
-              className="whitespace-nowrap text-[17px] font-medium tracking-[-0.02em] text-[var(--fg)]/32 transition-colors duration-500 hover:text-[var(--fg)]/70 md:text-[19px]"
+              className="whitespace-nowrap text-[17px] font-medium tracking-[-0.02em] text-[var(--fg)]/45 transition-colors duration-500 hover:text-[var(--fg)]/70 md:text-[19px]"
             >
               {client}
             </span>

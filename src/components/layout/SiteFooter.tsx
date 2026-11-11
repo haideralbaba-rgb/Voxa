@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { ArrowUp, ArrowUpRight } from 'lucide-react'
 import { navItems, profile } from '@/lib/data/profile'
 
@@ -35,7 +36,7 @@ export function SiteFooter() {
       <div className="container-page py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <a href="#top" className="inline-flex items-center gap-2.5" aria-label="Back to top">
+            <Link href="/#top" className="inline-flex items-center gap-2.5" aria-label="Back to top">
               <span className="grid size-8 place-items-center rounded-full bg-[var(--fg)] font-mono text-[12px] font-semibold text-[var(--bg)]">
                 HA
               </span>
@@ -43,7 +44,7 @@ export function SiteFooter() {
                 {profile.shortName}
                 <span className="text-muted">.studio</span>
               </span>
-            </a>
+            </Link>
             <p className="mt-4 max-w-xs text-[13px] leading-[1.7] text-muted">
               {profile.role}, building calm interfaces for brands with a point of view. Currently in{' '}
               {profile.location}.
@@ -61,7 +62,7 @@ export function SiteFooter() {
             {navItems.map((item) => (
               <a
                 key={item.href}
-                href={item.href}
+                href={`/${item.href}`}
                 className="w-fit text-[13px] text-[var(--fg)]/62 transition-colors hover:text-[var(--fg)]"
               >
                 {item.label}
@@ -104,13 +105,13 @@ export function SiteFooter() {
             <span className="hidden font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted sm:inline">
               Designed &amp; coded by hand
             </span>
-            <a
-              href="#top"
+            <Link
+              href="/#top"
               className="group inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--hairline)] px-3.5 text-[12px] font-medium text-[var(--fg)]/70 transition-colors hover:border-[var(--hairline-strong)] hover:text-[var(--fg)]"
             >
               Top
               <ArrowUp size={13} className="transition-transform duration-300 group-hover:-translate-y-0.5" aria-hidden />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

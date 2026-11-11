@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Braces, Boxes, Wrench, PenTool } from 'lucide-react'
-import type { SkillGroupId } from '@/lib/types'
+import type { SkillGroup, SkillGroupId } from '@/lib/types'
 import { profile, skillGroups } from '@/lib/data/profile'
 import { cn } from '@/lib/utils'
 import { SectionHeading } from '@/components/ui/SectionHeading'
@@ -18,6 +18,9 @@ const icons: Record<SkillGroupId, typeof Braces> = {
 
 export function Skills() {
   const [active, setActive] = useState<SkillGroupId | null>(null)
+  // One open skill at a time — the panel expands in place with a layout
+  // animation, so the surrounding rows slide instead of the page jumping.
+  const [openSkill, setOpenSkill] = useState<string | null>(null)
 
   return (
     <section
@@ -73,33 +76,20 @@ export function Skills() {
                 <h3 className="mt-5 text-[17px] font-semibold tracking-[-0.02em]">{group.title}</h3>
                 <p className="mt-1.5 text-[12.5px] leading-[1.6] text-muted">{group.blurb}</p>
 
-                <ul className="mt-5 flex flex-col gap-3.5">
+                <ul className="mt-5 flex flex-col gap-2.5">
                   {group.skills.map((skill, skillIndex) => (
-                    <li key={skill.name}>
-                      <div className="flex items-baseline justify-between gap-2">
-                        <span className="text-[12.5px] font-medium text-[var(--fg)]/84">{skill.name}</span>
-                        <span className="shrink-0 font-mono text-[9.5px] uppercase tracking-[0.1em] text-muted">
-                          {skill.level}
-                        </span>
-                      </div>
-                      <div className="mt-1.5 h-[3px] overflow-hidden rounded-full bg-[var(--fg)]/[0.07]">
-                        <motion.div
-                          className="h-full rounded-full"
-                          style={{
-                            background: isActive
-                              ? 'linear-gradient(90deg, var(--color-accent), var(--color-accent-soft))'
-                              : 'var(--color-ink-400)',
-                          }}
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${Math.min(100, (skill.years / 10) * 100)}%` }}
-                          viewport={{ once: true, amount: 0.6 }}
-                          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.12 + skillIndex * 0.05 }}
-                        />
-                      </div>
-                      {skill.note ? (
-                        <p className="mt-1 font-mono text-[9.5px] tracking-[0.02em] text-muted/70">{skill.note}</p>
-                      ) : null}
-                    </li>
+                    <SkillRow
+                      key={skill.name}
+                      skill={skill}
+                      index={skillIndex}
+                      active={isActive}
+                      open={openSkill === `${group.id}-${skill.name}`}
+                      onToggle={() =>
+                        setOpenSkill((current) =>
+                          current === `${group.id}-${skill.name}` ? null : `${group.id}-${skill.name}`,
+                        )
+                      }
+                    />
                   ))}
                 </ul>
               </motion.article>
@@ -131,6 +121,79 @@ export function Skills() {
   )
 }
 
+function SkillRow({
+  skill,
+  index,
+  active,
+  open,
+  onToggle,
+}: {
+  skill: SkillGroup['skills'][number]
+  index: number
+  active: boolean
+  open: boolean
+  onToggle: () => void
+}) {
+  const panelId = `skill-${skill.name.replace(/\W+/g, '-').toLowerCase()}`
+
+  return (
+    <motion.li layout="position" className="group/skill">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={panelId}
+        className="flex w-full cursor-pointer items-baseline justify-between gap-2 text-left"
+      >
+        <span className="text-[12.5px] font-medium text-[var(--fg)]/84 transition-colors duration-300 group-hover/skill:text-[var(--fg)]">
+          {skill.name}
+        </span>
+        <span className="flex shrink-0 items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.1em] text-muted">
+          {skill.level}
+          <motion.span animate={{ rotate: open ? 90 : 0 }} transition={{ duration: 0.25 }} aria-hidden>
+            <svg width="9" height="9" viewBox="0 0 12 12" fill="none">
+              <path d="M4.5 2.5 8 6l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </motion.span>
+        </span>
+      </button>
+
+      <div className="mt-1.5 h-[3px] overflow-hidden rounded-full bg-[var(--fg)]/[0.07]">
+        <motion.div
+          className="h-full rounded-full"
+          style={{
+            background: active
+              ? 'linear-gradient(90deg, var(--color-accent), var(--color-accent-soft))'
+              : 'var(--color-ink-400)',
+          }}
+          initial={{ width: 0 }}
+          whileInView={{ width: `${Math.min(100, (skill.years / 10) * 100)}%` }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.12 + index * 0.05 }}
+        />
+      </div>
+
+      <AnimatePresence initial={false}>
+        {open ? (
+          <motion.div
+            key="detail"
+            id={panelId}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <p className="pt-2 font-mono text-[10px] leading-[1.7] tracking-[0.01em] text-muted">
+              {skill.years} {skill.years === 1 ? 'year' : 'years'} · {skill.note ?? 'Shipped in production.'}
+            </p>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </motion.li>
+  )
+}
+
 /** Small, reusable stack strip used by the contact section. */
 export function StackStrip() {
   const reduced = useReducedMotion()
@@ -155,7 +218,7 @@ export function StackStrip() {
         {[...items, ...items].map((item, index) => (
           <span
             key={`${item}-${index}`}
-            className="whitespace-nowrap rounded-full border border-[var(--hairline)] px-3 py-1.5 font-mono text-[11px] text-[var(--fg)]/55"
+            className="whitespace-nowrap rounded-full border border-[var(--hairline)] px-3 py-1.5 font-mono text-[11px] text-[var(--fg)]/62"
           >
             {item}
           </span>

@@ -135,12 +135,50 @@
   z-index: 2;
 }
 
+/* Route changes (`ViewLink`, overlay → page) opt in via a root attribute so
+   they never interfere with the theme wipe above. */
+html[data-route-transition]::view-transition-old(root) {
+  animation: route-out 260ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+html[data-route-transition]::view-transition-new(root) {
+  animation: route-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* A cover that exists on both sides morphs instead of crossfading. */
+::view-transition-group(project-cover) {
+  animation-duration: 520ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes route-out {
+  to {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: scale(1.012);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-route-transition]::view-transition-old(root),
+  html[data-route-transition]::view-transition-new(root),
+  ::view-transition-group(project-cover) {
+    animation: none !important;
+  }
+}
+
 @layer base {
   :root {
     --bg: var(--color-ink-50);
     --bg-elevated: #ffffff;
     --fg: var(--color-ink-950);
-    --fg-muted: var(--color-ink-500);
+    --fg-muted: #66666f;
     --hairline: rgb(0 0 0 / 0.09);
     --hairline-strong: rgb(0 0 0 / 0.16);
     --glass: rgb(255 255 255 / 0.72);

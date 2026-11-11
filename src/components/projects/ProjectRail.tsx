@@ -58,6 +58,7 @@ export function ProjectRail({
                 className="object-cover transition-transform duration-700 group-active:scale-[0.98]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" aria-hidden />
+              <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/40 to-transparent" aria-hidden />
               <div className="absolute inset-x-4 bottom-4">
                 <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/60">
                   {project.category} · {project.year}

@@ -56,13 +56,19 @@ export function TiltCard({
     return <div className={className}>{children}</div>
   }
 
+  /*
+   * The tilt is pointer-only: on touch devices a press would move the card at
+   * the exact moment the user is trying to tap it. This media query lets the
+   * card stay flat there even when reduced motion is off.
+   */
+
   return (
     <motion.div
       ref={ref}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
       style={{ rotateX, rotateY, transformPerspective: 1100, transformStyle: 'preserve-3d' }}
-      className={cn('relative [backface-visibility:hidden]', className)}
+      className={cn('relative [backface-visibility:hidden] [@media(hover:none)]:[transform:none]', className)}
     >
       {children}
       {glare ? (

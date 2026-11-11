@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Menu, X, ArrowUpRight } from 'lucide-react'
 import { navItems, profile } from '@/lib/data/profile'
 import { cn } from '@/lib/utils'
@@ -13,6 +14,7 @@ export function SiteHeader() {
   const [hidden, setHidden] = useState(false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState<string>('')
+  const pathname = usePathname()
   const { scrollY } = useScroll()
   const reduced = useReducedMotion()
   const panelRef = useRef<HTMLDivElement | null>(null)
@@ -108,7 +110,7 @@ export function SiteHeader() {
             )}
           >
             <Link
-              href="#top"
+              href="/#top"
               className="group flex items-center gap-2.5 rounded-full pl-1 text-[15px] font-semibold tracking-[-0.02em]"
               aria-label={`${profile.name} — back to top`}
             >
@@ -124,7 +126,8 @@ export function SiteHeader() {
 
             <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
               {navItems.map((item) => {
-                const isActive = active === item.href
+                // Section highlighting only applies to the one-page home.
+                const isActive = pathname === '/' && active === item.href
                 return (
                   <a
                     key={item.href}
@@ -150,13 +153,13 @@ export function SiteHeader() {
 
             <div className="flex items-center gap-1.5">
               <ThemeToggle />
-              <a
-                href="#contact"
+              <Link
+                href="/#contact"
                 className="hidden h-9 items-center gap-1.5 rounded-full bg-[var(--fg)] px-4 text-[13px] font-medium text-[var(--bg)] transition-opacity duration-300 hover:opacity-88 sm:inline-flex"
               >
                 Let&apos;s talk
                 <ArrowUpRight size={14} strokeWidth={2} aria-hidden />
-              </a>
+              </Link>
               <button
                 ref={toggleRef}
                 type="button"
