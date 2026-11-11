@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+import { getSupabaseServer } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 
@@ -36,9 +37,26 @@ export async function POST(request: Request) {
     )
   }
 
-  // In production this writes to Supabase (see supabase/migrations) or forwards
-  // to a transactional email provider. The static build ships a working,
-  // honest no-op so the UI never lies about a delivery that did not happen.
+  // Persist first: Supabase, when configured, is the durable record of the
+  // enquiry. RLS allows inserts only, so the anon key cannot read anything back.
+  const supabase = await getSupabaseServer()
+  let stored = false
+  let storageFailed = false
+
+  if (supabase) {
+    const { error } = await supabase.from('portfolio_messages').insert({
+      name: parsed.data.name,
+      email: parsed.data.email,
+      company: parsed.data.company || null,
+      budget: parsed.data.budget || null,
+      message: parsed.data.message,
+      source: 'portfolio',
+    })
+    if (error) storageFailed = true
+    else stored = true
+  }
+
+  // Then forward to a webhook (Slack, Resend, …) when one is configured.
   const endpoint = process.env.CONTACT_WEBHOOK_URL
   if (endpoint) {
     try {
@@ -53,8 +71,8 @@ export async function POST(request: Request) {
         { status: 502 },
       )
     }
-  } else {
-    // Surface the enquiry in server logs so a preview deployment is still useful.
+  } else if (!stored) {
+    // Surface the enquiry in server logs so an unconfigured deployment is still useful.
     console.info('[contact] new enquiry', {
       name: parsed.data.name,
       email: parsed.data.email,
@@ -64,6 +82,9 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     ok: true,
-    message: 'Thanks — your note landed. I reply within one working day.',
+    // Be honest: if storage was configured and failed, ask for an email too.
+    message: storageFailed
+      ? 'Thanks — I received your note. If you do not hear back within a day, please email me directly.'
+      : 'Thanks — your note landed. I reply within one working day.',
   })
 }
