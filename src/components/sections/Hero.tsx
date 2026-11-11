@@ -7,6 +7,8 @@ import { profile } from '@/lib/data/profile'
 import { ButtonLink } from '@/components/ui/Button'
 import { Art } from '@/components/ui/Art'
 import { Counter } from '@/components/ui/Counter'
+import { Orb } from '@/components/visual/Orb'
+import { ShaderBackdrop } from '@/components/visual/ShaderBackdrop'
 import { DURATION, EASE, SPRING } from '@/lib/motion'
 import { HeroBackdrop } from './HeroBackdrop'
 
@@ -95,6 +97,10 @@ export function Hero() {
       className="relative overflow-hidden pb-16 pt-32 md:pb-24 md:pt-40"
     >
       <HeroBackdrop scrollYProgress={scrollYProgress} />
+
+      {/* Ambient shader rig: three drifting light fields under the grid, so the
+          spotlight has something to move through. */}
+      <ShaderBackdrop variant="halo" intensity={0.4} className="pointer-events-none absolute inset-0 -z-20" />
 
       <div className="container-page">
         <div className="grid items-end gap-12 lg:grid-cols-[1.35fr_0.65fr] lg:gap-16">
@@ -212,6 +218,12 @@ export function Hero() {
                   </span>
                 </div>
               </motion.div>
+
+              {/* The site's one 3D object, floating off the portrait so the
+                  composition has a second light source. */}
+              <div className="pointer-events-none absolute -right-12 -top-16 hidden lg:block">
+                <Orb tone="chromatic" size={104} interactive={false} />
+              </div>
 
               <motion.div
                 initial={reduced ? false : { opacity: 0, x: -14, y: 8 }}

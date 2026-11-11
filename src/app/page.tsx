@@ -6,6 +6,8 @@ import { Hero } from '@/components/sections/Hero'
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase'
 import { StatementBridge } from '@/components/sections/StatementBridge'
 import { Storyboard } from '@/components/storyboard/Storyboard'
+import { Craft } from '@/components/sections/Craft'
+import { Toolkit } from '@/components/sections/Toolkit'
 import { Experience } from '@/components/sections/Experience'
 import { Skills, StackStrip } from '@/components/sections/Skills'
 import { TestimonialStack } from '@/components/sections/TestimonialStack'
@@ -29,10 +31,12 @@ export default function HomePage() {
         <ProjectShowcase />
         <StatementBridge />
         <Storyboard />
+        <Craft />
         <AboutStrip />
         <Experience />
         <Skills />
         <TestimonialStack />
+        <Toolkit />
         <Contact />
         <StackStrip />
       </main>

@@ -6,6 +6,7 @@ import { ArrowUpRight } from 'lucide-react'
 import type { Project } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { TiltCard } from './TiltCard'
+import { useSound } from '@/components/providers/SoundProvider'
 
 interface ProjectCardProps {
   project: Project
@@ -17,6 +18,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, onOpen, size = 'standard', index }: ProjectCardProps) {
   const reduced = useReducedMotion()
+  const { play } = useSound()
   const isFeature = size === 'feature'
 
   return (
@@ -115,7 +117,11 @@ export function ProjectCard({ project, onOpen, size = 'standard', index }: Proje
         {/* Full-card hit area — keeps semantics clean while making the whole card clickable */}
         <button
           type="button"
-          onClick={() => onOpen(project)}
+          onClick={() => {
+            play('open')
+            onOpen(project)
+          }}
+          onPointerEnter={() => play('hover')}
           className="absolute inset-0 z-20 cursor-pointer rounded-[26px] focus-visible:outline-offset-[-3px]"
           aria-label={`Open case study: ${project.title} — ${project.tagline}`}
         />

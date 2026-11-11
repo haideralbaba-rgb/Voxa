@@ -8,6 +8,7 @@ import { ButtonLink } from '@/components/ui/Button'
 import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import { TechPill } from '@/components/ui/Badge'
 import { Art } from '@/components/ui/Art'
+import { ShaderBackdrop } from '@/components/visual/ShaderBackdrop'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -51,7 +52,12 @@ export default async function CaseStudyPage({ params }: PageProps) {
   return (
     <>
       <SiteHeader />
-      <main id="main" className="pt-28 md:pt-32">
+      <main id="main" className="relative overflow-hidden pt-28 md:pt-32">
+        <ShaderBackdrop
+          variant="topographic"
+          intensity={0.5}
+          className="pointer-events-none absolute inset-x-0 top-0 h-[60vh] -z-10"
+        />
         <article className="container-page">
           <ButtonLink href="/#work" variant="ghost" size="sm" className="-ml-2 mb-6">
             <ArrowLeft size={14} aria-hidden />
