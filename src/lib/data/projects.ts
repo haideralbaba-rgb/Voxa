@@ -87,7 +87,7 @@ export const projects: Project[] = [
     stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'motion/react', 'Sanity', 'Vercel'],
     links: [
       { kind: 'live', label: 'Live site', href: 'https://example.com/aperture' },
-      { kind: 'case-study', label: 'Read the process', href: '#contact' },
+      { kind: 'case-study', label: 'Read the process', href: '/#contact' },
     ],
     awards: ['CSS Design Awards — Site of the Day (nominee)'],
   },
@@ -333,7 +333,7 @@ export const projects: Project[] = [
     ],
     stack: ['React', 'TypeScript', 'Tailwind CSS', 'Storybook', 'Figma Variables', 'Playwright'],
     links: [
-      { kind: 'case-study', label: 'System overview', href: '#contact' },
+      { kind: 'case-study', label: 'System overview', href: '/#contact' },
       { kind: 'github', label: 'Source', href: 'https://github.com/haideralbaba-rgb' },
     ],
     awards: ['Internal engineering award — Impact (2024)'],
