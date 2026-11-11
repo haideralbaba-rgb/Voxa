@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" width="1200" height="1500" role="img">
+  <defs>
+    <filter id="blur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="60"/></filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <linearGradient id="vign" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0.35"/><stop offset="0.4" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/>
+    </linearGradient>
+
+  </defs>
+  <rect width="1200" height="1500" fill="#08080a"/>
+
+  <ellipse cx="600" cy="740" rx="480" ry="420" fill="#1d1830" filter="url(#blur)" opacity="0.95"/>
+  <ellipse cx="600" cy="760" rx="300" ry="190" fill="none" stroke="#e08a5f" stroke-opacity="0.35" stroke-width="2"/>
+  <g transform="translate(600 490) scale(0.60) translate(-90 -120)"><rect width="180" height="240" rx="22" fill="#15151b" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(881 577) scale(0.65) translate(-90 -120)"><rect width="180" height="240" rx="22" fill="#15151b" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(951 771) scale(0.75) translate(-90 -120)"><rect width="180" height="240" rx="22" fill="#15151b" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(756 927) scale(0.83) translate(-90 -120)"><rect width="180" height="240" rx="22" fill="#15151b" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(444 927) scale(0.83) translate(-90 -120)"><rect width="180" height="240" rx="22" fill="#15151b" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(249 771) scale(0.75) translate(-90 -120)"><rect width="180" height="240" rx="22" fill="#15151b" stroke="#ffffff" stroke-opacity="0.16"/></g><g transform="translate(319 577) scale(0.65) translate(-90 -120)"><rect width="180" height="240" rx="22" fill="#15151b" stroke="#ffffff" stroke-opacity="0.16"/></g>
+  <circle cx="600" cy="720" r="58" fill="#e08a5f" filter="url(#soft)" opacity="0.85"/>
+
+  <rect width="1200" height="1500" fill="url(#vign)"/>
+  <rect width="1200" height="1500" filter="url(#grain)" opacity="0.06"/>
+</svg>

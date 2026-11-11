@@ -37,6 +37,7 @@ export const profile: Profile = {
   ],
   nav: [
     { label: 'Work', href: '#work' },
+    { label: 'Storyboard', href: '#story' },
     { label: 'Experience', href: '#experience' },
     { label: 'Skills', href: '#skills' },
     { label: 'Testimonials', href: '#testimonials' },

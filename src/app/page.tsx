@@ -5,6 +5,7 @@ import { SiteFooter } from '@/components/layout/SiteFooter'
 import { Hero } from '@/components/sections/Hero'
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase'
 import { StatementBridge } from '@/components/sections/StatementBridge'
+import { Storyboard } from '@/components/storyboard/Storyboard'
 import { Experience } from '@/components/sections/Experience'
 import { Skills, StackStrip } from '@/components/sections/Skills'
 import { TestimonialStack } from '@/components/sections/TestimonialStack'
@@ -27,6 +28,7 @@ export default function HomePage() {
         <Hero />
         <ProjectShowcase />
         <StatementBridge />
+        <Storyboard />
         <AboutStrip />
         <Experience />
         <Skills />
