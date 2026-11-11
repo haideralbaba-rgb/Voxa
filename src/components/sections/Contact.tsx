@@ -70,7 +70,7 @@ export function Contact() {
 
   const fieldClass = (name: keyof ContactPayload) =>
     cn(
-      'w-full rounded-xl border bg-[var(--card)] px-3.5 py-3 text-[13.5px] text-[var(--fg)] placeholder:text-[var(--fg)]/28 transition-[border-color,box-shadow] duration-300 outline-none',
+      'w-full rounded-xl border bg-[var(--card)] px-3.5 py-3 text-[13.5px] text-[var(--fg)] placeholder:text-[var(--fg)]/50 transition-[border-color,box-shadow] duration-300 outline-none',
       errors[name]
         ? 'border-red-500/50 focus:border-red-500/70'
         : 'border-[var(--hairline)] focus:border-accent/60 focus:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-accent)_16%,transparent)]',
@@ -312,7 +312,7 @@ export function Contact() {
                   ) : null}
 
                   <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
-                    <p className="max-w-[15rem] text-[11px] leading-4 text-muted/80">
+                    <p className="max-w-[15rem] text-[11px] leading-4 text-muted">
                       Your details are used only to reply to this enquiry.
                     </p>
                     <button
@@ -369,7 +369,7 @@ function Field({
           {label}
           {required ? <span className="ml-0.5 text-accent">*</span> : null}
         </label>
-        {hint ? <span className="font-mono text-[9.5px] text-muted/70">{hint}</span> : null}
+        {hint ? <span className="font-mono text-[9.5px] text-muted">{hint}</span> : null}
       </div>
       {children}
       {error ? (

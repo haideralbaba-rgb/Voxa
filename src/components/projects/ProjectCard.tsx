@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from 'motion/react'
 import { ArrowUpRight } from 'lucide-react'
 import type { Project } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { TiltCard } from './TiltCard'
 
 interface ProjectCardProps {
   project: Project
@@ -19,7 +20,8 @@ export function ProjectCard({ project, onOpen, size = 'standard', index }: Proje
   const isFeature = size === 'feature'
 
   return (
-    <article className="flex flex-1">
+    <article className="flex flex-1 [perspective:1200px]">
+      <TiltCard className="flex flex-1" intensity={isFeature ? 4 : 6}>
       <motion.div
         initial={reduced ? false : { opacity: 0, y: 26 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -51,7 +53,10 @@ export function ProjectCard({ project, onOpen, size = 'standard', index }: Proje
               priority={index === 0}
               className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.25,1,0.5,1)] will-change-transform group-hover:scale-[1.04]"
             />
+            {/* Two scrims: one so the copy at the base keeps AA against any image,
+                a lighter one so the category chip at the top does too. */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/24 to-black/0" aria-hidden />
+            <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/45 to-transparent" aria-hidden />
             <div
               className="absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
               style={{ background: `radial-gradient(120% 90% at 20% 100%, ${project.accent}30 0%, transparent 62%)` }}
@@ -115,6 +120,7 @@ export function ProjectCard({ project, onOpen, size = 'standard', index }: Proje
           aria-label={`Open case study: ${project.title} — ${project.tagline}`}
         />
       </motion.div>
+      </TiltCard>
     </article>
   )
 }

@@ -2,11 +2,15 @@
 
 import { Art } from '@/components/ui/Art'
 import { useEffect, useMemo, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Code2, Play, X } from 'lucide-react'
 import type { GalleryItem, Project, ProjectLinkKind } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { TechPill } from '@/components/ui/Badge'
+import { ScrubReveal } from '@/components/ui/ScrubReveal'
+import { ChapterScroller } from '@/components/ui/ChapterScroller'
+import { withViewTransition } from '@/lib/view-transition'
 
 const EASE = [0.32, 0.72, 0, 1] as const
 
@@ -47,14 +51,12 @@ function GalleryFrame({ item, project }: { item: GalleryItem; project: Project }
             <span className="ml-2 h-4 flex-1 rounded-full bg-[var(--fg)]/[0.05]" />
           </div>
         ) : null}
-        <div
-          className={cn(
-            'relative overflow-hidden',
-            item.frame === 'phone' ? 'rounded-[1.75rem]' : null,
-          )}
+        <ScrubReveal
+          className={cn('relative overflow-hidden', item.frame === 'phone' ? 'rounded-[1.75rem]' : null)}
+          offset={['start 92%', 'start 55%']}
         >
           {image}
-        </div>
+        </ScrubReveal>
       </div>
       <figcaption className="mt-3 flex items-start gap-2.5 text-[12.5px] leading-5 text-muted">
         <span
@@ -77,6 +79,7 @@ interface CaseStudyPanelProps {
 }
 
 export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }: CaseStudyPanelProps) {
+  const router = useRouter()
   const reduced = useReducedMotion()
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const closeRef = useRef<HTMLButtonElement | null>(null)
@@ -172,7 +175,21 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                     {project.client} · {project.year}
                   </p>
                 </div>
-                <button
+                <div className="flex items-center gap-2">
+                  <a
+                    href={`/work/${project.slug}`}
+                    onClick={(event) => {
+                      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+                      event.preventDefault()
+                      onClose()
+                      withViewTransition(() => router.push(`/work/${project.slug}`))
+                    }}
+                    className="hidden h-9 items-center gap-1.5 rounded-full border border-[var(--hairline)] bg-[var(--card)] px-3.5 text-[12.5px] font-medium text-[var(--fg)]/78 transition-colors duration-300 hover:border-[var(--hairline-strong)] hover:text-[var(--fg)] sm:inline-flex"
+                  >
+                    <span>Open page</span>
+                    <ArrowUpRight size={14} aria-hidden />
+                  </a>
+                  <button
                   ref={closeRef}
                   type="button"
                   onClick={onClose}
@@ -180,7 +197,8 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                 >
                   <span className="hidden sm:inline">Close</span>
                   <X size={15} className="transition-transform duration-300 group-hover:rotate-90" aria-hidden />
-                </button>
+                  </button>
+                </div>
               </div>
 
               {/* Hero */}
@@ -188,6 +206,7 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
                 <motion.div
                   layoutId={reduced ? undefined : `project-media-${project.id}`}
                   className="relative h-[16rem] w-full overflow-hidden sm:h-[22rem] md:h-[26rem]"
+                  style={{ viewTransitionName: 'project-cover' }}
                   transition={{ duration: 0.62, ease: EASE }}
                 >
                   <Art
@@ -272,36 +291,17 @@ export function CaseStudyPanel({ project, onClose, onNavigate, previous, next }:
               </div>
 
               <div className="px-5 py-10 md:px-10 md:py-12">
-                {/* Architecture */}
-                <h3 className="eyebrow">How it was built</h3>
-                <div className="mt-6 grid gap-x-12 gap-y-8 md:grid-cols-3">
-                  {project.architecture.map((block, index) => (
-                    <section key={block.title} className="flex flex-col gap-3">
-                      <div className="flex items-baseline gap-2.5">
-                        <span className="font-mono text-[11px] tracking-[0.12em] text-accent">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        <h4 className="text-[15px] font-semibold tracking-[-0.02em] text-[var(--fg)]">
-                          {block.title}
-                        </h4>
-                      </div>
-                      <p className="text-[13.5px] leading-[1.72] text-muted">{block.body}</p>
-                      {block.bullets ? (
-                        <ul className="mt-1 flex flex-col gap-2">
-                          {block.bullets.map((bullet) => (
-                            <li
-                              key={bullet}
-                              className="flex items-start gap-2 font-mono text-[11.5px] leading-[1.6] text-[var(--fg)]/62"
-                            >
-                              <span className="mt-1.5 size-1 shrink-0 rounded-full bg-accent/70" aria-hidden />
-                              {bullet}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : null}
-                    </section>
-                  ))}
-                </div>
+                {/* Architecture — sticky chapters, scroll-driven */}
+                <ChapterScroller
+                  label="How it was built"
+                  title="The brief, the decisions, the outcome."
+                  chapters={project.architecture.map((block, i) => ({
+                    index: String(i + 1),
+                    title: block.title,
+                    body: block.body,
+                    bullets: block.bullets,
+                  }))}
+                />
 
                 {/* Gallery */}
                 <h3 className="eyebrow mt-14">Selected screens</h3>

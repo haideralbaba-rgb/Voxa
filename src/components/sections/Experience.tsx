@@ -7,6 +7,23 @@ import { experience } from '@/lib/data/profile'
 import { cn } from '@/lib/utils'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 
+/** "3 yrs 9 mos" from ISO-ish months — the kind of number a recruiter checks. */
+function tenure(start: string, end: string | null): string {
+  const toIndex = (value: string) => {
+    const [year, month] = value.split('-').map(Number)
+    return (year ?? 0) * 12 + ((month ?? 1) - 1)
+  }
+  const now = new Date()
+  const endIndex = end ? toIndex(end) : now.getFullYear() * 12 + now.getMonth()
+  const months = Math.max(1, endIndex - toIndex(start))
+  const years = Math.floor(months / 12)
+  const rest = months % 12
+  const parts: string[] = []
+  if (years) parts.push(`${years} yr${years === 1 ? '' : 's'}`)
+  if (rest) parts.push(`${rest} mo${rest === 1 ? '' : 's'}`)
+  return parts.join(' ') || '1 mo'
+}
+
 export function Experience() {
   const listRef = useRef<HTMLOListElement | null>(null)
   const reduced = useReducedMotion()
@@ -117,7 +134,10 @@ function TimelineRow({
       {/* Period */}
       <div className="hidden pt-1 md:block">
         <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">{item.period}</p>
-        <p className="mt-1.5 text-[11px] text-muted/80">{item.employment}</p>
+        <p className="mt-1.5 text-[11px] text-muted">{item.employment}</p>
+        <p className="mt-0.5 font-mono text-[10px] tracking-[0.06em] text-muted/90">
+          {tenure(item.start, item.end)}
+        </p>
       </div>
 
       {/* Dot */}

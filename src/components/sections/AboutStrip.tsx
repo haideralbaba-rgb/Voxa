@@ -1,6 +1,7 @@
 'use client'
 
 import { Art } from '@/components/ui/Art'
+import { Counter } from '@/components/ui/Counter'
 import { motion, useReducedMotion } from 'motion/react'
 import { profile } from '@/lib/data/profile'
 
@@ -62,7 +63,9 @@ export function AboutStrip() {
                   <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted">
                     {stat.label}
                   </dt>
-                  <dd className="mt-1.5 text-[20px] font-semibold tracking-[-0.03em]">{stat.value}</dd>
+                  <dd className="mt-1.5 text-[20px] font-semibold tracking-[-0.03em]">
+                    <Counter value={stat.value} />
+                  </dd>
                 </div>
               ))}
             </dl>

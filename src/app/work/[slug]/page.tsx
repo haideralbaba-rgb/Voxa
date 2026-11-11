@@ -73,7 +73,10 @@ export default async function CaseStudyPage({ params }: PageProps) {
           </h1>
           <p className="mt-5 max-w-2xl text-[16px] leading-[1.75] text-muted">{project.summary}</p>
 
-          <div className="relative mt-9 aspect-[16/9] overflow-hidden rounded-2xl border border-[var(--hairline)]">
+          <div
+            className="relative mt-9 aspect-[16/9] overflow-hidden rounded-2xl border border-[var(--hairline)]"
+            style={{ viewTransitionName: 'project-cover' }}
+          >
             <Art
               src={project.cover.src}
               alt={project.cover.alt}
