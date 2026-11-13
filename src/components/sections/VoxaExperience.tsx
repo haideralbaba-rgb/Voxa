@@ -6,10 +6,10 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import { ArrowDown, ArrowUpLeft, Asterisk, MoveUpLeft } from 'lucide-react'
 
 const projects = [
-  { number: '٠١', name: 'أطلس', kind: 'هوية بصرية', image: '/images/projects/atlas-cover.svg', className: 'voxa-project-tall' },
-  { number: '٠٢', name: 'هالو', kind: 'اتجاه فني وحملة', image: '/images/projects/halo-cover.svg', className: '' },
-  { number: '٠٣', name: 'مانوسكريبت', kind: 'تصميم تحريري', image: '/images/projects/manuscript-cover.svg', className: '' },
-  { number: '٠٤', name: 'سافرون', kind: 'هوية وتجربة', image: '/images/projects/saffron-cover.svg', className: 'voxa-project-wide' },
+  { number: '٠١', slug: 'atlas-design-system', name: 'أطلس', kind: 'هوية بصرية', image: '/images/projects/atlas-cover.svg', className: 'voxa-project-tall' },
+  { number: '٠٢', slug: 'halo-festival', name: 'هالو', kind: 'اتجاه فني وحملة', image: '/images/projects/halo-cover.svg', className: '' },
+  { number: '٠٣', slug: 'manuscript-quarterly', name: 'مانوسكريبت', kind: 'تصميم تحريري', image: '/images/projects/manuscript-cover.svg', className: '' },
+  { number: '٠٤', slug: 'saffron-commerce', name: 'سافرون', kind: 'هوية وتجربة', image: '/images/projects/saffron-cover.svg', className: 'voxa-project-wide' },
 ]
 
 const values = [
@@ -77,14 +77,14 @@ export function VoxaExperience() {
         </div>
         <div className="voxa-work-grid">
           {projects.map((project, index) => (
-            <motion.article key={project.number} className={`voxa-project ${project.className}`} initial={reduced ? false : { opacity: 0, y: 34 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.16 }} transition={{ duration: 0.72, delay: index * 0.07 }}>
+            <motion.a href={`/work/${project.slug}`} aria-label={`استكشف مشروع ${project.name}`} key={project.number} className={`voxa-project ${project.className}`} initial={reduced ? false : { opacity: 0, y: 34 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.16 }} transition={{ duration: 0.72, delay: index * 0.07 }}>
               <div className="voxa-project-image">
                 <Image src={project.image} alt={`تجربة تصميم ${project.name}`} fill sizes="(max-width: 720px) 100vw, 50vw" />
                 <span className="voxa-project-number">{project.number}</span>
                 <span className="voxa-project-open"><ArrowUpLeft size={18} /></span>
               </div>
               <div className="voxa-project-info"><h3>{project.name}</h3><span>{project.kind}</span></div>
-            </motion.article>
+            </motion.a>
           ))}
         </div>
         <p className="voxa-work-footnote">مختارات من التجارب البصرية — والمزيد يتشكّل.</p>
