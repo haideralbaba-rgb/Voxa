@@ -450,3 +450,227 @@ html[data-route-transition]::view-transition-new(root) {
     mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
   }
 }
+
+
+/* ------------------------------------------------------------------
+   VOXA — Arabic-first studio experience
+   ------------------------------------------------------------------ */
+@font-face {
+  font-family: 'VOXA Arabic';
+  src: local('IBM Plex Sans Arabic'), local('Noto Sans Arabic'), local('Tahoma');
+  font-display: swap;
+}
+
+.voxa-site {
+  --voxa-bg: #090909;
+  --voxa-bg-soft: #11110f;
+  --voxa-paper: #f0eee8;
+  --voxa-muted: #92918c;
+  --voxa-line: rgba(240, 238, 232, .14);
+  --voxa-accent: #c98762;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background: var(--voxa-bg);
+  color: var(--voxa-paper);
+  font-family: 'VOXA Arabic', 'IBM Plex Sans Arabic', 'Noto Sans Arabic', Tahoma, Arial, sans-serif;
+  letter-spacing: 0;
+  direction: rtl;
+}
+.voxa-site * { box-sizing: border-box; }
+.voxa-site a { color: inherit; text-decoration: none; }
+.voxa-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: .045;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+}
+.voxa-header {
+  position: absolute;
+  z-index: 20;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(100% - 64px, 1440px);
+  height: 92px;
+  margin-inline: auto;
+  border-bottom: 1px solid var(--voxa-line);
+}
+.voxa-wordmark {
+  display: inline-flex;
+  align-items: flex-start;
+  direction: ltr;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -.09em;
+}
+.voxa-wordmark span { margin: 2px 0 0 4px; color: var(--voxa-accent); font-size: 9px; letter-spacing: 0; }
+.voxa-header nav { display: flex; align-items: center; gap: clamp(22px, 4vw, 58px); }
+.voxa-header nav a { color: rgba(240,238,232,.67); font-size: 12px; transition: color .25s ease; }
+.voxa-header nav a:hover { color: var(--voxa-paper); }
+.voxa-header-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 13px;
+  padding: 11px 16px;
+  border: 1px solid var(--voxa-line);
+  border-radius: 99px;
+  font-size: 11px;
+  transition: background .25s ease, color .25s ease, border-color .25s ease;
+}
+.voxa-header-cta:hover { color: var(--voxa-bg); background: var(--voxa-paper); border-color: var(--voxa-paper); }
+
+.voxa-story { position: relative; height: 340vh; background: radial-gradient(ellipse at 56% 45%, #191511 0%, #0c0b0a 34%, #090909 72%); }
+.voxa-story-sticky { position: sticky; top: 0; height: 100svh; min-height: 660px; overflow: hidden; display: flex; align-items: center; }
+.voxa-grid {
+  position: absolute;
+  inset: 0;
+  opacity: .18;
+  background-image: linear-gradient(to right, rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.08) 1px, transparent 1px);
+  background-size: 9.09% 100%, 100% 80px;
+  mask-image: radial-gradient(ellipse at 51% 45%, #000 0%, transparent 75%);
+}
+.voxa-orb {
+  position: absolute;
+  top: 50%;
+  left: 24%;
+  width: min(37vw, 520px);
+  aspect-ratio: 1;
+  transform-origin: center;
+  border-radius: 50%;
+  border: 1px solid rgba(221,161,123,.35);
+  background: radial-gradient(circle at 34% 28%, rgba(226,175,137,.16), transparent 25%), radial-gradient(circle at 50% 50%, rgba(173,103,68,.12), rgba(10,9,8,.05) 58%, transparent 70%);
+  box-shadow: 0 0 120px rgba(176,103,64,.08), inset 0 0 60px rgba(217,153,111,.05);
+  translate: 0 -50%;
+  will-change: transform, opacity;
+}
+.voxa-orb::before, .voxa-orb::after { content: ''; position: absolute; inset: 12%; border: 1px solid rgba(221,161,123,.28); border-radius: 50%; transform: rotate(42deg) scaleX(.48); }
+.voxa-orb::after { inset: 4%; transform: rotate(-42deg) scaleX(.48); }
+.voxa-orb span, .voxa-orb i, .voxa-orb b { position: absolute; display: block; border-radius: 50%; background: var(--voxa-accent); box-shadow: 0 0 34px 10px rgba(201,135,98,.25); }
+.voxa-orb span { width: 7px; height: 7px; top: 14%; left: 24%; }
+.voxa-orb i { width: 4px; height: 4px; bottom: 17%; right: 21%; }
+.voxa-orb b { width: 3px; height: 3px; top: 48%; right: 4%; }
+.voxa-hero-copy { position: relative; z-index: 2; width: min(100% - 64px, 1440px); margin-inline: auto; padding-top: 5vh; }
+.voxa-kicker { display: flex; align-items: center; gap: 11px; color: var(--voxa-muted); font-size: 11px; letter-spacing: .015em; }
+.voxa-kicker > span { width: 6px; height: 6px; border-radius: 50%; background: var(--voxa-accent); box-shadow: 0 0 16px rgba(201,135,98,.8); }
+.voxa-kicker i { width: 3px; height: 3px; border-radius: 50%; background: var(--voxa-accent); opacity: .7; }
+.voxa-hero-copy h1 { margin: 38px 0 24px; font-size: clamp(76px, 12.3vw, 174px); font-weight: 500; line-height: .99; letter-spacing: -.075em; }
+.voxa-hero-copy h1 em, .voxa-work-heading h2 em, .voxa-process-heading h2 em, .voxa-manifesto h2 em, .voxa-end h2 em {
+  color: var(--voxa-accent);
+  font-style: normal;
+}
+.voxa-hero-description { color: rgba(240,238,232,.65); font-size: clamp(14px, 1.35vw, 17px); line-height: 2; }
+.voxa-scroll-link { display: inline-flex; align-items: center; gap: 12px; margin-top: 38px; padding-bottom: 9px; border-bottom: 1px solid rgba(201,135,98,.55); color: var(--voxa-paper); font-size: 12px; }
+.voxa-scroll-link svg { color: var(--voxa-accent); }
+.voxa-story-index { position: absolute; bottom: 48px; right: max(32px, calc((100vw - 1440px) / 2)); display: flex; align-items: center; gap: 12px; color: var(--voxa-muted); font: 10px 'JetBrains Mono', monospace; }
+.voxa-story-index span:first-child { color: var(--voxa-accent); }
+.voxa-index-line { width: 70px; height: 1px; background: linear-gradient(to left, var(--voxa-accent), var(--voxa-line)); }
+.voxa-story-caption { position: absolute; bottom: 48px; left: max(32px, calc((100vw - 1440px) / 2)); color: rgba(240,238,232,.4); font-size: 10px; }
+.voxa-story-track { position: absolute; bottom: 0; inset-inline: 0; display: flex; justify-content: space-around; padding: 14px 32px; border-top: 1px solid var(--voxa-line); color: rgba(240,238,232,.3); font-size: 10px; letter-spacing: .08em; }
+
+.voxa-intro, .voxa-work, .voxa-process { position: relative; width: min(100% - 64px, 1440px); margin-inline: auto; padding-block: clamp(100px, 13vw, 190px); }
+.voxa-section-meta { display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--voxa-line); color: var(--voxa-muted); font-size: 10px; }
+.voxa-intro { min-height: 780px; }
+.voxa-intro-content { width: min(790px, 76%); margin: 100px 8% 0 auto; }
+.voxa-intro-content h2 { margin: 30px 0; font-size: clamp(43px, 7vw, 92px); font-weight: 450; line-height: 1.28; letter-spacing: -.065em; }
+.voxa-intro-content h2 span { color: var(--voxa-accent); }
+.voxa-intro-note { max-width: 440px; margin-right: auto; color: var(--voxa-muted); font-size: 14px; line-height: 2.1; }
+.voxa-intro-mark { position: absolute; bottom: 100px; left: 9%; width: clamp(92px, 13vw, 180px); height: auto; color: rgba(201,135,98,.36); }
+
+.voxa-work { padding-top: 80px; }
+.voxa-work-heading { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin: 78px 0 52px; }
+.voxa-work-heading h2, .voxa-process-heading h2 { margin: 0; font-size: clamp(58px, 9vw, 118px); font-weight: 450; line-height: 1.08; letter-spacing: -.07em; }
+.voxa-work-heading p { max-width: 270px; margin: 0 3% 10px 0; color: var(--voxa-muted); font-size: 13px; line-height: 2; }
+.voxa-work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px 22px; align-items: start; }
+.voxa-project { min-width: 0; }
+.voxa-project-tall { margin-top: 110px; }
+.voxa-project-wide { margin-top: 100px; }
+.voxa-project-image { position: relative; overflow: hidden; aspect-ratio: 1.08 / 1; background: #171613; }
+.voxa-project-tall .voxa-project-image { aspect-ratio: .88 / 1; }
+.voxa-project-wide .voxa-project-image { aspect-ratio: 1.12 / 1; }
+.voxa-project-image img { object-fit: cover; transition: transform .85s cubic-bezier(.2,.7,.2,1); }
+.voxa-project:hover .voxa-project-image img { transform: scale(1.045); }
+.voxa-project-number { position: absolute; top: 18px; right: 18px; z-index: 1; color: rgba(255,255,255,.72); font: 10px 'JetBrains Mono', monospace; }
+.voxa-project-open { position: absolute; left: 18px; bottom: 18px; z-index: 1; display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid rgba(255,255,255,.45); border-radius: 50%; color: white; background: rgba(10,10,10,.18); backdrop-filter: blur(10px); }
+.voxa-project-info { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-top: 17px; }
+.voxa-project-info h3 { margin: 0; font-size: 19px; font-weight: 500; }
+.voxa-project-info span { color: var(--voxa-muted); font-size: 11px; }
+.voxa-work-footnote { margin-top: 70px; color: var(--voxa-muted); text-align: center; font-size: 11px; }
+
+.voxa-manifesto { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 660px; margin-top: 60px; padding: 100px 32px; overflow: hidden; text-align: center; background: radial-gradient(ellipse at 50% 52%, rgba(139,83,53,.18), transparent 53%), #10100f; }
+.voxa-manifesto::before { content: ''; position: absolute; inset: 12%; border: 1px solid rgba(201,135,98,.12); border-radius: 50%; transform: scaleX(.72); }
+.voxa-manifesto > p { position: relative; z-index: 1; color: var(--voxa-muted); font-size: 12px; }
+.voxa-manifesto h2 { position: relative; z-index: 1; margin: 25px 0; font-size: clamp(49px, 8vw, 104px); font-weight: 450; line-height: 1.25; letter-spacing: -.07em; }
+.voxa-manifesto-star { position: relative; z-index: 1; display: grid; width: 45px; height: 45px; place-items: center; border: 1px solid rgba(201,135,98,.35); border-radius: 50%; color: var(--voxa-accent); }
+.voxa-manifesto-star svg { width: 25px; }
+
+.voxa-process { display: grid; grid-template-columns: .9fr 1.1fr; gap: 70px 9%; }
+.voxa-process > .voxa-section-meta { grid-column: 1 / -1; }
+.voxa-process-heading h2 { margin-top: 28px; }
+.voxa-values { border-top: 1px solid var(--voxa-line); }
+.voxa-value { display: grid; grid-template-columns: 42px 1fr 20px; align-items: start; gap: 18px; padding: 30px 0; border-bottom: 1px solid var(--voxa-line); }
+.voxa-value-number { padding-top: 6px; color: var(--voxa-accent); font: 10px 'JetBrains Mono', monospace; }
+.voxa-value h3 { margin: 0 0 10px; font-size: 18px; font-weight: 500; }
+.voxa-value p { max-width: 420px; margin: 0; color: var(--voxa-muted); font-size: 12px; line-height: 2; }
+.voxa-value > svg { margin-top: 4px; color: var(--voxa-accent); }
+
+.voxa-end { position: relative; min-height: 800px; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 120px 32px 0; text-align: center; background: radial-gradient(ellipse at 50% 35%, rgba(166,94,58,.19), transparent 48%), #0d0c0b; }
+.voxa-end-symbol { position: relative; display: grid; width: 94px; height: 94px; margin-bottom: 44px; place-items: center; border: 1px solid rgba(201,135,98,.45); border-radius: 50%; color: var(--voxa-accent); }
+.voxa-end-symbol span { font: italic 55px 'Instrument Serif', Georgia, serif; }
+.voxa-end-symbol i { position: absolute; inset: -9px; border: 1px solid rgba(201,135,98,.13); border-radius: 50%; }
+.voxa-end h2 { margin: 24px 0 18px; font-size: clamp(48px, 8.2vw, 108px); font-weight: 450; line-height: 1.22; letter-spacing: -.07em; }
+.voxa-end-note { max-width: 420px; color: var(--voxa-muted); font-size: 12px; line-height: 2; }
+.voxa-contact-link { display: inline-flex; align-items: center; gap: 14px; margin-top: 27px; padding: 13px 19px; border: 1px solid rgba(201,135,98,.45); border-radius: 99px; color: var(--voxa-paper); font-size: 12px; transition: background .25s ease, color .25s ease; }
+.voxa-contact-link:hover { color: var(--voxa-bg); background: var(--voxa-accent); }
+.voxa-footer { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: min(100%, 1440px); min-height: 100px; margin-top: auto; border-top: 1px solid var(--voxa-line); color: var(--voxa-muted); font-size: 10px; text-align: right; }
+.voxa-footer .voxa-wordmark { color: var(--voxa-paper); }
+
+@media (max-width: 720px) {
+  .voxa-header { width: calc(100% - 36px); height: 72px; }
+  .voxa-wordmark { font-size: 21px; }
+  .voxa-header nav { gap: 15px; }
+  .voxa-header nav a { font-size: 10px; }
+  .voxa-header-cta { gap: 6px; padding: 9px 10px; font-size: 9px; }
+  .voxa-story { height: 300vh; }
+  .voxa-story-sticky { min-height: 620px; }
+  .voxa-hero-copy { width: calc(100% - 42px); padding-top: 40px; }
+  .voxa-hero-copy h1 { margin-top: 33px; font-size: clamp(72px, 17vw, 118px); }
+  .voxa-hero-description { font-size: 13px; }
+  .voxa-orb { left: -21%; top: 53%; width: 78vw; opacity: .7; }
+  .voxa-story-index { right: 21px; bottom: 45px; }
+  .voxa-story-caption { left: 21px; bottom: 45px; font-size: 9px; }
+  .voxa-story-track { padding-inline: 14px; font-size: 9px; }
+  .voxa-intro, .voxa-work, .voxa-process { width: calc(100% - 42px); padding-block: 95px; }
+  .voxa-intro { min-height: auto; }
+  .voxa-intro-content { width: 100%; margin: 78px 0 0; }
+  .voxa-intro-content h2 { font-size: clamp(42px, 11vw, 66px); }
+  .voxa-intro-note { margin: 28px 0 0; font-size: 12px; }
+  .voxa-intro-mark { position: relative; left: auto; bottom: auto; width: 78px; margin-top: 50px; }
+  .voxa-work-heading { display: block; margin: 62px 0 38px; }
+  .voxa-work-heading h2, .voxa-process-heading h2 { font-size: clamp(58px, 14vw, 82px); }
+  .voxa-work-heading p { margin: 24px 0 0; font-size: 12px; }
+  .voxa-work-grid { grid-template-columns: 1fr; gap: 38px; }
+  .voxa-project-tall, .voxa-project-wide { margin-top: 0; }
+  .voxa-project-image, .voxa-project-tall .voxa-project-image, .voxa-project-wide .voxa-project-image { aspect-ratio: 1 / .92; }
+  .voxa-project-info h3 { font-size: 17px; }
+  .voxa-work-footnote { margin-top: 46px; }
+  .voxa-manifesto { min-height: 490px; padding-inline: 22px; }
+  .voxa-manifesto h2 { font-size: clamp(48px, 12vw, 72px); }
+  .voxa-process { display: block; }
+  .voxa-process-heading { margin: 56px 0 42px; }
+  .voxa-value { grid-template-columns: 30px 1fr 18px; gap: 10px; padding: 25px 0; }
+  .voxa-value h3 { font-size: 16px; }
+  .voxa-value p { font-size: 11px; }
+  .voxa-end { min-height: 720px; padding-inline: 22px; }
+  .voxa-end h2 { font-size: clamp(45px, 11vw, 72px); }
+  .voxa-footer { flex-wrap: wrap; justify-content: space-between; padding-block: 22px; }
+  .voxa-footer > span:nth-child(2) { order: 3; width: 100%; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .voxa-project-image img { transition: none; }
+}
