@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
-import { ArrowDown, ArrowUpLeft, ArrowUpRight, Asterisk, MoveUpLeft } from 'lucide-react'
+import { ArrowDown, ArrowUpLeft, Asterisk, MoveUpLeft } from 'lucide-react'
 
 const projects = [
   { number: '٠١', name: 'أطلس', kind: 'هوية بصرية', image: '/images/projects/atlas-cover.svg', className: 'voxa-project-tall' },
