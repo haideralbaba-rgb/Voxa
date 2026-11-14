@@ -739,3 +739,37 @@ html[data-route-transition]::view-transition-new(root) {
   .voxa-not-found { padding-inline: 22px; }
   .voxa-not-found > .voxa-wordmark { margin-bottom: 80px; }
 }
+
+/* A quiet, scroll-driven light field behind the editorial content. */
+.voxa-ambient { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.voxa-ambient-field { position: absolute; inset: -25%; will-change: transform; background: radial-gradient(ellipse at 20% 38%, rgba(142, 78, 49, .12), transparent 28%), radial-gradient(ellipse at 80% 68%, rgba(91, 101, 111, .09), transparent 30%); }
+.voxa-ambient-field span, .voxa-ambient-field i, .voxa-ambient-field b { position: absolute; display: block; border: 1px solid rgba(201, 135, 98, .11); border-radius: 50%; }
+.voxa-ambient-field span { width: 56vw; height: 56vw; top: 15%; left: -8%; }
+.voxa-ambient-field i { width: 44vw; height: 44vw; top: 23%; left: -2%; }
+.voxa-ambient-field b { width: 62vw; height: 62vw; right: -15%; bottom: -12%; border-color: rgba(141, 153, 160, .07); }
+.voxa-value-icon { display: grid; width: 38px; height: 38px; place-items: center; margin-top: -5px; border: 1px solid rgba(201, 135, 98, .28); border-radius: 50%; color: var(--voxa-accent); transition: background .3s ease, transform .3s ease; }
+.voxa-value:hover .voxa-value-icon { transform: rotate(-12deg); background: rgba(201, 135, 98, .1); }
+.voxa-value { grid-template-columns: 42px 1fr 38px; }
+.voxa-music-wrap { position: fixed; z-index: 40; bottom: 22px; left: 24px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.voxa-music { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 5px 8px 5px 14px; border: 1px solid rgba(201, 135, 98, .32); border-radius: 99px; background: rgba(18, 16, 14, .88); color: #f0eee8; font: inherit; font-size: 11px; cursor: pointer; box-shadow: 0 10px 35px rgba(0,0,0,.22); backdrop-filter: blur(16px); transition: border-color .25s ease, background .25s ease; }
+.voxa-music:hover { border-color: rgba(201, 135, 98, .8); background: #211a16; }
+.voxa-music:focus-visible { outline: 2px solid #e5aa86; outline-offset: 4px; }
+.voxa-music-icon { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 50%; background: rgba(201, 135, 98, .14); color: #dfa582; }
+.voxa-music-bars { display: flex; align-items: center; gap: 2px; height: 14px; direction: ltr; }
+.voxa-music-bars i { display: block; width: 2px; height: 4px; border-radius: 2px; background: #c98762; }
+.voxa-music-bars.is-playing i { animation: voxa-sound-wave 1.2s ease-in-out infinite alternate; }
+.voxa-music-bars.is-playing i:nth-child(2) { animation-delay: -.7s; }
+.voxa-music-bars.is-playing i:nth-child(3) { animation-delay: -.3s; }
+.voxa-music-error { max-width: 210px; padding: 7px 10px; border-radius: 8px; background: #211a16; color: #f0eee8; font-size: 11px; }
+@keyframes voxa-sound-wave { from { height: 3px; } to { height: 13px; } }
+@media (max-width: 720px) {
+  .voxa-value { grid-template-columns: 30px 1fr 38px; }
+  .voxa-music-wrap { bottom: 14px; left: 14px; }
+  .voxa-ambient-field span, .voxa-ambient-field i, .voxa-ambient-field b { min-width: 75vw; min-height: 75vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .voxa-ambient-field { will-change: auto; }
+  .voxa-value-icon { transition: none; }
+  .voxa-value:hover .voxa-value-icon { transform: none; }
+  .voxa-music-bars.is-playing i { animation: none; height: 8px; }
+}
