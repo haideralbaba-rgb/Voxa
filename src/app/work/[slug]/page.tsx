@@ -53,18 +53,18 @@ export default async function ProjectPage({ params }: PageProps) {
   return (
     <main dir="rtl" className="voxa-project-page">
       <header className="voxa-detail-header">
-        <Link href="/#top" className="voxa-wordmark" aria-label="فوكسـا، الصفحة الرئيسية">VOXA<span>®</span></Link>
+        <Link href="/#top" className="voxa-wordmark" aria-label="فوكسـا، الصفحة الرئيسية">VOXA</Link>
         <Link href="/#work" className="voxa-detail-back"><ArrowUpRight size={15} /> العودة إلى الأعمال</Link>
       </header>
       <article className="voxa-detail-shell">
-        <p className="voxa-kicker"><span /> {kind} <i /> تجربة بصرية</p>
+        <p className="voxa-kicker"><span /> {kind} <i /> نموذج تصوري</p>
         <h1>{name}<br /><em>من فكرة إلى صورة.</em></h1>
-        <p className="voxa-detail-intro">مساحة لاستكشاف التكوين، واللون، والإيقاع البصري. كل تفصيل هنا جزء من لغة واحدة تحاول أن تمنح الفكرة شكلاً واضحاً ومميزاً.</p>
+        <p className="voxa-detail-intro">نموذج تصوري لاستكشاف التكوين واللون والإيقاع البصري، وليس مشروعاً لعميل. الصور والأرقام الظاهرة فيه توضيحية فقط، ونعرضه للتعريف بأسلوبنا وطريقة تفكيرنا.</p>
         <div className="voxa-detail-cover">
           <Image src={project.cover.src} alt={`الغلاف البصري لمشروع ${name}`} fill priority sizes="(max-width: 760px) 100vw, 82vw" />
         </div>
         <div className="voxa-detail-meta">
-          <span>مختارات فوكسـا</span><span>{kind}</span><span>{project.year}</span>
+          <span>نموذج تصوري</span><span>{kind}</span><span>مختارات فوكسـا</span>
         </div>
         <div className="voxa-detail-gallery">
           {project.gallery.map((item, index) => (

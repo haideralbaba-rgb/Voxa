@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: '%s — VOXA',
   },
   description:
-    'فوكسـا استوديو إبداعي مستقل يحوّل الأفكار إلى هويات وتجارب بصرية واضحة، متماسكة، وجديرة بأن تُرى.',
+    'فوكسـا فريق إبداعي ناشئ من كربلاء يصنع هويات وتجارب بصرية بأفكار واضحة وعناية بالتفاصيل.',
   applicationName: 'VOXA',
   authors: [{ name: 'VOXA' }],
   creator: 'VOXA',
@@ -18,14 +18,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     title: 'VOXA — الفكرة تصير أثراً',
-    description: 'استوديو إبداعي مستقل للأفكار التي تستحق أن تُرى.',
+    description: 'فريق إبداعي ناشئ للأفكار التي تستحق أن تُرى.',
     siteName: 'VOXA',
     locale: 'ar_IQ',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'VOXA — الفكرة تصير أثراً',
-    description: 'استوديو إبداعي مستقل للأفكار التي تستحق أن تُرى.',
+    description: 'فريق إبداعي ناشئ للأفكار التي تستحق أن تُرى.',
   },
   robots: {
     index: false,

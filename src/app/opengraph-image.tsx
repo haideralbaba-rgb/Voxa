@@ -19,8 +19,8 @@ export default function OpenGraphImage() {
         fontFamily: 'sans-serif',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: 34, fontWeight: 800, letterSpacing: -3 }}>VOXA®</span>
-          <span style={{ fontSize: 18, color: '#c98762' }}>استوديو إبداعي مستقل</span>
+          <span style={{ fontSize: 34, fontWeight: 800, letterSpacing: -3 }}>VOXA</span>
+          <span style={{ fontSize: 18, color: '#c98762' }}>فريق إبداعي ناشئ</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <span style={{ fontSize: 84, fontWeight: 700, lineHeight: 1.3 }}>الفكرة تصير أثراً.</span>
