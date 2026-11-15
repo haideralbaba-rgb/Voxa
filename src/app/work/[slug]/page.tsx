@@ -1,22 +1,24 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
-import { ArrowLeft, ArrowRight, ArrowUpLeft } from 'lucide-react'
-import { getAdjacentWork, getWorkBySlug, WORK_PROJECTS } from '@/lib/voxa-data'
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ArrowLeft, ArrowRight, ArrowUpLeft } from "lucide-react";
+import { getAdjacentWork, getWorkBySlug, WORK_PROJECTS } from "@/lib/voxa-data";
 
 interface PageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }
 
 export function generateStaticParams() {
-  return WORK_PROJECTS.map((project) => ({ slug: project.slug }))
+  return WORK_PROJECTS.map((project) => ({ slug: project.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params
-  const project = getWorkBySlug(slug)
-  if (!project) return { title: 'العمل غير موجود' }
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getWorkBySlug(slug);
+  if (!project) return { title: "العمل غير موجود" };
 
   return {
     title: `${project.title} — ${project.categoryLabel}`,
@@ -26,18 +28,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: project.summary,
       images: [{ url: project.image, alt: project.imageAlt }],
     },
-  }
+  };
 }
 
 export default async function WorkDetailPage({ params }: PageProps) {
-  const { slug } = await params
-  const project = getWorkBySlug(slug)
-  if (!project) notFound()
+  const { slug } = await params;
+  const project = getWorkBySlug(slug);
+  if (!project) notFound();
 
-  const { prev, next } = getAdjacentWork(slug)
+  const { prev, next } = getAdjacentWork(slug);
 
   return (
-    <article className="pt-28 pb-0 md:pt-32">
+    <article className="vx-case-study pb-0">
       <div className="container-vox">
         {/* Top editorial meta-row */}
         <div className="meta-row flex-wrap">
@@ -69,7 +71,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
           </div>
 
           <div className="lg:col-span-4">
-            <p className="text-sm leading-[2.05] text-muted md:text-base">{project.summary}</p>
+            <p className="text-sm leading-[2.05] text-muted md:text-base">
+              {project.summary}
+            </p>
           </div>
         </header>
 
@@ -90,9 +94,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
           {project.specs.map((spec, idx) => (
             <div
               key={spec.label}
-              className={`py-5 ${idx % 2 === 1 ? 'border-s border-line ps-5' : 'pe-5'} ${
-                idx >= 2 ? 'border-t border-line lg:border-t-0' : ''
-              } ${idx > 0 ? 'lg:border-s lg:border-line lg:ps-6' : 'lg:ps-0'}`}
+              className={`py-5 ${idx % 2 === 1 ? "border-s border-line ps-5" : "pe-5"} ${
+                idx >= 2 ? "border-t border-line lg:border-t-0" : ""
+              } ${idx > 0 ? "lg:border-s lg:border-line lg:ps-6" : "lg:ps-0"}`}
             >
               <span className="block text-[11px] text-muted">{spec.label}</span>
               <span className="mt-1 block font-display text-sm font-medium text-ink md:text-base">
@@ -108,20 +112,32 @@ export default async function WorkDetailPage({ params }: PageProps) {
           <div className="space-y-12 lg:col-span-7">
             <section className="space-y-3 border-b border-line pb-10">
               <span className="label text-blue">01 / CHALLENGE</span>
-              <h2 className="font-display text-2xl font-medium text-ink">السؤال والتحدي</h2>
-              <p className="text-base leading-[2.05] text-muted">{project.challenge}</p>
+              <h2 className="font-display text-2xl font-medium text-ink">
+                السؤال والتحدي
+              </h2>
+              <p className="text-base leading-[2.05] text-muted">
+                {project.challenge}
+              </p>
             </section>
 
             <section className="space-y-3 border-b border-line pb-10">
               <span className="label text-blue">02 / VISUAL DIRECTION</span>
-              <h2 className="font-display text-2xl font-medium text-ink">الاتجاه البصري والحل</h2>
-              <p className="text-base leading-[2.05] text-muted">{project.approach}</p>
+              <h2 className="font-display text-2xl font-medium text-ink">
+                الاتجاه البصري والحل
+              </h2>
+              <p className="text-base leading-[2.05] text-muted">
+                {project.approach}
+              </p>
             </section>
 
             <section className="space-y-3">
               <span className="label text-blue">03 / OUTCOME</span>
-              <h2 className="font-display text-2xl font-medium text-ink">الأثر والنتيجة</h2>
-              <p className="text-base leading-[2.05] text-muted">{project.outcome}</p>
+              <h2 className="font-display text-2xl font-medium text-ink">
+                الأثر والنتيجة
+              </h2>
+              <p className="text-base leading-[2.05] text-muted">
+                {project.outcome}
+              </p>
             </section>
           </div>
 
@@ -129,12 +145,19 @@ export default async function WorkDetailPage({ params }: PageProps) {
           <aside className="space-y-10 lg:col-span-5">
             <div className="border border-line bg-paper-2/60 p-6 md:p-8">
               <span className="label text-muted">DELIVERABLES</span>
-              <h3 className="mt-2 font-display text-lg font-medium text-ink">مخرجات العمل</h3>
+              <h3 className="mt-2 font-display text-lg font-medium text-ink">
+                مخرجات العمل
+              </h3>
               <ul className="mt-5 divide-y divide-line">
                 {project.deliverables.map((item, idx) => (
-                  <li key={item} className="flex items-center justify-between py-3 text-sm text-ink">
+                  <li
+                    key={item}
+                    className="flex items-center justify-between py-3 text-sm text-ink"
+                  >
                     <span>{item}</span>
-                    <span className="label text-[10px] text-muted">0{idx + 1}</span>
+                    <span className="label text-[10px] text-muted">
+                      0{idx + 1}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -142,25 +165,38 @@ export default async function WorkDetailPage({ params }: PageProps) {
 
             <div className="border border-line p-6 md:p-8">
               <span className="label text-muted">COLOR SYSTEM</span>
-              <h3 className="mt-2 font-display text-lg font-medium text-ink">لوحة الألوان</h3>
+              <h3 className="mt-2 font-display text-lg font-medium text-ink">
+                لوحة الألوان
+              </h3>
               <div className="mt-5 grid grid-cols-2 gap-3.5">
                 {project.palette.map((swatch) => (
-                  <div key={swatch.hex} className="border border-line bg-paper p-2.5">
+                  <div
+                    key={swatch.hex}
+                    className="border border-line bg-paper p-2.5"
+                  >
                     <div
                       className="h-14 w-full border border-line"
                       style={{ backgroundColor: swatch.hex }}
                     />
                     <div className="mt-2.5 flex items-baseline justify-between gap-2">
-                      <span className="latin truncate text-[11px] text-ink">{swatch.name}</span>
-                      <span className="label text-[9px] text-muted">{swatch.hex}</span>
+                      <span className="latin truncate text-[11px] text-ink">
+                        {swatch.name}
+                      </span>
+                      <span className="label text-[9px] text-muted">
+                        {swatch.hex}
+                      </span>
                     </div>
                   </div>
                 ))}
               </div>
 
               <div className="mt-6 border-t border-line pt-5">
-                <span className="label block text-[10px] text-muted">TYPOGRAPHY</span>
-                <p className="latin mt-1.5 font-display text-sm text-ink">{project.typography}</p>
+                <span className="label block text-[10px] text-muted">
+                  TYPOGRAPHY
+                </span>
+                <p className="latin mt-1.5 font-display text-sm text-ink">
+                  {project.typography}
+                </p>
               </div>
             </div>
           </aside>
@@ -223,5 +259,5 @@ export default async function WorkDetailPage({ params }: PageProps) {
         </div>
       </div>
     </article>
-  )
+  );
 }

@@ -1,74 +1,72 @@
-import type { Metadata, Viewport } from 'next'
-import { Cursor, Loader, ScrollProgress } from '@/components/Chrome'
-import { Footer } from '@/components/Footer'
-import { Header } from '@/components/Header'
-import { MotionProvider } from '@/components/providers/MotionProvider'
-import './globals.css'
+import type { Metadata, Viewport } from "next";
+import { ScrollProgress } from "@/components/Chrome";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { MotionProvider } from "@/components/providers/MotionProvider";
+import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://voxa.studio'
-
-const themeBootScript = `
-(function(){
-  try {
-    var saved = localStorage.getItem('voxa-theme');
-    if (saved === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  } catch (e) {}
-})();
-`
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://voxa.studio";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'VOXA — استوديو تصميم وهوية بصرية',
-    template: '%s — VOXA',
+    default: "VOXA — استوديو تصميم وهوية بصرية",
+    template: "%s — VOXA",
   },
   description:
-    'فوكسـا استوديو تصميم مستقل من كربلاء، يبني الهويات البصرية والمواقع التحريرية والتجارب الرقمية بوضوح وحرفة تدوم.',
-  applicationName: 'VOXA',
-  authors: [{ name: 'VOXA' }],
-  creator: 'VOXA',
+    "فوكسـا استوديو تصميم مستقل من كربلاء، يبني الهويات البصرية والمواقع التحريرية والتجارب الرقمية بوضوح وحرفة تدوم.",
+  applicationName: "VOXA",
+  authors: [{ name: "VOXA" }],
+  creator: "VOXA",
   keywords: [
-    'VOXA',
-    'فوكسـا',
-    'استوديو تصميم',
-    'هوية بصرية',
-    'تصميم مواقع',
-    'توجيه فني',
-    'كربلاء',
-    'العراق',
+    "VOXA",
+    "فوكسـا",
+    "استوديو تصميم",
+    "هوية بصرية",
+    "تصميم مواقع",
+    "توجيه فني",
+    "كربلاء",
+    "العراق",
   ],
   openGraph: {
-    type: 'website',
-    title: 'VOXA — استوديو تصميم وهوية بصرية',
+    type: "website",
+    title: "VOXA — استوديو تصميم وهوية بصرية",
     description:
-      'فوكسـا استوديو تصميم مستقل من كربلاء، يصوغ الهويات البصرية والمواقع التحريرية والتجارب الرقمية.',
-    siteName: 'VOXA',
-    locale: 'ar_IQ',
-    images: [{ url: '/images/work/identity.jpg', width: 1024, height: 1536, alt: 'VOXA Studio' }],
+      "فوكسـا استوديو تصميم مستقل من كربلاء، يصوغ الهويات البصرية والمواقع التحريرية والتجارب الرقمية.",
+    siteName: "VOXA",
+    locale: "ar_IQ",
+    images: [
+      {
+        url: "/images/work/identity.jpg",
+        width: 1024,
+        height: 1536,
+        alt: "VOXA Studio",
+      },
+    ],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'VOXA — استوديو تصميم وهوية بصرية',
+    card: "summary_large_image",
+    title: "VOXA — استوديو تصميم وهوية بصرية",
     description:
-      'استوديو تصميم مستقل من كربلاء للهويات البصرية والمطبوعات والتجارب الرقمية.',
-    images: ['/images/work/identity.jpg'],
+      "استوديو تصميم مستقل من كربلاء للهويات البصرية والمطبوعات والتجارب الرقمية.",
+    images: ["/images/work/identity.jpg"],
   },
   robots: { index: true, follow: true },
-  category: 'design',
-}
+  category: "design",
+};
 
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
-  themeColor: '#efebe1',
-  colorScheme: 'light dark',
-}
+  themeColor: "#181917",
+  colorScheme: "dark",
+};
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
@@ -93,7 +91,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>
       <body className="min-h-dvh antialiased">
         <MotionProvider>
@@ -103,10 +100,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           >
             انتقل إلى المحتوى الرئيسي
           </a>
-          <Loader />
-          <Cursor />
           <ScrollProgress />
-          <div className="grain" aria-hidden="true" />
           <Header />
           <main id="main" className="relative">
             {children}
@@ -117,5 +111,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </MotionProvider>
       </body>
     </html>
-  )
+  );
 }
