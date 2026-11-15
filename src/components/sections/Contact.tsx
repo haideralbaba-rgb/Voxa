@@ -1,392 +1,418 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { ArrowUpRight, Check, Copy, Loader2, Mail, Send } from 'lucide-react'
-import { budgets, profile } from '@/lib/data/profile'
-import type { ContactPayload, ContactResult } from '@/lib/types'
-import { cn } from '@/lib/utils'
-import { useSound } from '@/components/providers/SoundProvider'
-import { ShaderBackdrop } from '@/components/visual/ShaderBackdrop'
+import { useState, type FormEvent } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
+import { ArrowUpLeft, Check, CheckCircle2, Copy, Loader2 } from 'lucide-react'
+import { CONTACT_BUDGETS, CONTACT_SERVICES, STUDIO } from '@/lib/voxa-data'
 
-type Status = 'idle' | 'submitting' | 'success' | 'error'
+interface FieldErrors {
+  name?: string
+  email?: string
+  service?: string
+  budget?: string
+  message?: string
+}
 
-const emptyForm: ContactPayload = { name: '', email: '', company: '', budget: '', message: '' }
-
-const budgetOptions = [...budgets]
+const EASE_EXPO = [0.16, 1, 0.3, 1] as const
 
 export function Contact() {
-  const [form, setForm] = useState<ContactPayload>(emptyForm)
-  const [status, setStatus] = useState<Status>('idle')
-  const [errors, setErrors] = useState<Partial<Record<keyof ContactPayload, string>>>({})
-  const [result, setResult] = useState<ContactResult | null>(null)
-  const [copied, setCopied] = useState(false)
-  const formRef = useRef<HTMLFormElement | null>(null)
   const reduced = useReducedMotion()
-  const { play } = useSound()
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [service, setService] = useState<string>(CONTACT_SERVICES[0])
+  const [budget, setBudget] = useState<string>('')
+  const [message, setMessage] = useState('')
+  const [website, setWebsite] = useState('')
 
-  function update<K extends keyof ContactPayload>(key: K, value: ContactPayload[K]) {
-    setForm((previous) => ({ ...previous, [key]: value }))
-    setErrors((previous) => (previous[key] ? { ...previous, [key]: undefined } : previous))
-    if (status === 'error') setStatus('idle')
-  }
+  const [errors, setErrors] = useState<FieldErrors>({})
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [serverMessage, setServerMessage] = useState('')
+  const [copied, setCopied] = useState(false)
 
-  async function copyEmail() {
+  const copyEmail = async () => {
     try {
-      await navigator.clipboard.writeText(profile.email)
-      play('copy')
+      await navigator.clipboard.writeText(STUDIO.email)
       setCopied(true)
       window.setTimeout(() => setCopied(false), 2200)
     } catch {
-      setCopied(false)
+      // Fallback: open mailto if clipboard is unavailable
+      window.location.href = `mailto:${STUDIO.email}`
     }
   }
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const validateClient = (): FieldErrors => {
+    const next: FieldErrors = {}
+    if (name.trim().length < 2) {
+      next.name = 'يرجى كتابة اسمك (حرفان على الأقل).'
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      next.email = 'يرجى إدخال بريد إلكتروني صحيح.'
+    }
+    if (message.trim().length < 20) {
+      next.message = 'اكتب لمحة أوضح عن مشروعك (٢٠ حرفاً على الأقل).'
+    } else if (message.trim().length > 1200) {
+      next.message = 'يرجى اختصار الرسالة لأقل من ١٢٠٠ حرف.'
+    }
+    return next
+  }
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setStatus('submitting')
+    setServerMessage('')
+
+    const clientErrors = validateClient()
+    if (Object.keys(clientErrors).length > 0) {
+      setErrors(clientErrors)
+      setStatus('error')
+      setServerMessage('يرجى مراجعة الحقول المحددة قبل الإرسال.')
+      return
+    }
+
     setErrors({})
+    setStatus('submitting')
 
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          service,
+          budget,
+          message: message.trim(),
+          website,
+        }),
       })
-      const data = (await response.json()) as ContactResult
-      setResult(data)
+
+      const data = (await response.json()) as {
+        ok?: boolean
+        message?: string
+        fieldErrors?: FieldErrors
+      }
+
       if (!response.ok || !data.ok) {
-        play('error')
-        setStatus('error')
         setErrors(data.fieldErrors ?? {})
-        const firstField = data.fieldErrors ? Object.keys(data.fieldErrors)[0] : undefined
-        if (firstField) {
-          formRef.current?.querySelector<HTMLElement>(`[name="${firstField}"]`)?.focus()
-        }
+        setStatus('error')
+        setServerMessage(data.message ?? 'تعذّر إرسال الرسالة حالياً. جرّب التواصل المباشر عبر البريد.')
         return
       }
-      play('success')
+
       setStatus('success')
-      setForm(emptyForm)
+      setServerMessage(
+        data.message ?? 'وصلتنا رسالتك بنجاح. سنراجع تفاصيل مشروعك ونرد خلال ٢٤ ساعة عمل.',
+      )
     } catch {
       setStatus('error')
-      setResult({ ok: false, message: 'Network hiccup. Try again, or email me directly.' })
+      setServerMessage('حدث خطأ في الاتصال بالشبكة. يرجى المحاولة مرة أخرى أو مراسلتنا مباشرة.')
     }
   }
 
-  const fieldClass = (name: keyof ContactPayload) =>
-    cn(
-      'w-full rounded-xl border bg-[var(--card)] px-3.5 py-3 text-[13.5px] text-[var(--fg)] placeholder:text-[var(--fg)]/50 transition-[border-color,box-shadow] duration-300 outline-none',
-      errors[name]
-        ? 'border-red-500/50 focus:border-red-500/70'
-        : 'border-[var(--hairline)] focus:border-accent/60 focus:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-accent)_16%,transparent)]',
-    )
+  const resetForm = () => {
+    setName('')
+    setEmail('')
+    setService(CONTACT_SERVICES[0])
+    setBudget('')
+    setMessage('')
+    setWebsite('')
+    setErrors({})
+    setStatus('idle')
+    setServerMessage('')
+  }
 
   return (
-    <section
-      id="contact"
-      aria-labelledby="contact-heading"
-      className="relative scroll-mt-24 overflow-hidden border-t border-[var(--hairline)] py-20 md:py-28"
-    >
-      {/* Copper filaments on dark silk — the contact section gets the warmest
-          of the ambient rigs, low enough to sit under the form. */}
-      <ShaderBackdrop
-        variant="silk"
-        intensity={0.55}
-        className="pointer-events-none absolute inset-0 -z-10"
-      />
+    <section id="contact" className="border-t border-line py-24 md:py-36">
+      <div className="container-vox">
+        <div className="meta-row">
+          <span className="text-xs font-medium text-ink">٠٦ — ابدأ مشروعك</span>
+          <span className="label text-muted">06 / START A PROJECT</span>
+        </div>
 
-      <div className="container-page">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
-          {/* Left: pitch + direct contact */}
-          <div>
-            <div className="mb-5 flex items-center gap-3">
-              <span className="font-mono text-[11px] tracking-[0.16em] text-accent">08</span>
-              <span className="h-px w-8 bg-[var(--hairline-strong)]" aria-hidden />
-              <span className="eyebrow">Contact</span>
-            </div>
-            <h2
-              id="contact-heading"
-              className="text-display-lg font-semibold leading-[0.98] tracking-[-0.045em]"
-            >
-              Let&apos;s build something
-              <br />
-              <span className="serif-accent text-accent">worth remembering.</span>
-            </h2>
-            <p className="mt-5 max-w-md text-[15px] leading-[1.75] text-muted">
-              Brand systems, product interfaces, or a launch site that has to land. Tell me the
-              shape of the problem — I reply within one working day, and I say no quickly when it is
-              not a fit.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-2.5">
-              <button
-                type="button"
-                onClick={copyEmail}
-                className="group inline-flex h-11 items-center gap-2.5 rounded-full border border-[var(--hairline-strong)] bg-[var(--card)] pl-4 pr-3 text-[13.5px] font-medium transition-colors duration-300 hover:border-accent/45"
-              >
-                <Mail size={14} className="text-muted" aria-hidden />
-                {profile.email}
-                <span className="grid size-7 place-items-center rounded-full bg-[var(--fg)]/[0.06] text-[var(--fg)]/70 transition-colors group-hover:bg-accent group-hover:text-white">
-                  {copied ? <Check size={12} aria-hidden /> : <Copy size={12} aria-hidden />}
-                </span>
-              </button>
-              <span className="sr-only" role="status" aria-live="polite">
-                {copied ? 'Email address copied to clipboard' : ''}
-              </span>
+        <div className="mt-12 grid grid-cols-1 gap-14 lg:mt-16 lg:grid-cols-12 lg:gap-14">
+          {/* Right (start in RTL): Editorial CTA & direct email */}
+          <motion.div
+            initial={reduced ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.75, ease: EASE_EXPO }}
+            className="flex flex-col justify-between gap-10 lg:col-span-5"
+          >
+            <div className="space-y-6">
+              <h2 className="font-display text-[clamp(2.4rem,5.6vw,4.7rem)] font-semibold leading-[1.08] text-ink">
+                عندك فكرة؟
+                <br />
+                لنحوّلها إلى <span className="text-lime">أثر.</span>
+              </h2>
+              <p className="max-w-md text-sm leading-[2.05] text-muted md:text-base">
+                سواء كانت لديك خطة جاهزة أو مجرّد فكرة أولية تبحث عن شكلها الصحيح، شاركنا لمحة
+                سريعة وسنعود إليك خلال يوم عمل واحد بخطوات واضحة.
+              </p>
             </div>
 
-            <dl className="mt-10 grid grid-cols-2 gap-6 border-t border-[var(--hairline)] pt-6">
+            <div className="space-y-6 border-t border-line pt-8">
               <div>
-                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Location</dt>
-                <dd className="mt-1.5 text-[13.5px] font-medium">{profile.location}</dd>
-                <dd className="text-[11.5px] text-muted">{profile.timezone} · remote friendly</dd>
-              </div>
-              <div>
-                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Availability</dt>
-                <dd className="mt-1.5 flex items-center gap-1.5 text-[13.5px] font-medium">
-                  <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden />
-                  Booking Q1 2027
-                </dd>
-                <dd className="text-[11.5px] text-muted">Two slots per quarter</dd>
-              </div>
-            </dl>
-
-            <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2">
-              {profile.socials.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-1 text-[12.5px] text-muted transition-colors hover:text-[var(--fg)]"
-                >
-                  {social.label}
-                  <ArrowUpRight
-                    size={12}
-                    className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                    aria-hidden
-                  />
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Right: form */}
-          <div className="surface relative overflow-hidden rounded-3xl p-5 md:p-7">
-            <AnimatePresence mode="wait" initial={false}>
-              {status === 'success' ? (
-                <motion.div
-                  key="success"
-                  initial={reduced ? false : { opacity: 0, scale: 0.97 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex min-h-[24rem] flex-col items-center justify-center text-center"
-                  role="status"
-                  aria-live="polite"
-                >
-                  <motion.span
-                    initial={reduced ? false : { scale: 0.5, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ type: 'spring', stiffness: 260, damping: 18, delay: 0.1 }}
-                    className="grid size-14 place-items-center rounded-full bg-emerald-500/12 text-emerald-600 dark:text-emerald-400"
+                <span className="label block text-[10px] text-muted">DIRECT EMAIL</span>
+                <div className="mt-2.5 flex flex-wrap items-center gap-3">
+                  <a
+                    href={`mailto:${STUDIO.email}`}
+                    className="latin font-display text-xl text-ink transition-colors hover:text-lime md:text-2xl"
                   >
-                    <Check size={26} strokeWidth={2.2} aria-hidden />
-                  </motion.span>
-                  <h3 className="mt-5 text-[19px] font-semibold tracking-[-0.02em]">Message sent</h3>
-                  <p className="mt-2 max-w-xs text-[13.5px] leading-6 text-muted">
-                    {result?.message ?? 'Thanks — your note landed.'}
-                  </p>
+                    {STUDIO.email}
+                  </a>
                   <button
                     type="button"
-                    onClick={() => {
-                      setStatus('idle')
-                      setResult(null)
-                    }}
-                    className="mt-6 inline-flex h-10 items-center rounded-full border border-[var(--hairline-strong)] px-4 text-[12.5px] font-medium transition-colors hover:border-[var(--fg)]/40"
+                    onClick={copyEmail}
+                    data-cursor="نسخ"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-line px-3 py-1 text-xs text-muted transition-colors hover:border-lime hover:text-lime"
                   >
-                    Send another
+                    {copied ? <Check size={13} /> : <Copy size={13} />}
+                    <span>{copied ? 'تم النسخ' : 'نسخ البريد'}</span>
                   </button>
-                </motion.div>
-              ) : (
-                <motion.form
-                  key="form"
-                  ref={formRef}
-                  onSubmit={onSubmit}
-                  noValidate
-                  initial={false}
-                  exit={reduced ? { opacity: 0 } : { opacity: 0, y: -8 }}
-                  className="flex flex-col gap-4"
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 border-t border-line pt-6 text-xs">
+                <div>
+                  <span className="label block text-[10px] text-muted">RESPONSE TIME</span>
+                  <p className="mt-1 text-ink">خلال ٢٤ ساعة عمل</p>
+                </div>
+                <div>
+                  <span className="label block text-[10px] text-muted">LOCATION</span>
+                  <p className="mt-1 text-ink">
+                    {STUDIO.city} · <span className="latin">{STUDIO.timezoneLabel}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Left (end in RTL): Interactive Editorial Inquiry Form */}
+          <motion.div
+            initial={reduced ? false : { opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, delay: 0.08, ease: EASE_EXPO }}
+            className="lg:col-span-7"
+          >
+            {status === 'success' ? (
+              <div className="border border-lime/40 bg-paper-2 p-8 md:p-12">
+                <div className="flex items-center gap-3 text-lime">
+                  <CheckCircle2 size={24} />
+                  <span className="label text-lime">INQUIRY RECEIVED</span>
+                </div>
+                <h3 className="mt-5 font-display text-2xl font-medium text-ink md:text-3xl">
+                  شكراً لتواصلك، {name}.
+                </h3>
+                <p className="mt-3 max-w-lg text-sm leading-[2] text-muted md:text-base">
+                  {serverMessage}
+                </p>
+
+                <div className="mt-8 grid grid-cols-1 gap-3 border-y border-line py-5 text-xs sm:grid-cols-2">
+                  <div>
+                    <span className="label block text-[10px] text-muted">SERVICE</span>
+                    <span className="mt-1 block text-ink">{service || 'غير محدد'}</span>
+                  </div>
+                  <div>
+                    <span className="label block text-[10px] text-muted">BUDGET</span>
+                    <span className="mt-1 block text-ink">{budget || 'يُحدّد في النقاش'}</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="btn btn-line mt-8 !text-xs"
                 >
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <Field label="Name" htmlFor="contact-name" error={errors.name} required>
-                      <input
-                        id="contact-name"
-                        name="name"
-                        type="text"
-                        autoComplete="name"
-                        required
-                        value={form.name}
-                        onChange={(event) => update('name', event.target.value)}
-                        placeholder="Your name"
-                        aria-invalid={Boolean(errors.name)}
-                        aria-describedby={errors.name ? 'error-name' : undefined}
-                        className={fieldClass('name')}
-                      />
-                    </Field>
-                    <Field label="Email" htmlFor="contact-email" error={errors.email} required>
-                      <input
-                        id="contact-email"
-                        name="email"
-                        type="email"
-                        inputMode="email"
-                        autoComplete="email"
-                        required
-                        value={form.email}
-                        onChange={(event) => update('email', event.target.value)}
-                        placeholder="you@company.com"
-                        aria-invalid={Boolean(errors.email)}
-                        aria-describedby={errors.email ? 'error-email' : undefined}
-                        className={fieldClass('email')}
-                      />
-                    </Field>
-                  </div>
+                  <span>إرسال استفسار آخر</span>
+                </button>
+              </div>
+            ) : (
+              <form
+                onSubmit={handleSubmit}
+                noValidate
+                className="space-y-9 border border-line bg-paper-2/50 p-6 sm:p-8 md:p-10"
+              >
+                {/* Honeypot anti-spam field */}
+                <div className="hidden" aria-hidden="true">
+                  <label htmlFor="contact-website">Website</label>
+                  <input
+                    id="contact-website"
+                    name="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                  />
+                </div>
 
-                  <Field label="Company" htmlFor="contact-company" hint="Optional">
+                {/* Service Chips */}
+                <fieldset className="space-y-3.5">
+                  <legend className="flex items-center gap-2 text-xs text-muted">
+                    <span className="label text-lime">01</span>
+                    <span>ما نوع المشروع؟</span>
+                  </legend>
+                  <div className="flex flex-wrap gap-2">
+                    {CONTACT_SERVICES.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        aria-pressed={service === option}
+                        onClick={() => setService(service === option ? '' : option)}
+                        className="chip"
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+
+                {/* Budget Chips */}
+                <fieldset className="space-y-3.5">
+                  <legend className="flex items-center gap-2 text-xs text-muted">
+                    <span className="label text-lime">02</span>
+                    <span>الميزانية التقريبية (اختياري)</span>
+                  </legend>
+                  <div className="flex flex-wrap gap-2">
+                    {CONTACT_BUDGETS.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        aria-pressed={budget === option}
+                        onClick={() => setBudget(budget === option ? '' : option)}
+                        className="chip"
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+
+                {/* Name & Email Fields */}
+                <div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="contact-name" className="block text-xs text-muted">
+                      الاسم الكامل <span className="text-lime">*</span>
+                    </label>
                     <input
-                      id="contact-company"
-                      name="company"
+                      id="contact-name"
+                      name="name"
                       type="text"
-                      autoComplete="organization"
-                      value={form.company}
-                      onChange={(event) => update('company', event.target.value)}
-                      placeholder="Studio or company"
-                      className={fieldClass('company')}
-                    />
-                  </Field>
-
-                  <fieldset>
-                    <legend className="mb-2 text-[11px] font-medium uppercase tracking-[0.1em] text-muted">
-                      Budget range
-                    </legend>
-                    <div className="flex flex-wrap gap-1.5">
-                      {budgetOptions.map((option) => {
-                        const selected = form.budget === option
-                        return (
-                          <button
-                            key={option}
-                            type="button"
-                            aria-pressed={selected}
-                            onClick={() => update('budget', selected ? '' : option)}
-                            className={cn(
-                              'h-8 rounded-full border px-3 text-[12px] font-medium transition-all duration-300',
-                              selected
-                                ? 'border-accent bg-accent text-white'
-                                : 'border-[var(--hairline)] text-[var(--fg)]/62 hover:border-[var(--hairline-strong)] hover:text-[var(--fg)]',
-                            )}
-                          >
-                            {option}
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </fieldset>
-
-                  <Field
-                    label="Project"
-                    htmlFor="contact-message"
-                    error={errors.message}
-                    hint={`${form.message.length}/2000`}
-                    required
-                  >
-                    <textarea
-                      id="contact-message"
-                      name="message"
                       required
-                      rows={5}
-                      maxLength={2000}
-                      value={form.message}
-                      onChange={(event) => update('message', event.target.value)}
-                      placeholder="What are you building, who is it for, and when does it need to ship?"
-                      aria-invalid={Boolean(errors.message)}
-                      aria-describedby={errors.message ? 'error-message' : undefined}
-                      className={cn(fieldClass('message'), 'resize-none leading-6')}
+                      autoComplete="name"
+                      placeholder="مثال: علي الحسيني"
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value)
+                        if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }))
+                      }}
+                      aria-invalid={Boolean(errors.name)}
+                      className="field"
                     />
-                  </Field>
-
-                  {status === 'error' && result?.message ? (
-                    <p role="alert" className="rounded-lg bg-red-500/8 px-3 py-2 text-[12.5px] text-red-600 dark:text-red-400">
-                      {result.message}
-                    </p>
-                  ) : null}
-
-                  <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
-                    <p className="max-w-[15rem] text-[11px] leading-4 text-muted">
-                      Your details are used only to reply to this enquiry.
-                    </p>
-                    <button
-                      type="submit"
-                      disabled={status === 'submitting'}
-                      className="group inline-flex h-11 min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-[var(--fg)] px-5 text-[13.5px] font-medium text-[var(--bg)] transition-all duration-300 hover:opacity-90 disabled:opacity-60"
-                    >
-                      {status === 'submitting' ? (
-                        <>
-                          <Loader2 size={15} className="animate-spin" aria-hidden />
-                          Sending
-                        </>
-                      ) : (
-                        <>
-                          Send message
-                          <Send
-                            size={14}
-                            className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                            aria-hidden
-                          />
-                        </>
-                      )}
-                    </button>
+                    {errors.name && (
+                      <p role="alert" className="mt-2 text-xs text-[#ff7369]">
+                        {errors.name}
+                      </p>
+                    )}
                   </div>
-                </motion.form>
-              )}
-            </AnimatePresence>
-          </div>
+
+                  <div>
+                    <label htmlFor="contact-email" className="block text-xs text-muted">
+                      البريد الإلكتروني <span className="text-lime">*</span>
+                    </label>
+                    <input
+                      id="contact-email"
+                      name="email"
+                      type="email"
+                      required
+                      dir="ltr"
+                      autoComplete="email"
+                      placeholder="name@company.com"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value)
+                        if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }))
+                      }}
+                      aria-invalid={Boolean(errors.email)}
+                      className="field text-end"
+                    />
+                    {errors.email && (
+                      <p role="alert" className="mt-2 text-xs text-[#ff7369]">
+                        {errors.email}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Message Field */}
+                <div>
+                  <div className="flex items-center justify-between text-xs text-muted">
+                    <label htmlFor="contact-message">
+                      تفاصيل المشروع والفكرة <span className="text-lime">*</span>
+                    </label>
+                    <span className="label text-[10px]">
+                      {message.length} / 1200
+                    </span>
+                  </div>
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    rows={4}
+                    required
+                    maxLength={1200}
+                    placeholder="احكِ لنا باختصار عن علامتك أو مشروعك، وما الهدف الذي تسعى لتحقيقه..."
+                    value={message}
+                    onChange={(e) => {
+                      setMessage(e.target.value)
+                      if (errors.message) setErrors((prev) => ({ ...prev, message: undefined }))
+                    }}
+                    aria-invalid={Boolean(errors.message)}
+                    className="field resize-y"
+                  />
+                  {errors.message && (
+                    <p role="alert" className="mt-2 text-xs text-[#ff7369]">
+                      {errors.message}
+                    </p>
+                  )}
+                </div>
+
+                {status === 'error' && serverMessage && (
+                  <div
+                    role="alert"
+                    className="border border-[#ff5a4d]/50 bg-[#ff5a4d]/10 px-4 py-3 text-xs text-[#ffb0a8]"
+                  >
+                    {serverMessage}
+                  </div>
+                )}
+
+                <div className="flex flex-col items-start justify-between gap-4 pt-2 sm:flex-row sm:items-center">
+                  <button
+                    type="submit"
+                    disabled={status === 'submitting'}
+                    className="btn btn-lime w-full sm:w-auto"
+                  >
+                    {status === 'submitting' ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" />
+                        <span>جاري الإرسال...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>أرسل تفاصيل المشروع</span>
+                        <ArrowUpLeft size={16} />
+                      </>
+                    )}
+                  </button>
+
+                  <p className="text-[11px] leading-[1.8] text-muted">
+                    بياناتك محفوظة بسرّية تامة ولا نشاركها مع أي طرف ثالث.
+                  </p>
+                </div>
+              </form>
+            )}
+          </motion.div>
         </div>
       </div>
     </section>
-  )
-}
-
-function Field({
-  label,
-  htmlFor,
-  error,
-  hint,
-  required,
-  children,
-}: {
-  label: string
-  htmlFor: string
-  error?: string
-  hint?: string
-  required?: boolean
-  children: React.ReactNode
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex items-baseline justify-between gap-2">
-        <label htmlFor={htmlFor} className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted">
-          {label}
-          {required ? <span className="ml-0.5 text-accent">*</span> : null}
-        </label>
-        {hint ? <span className="font-mono text-[9.5px] text-muted">{hint}</span> : null}
-      </div>
-      {children}
-      {error ? (
-        <p id={`error-${htmlFor.replace('contact-', '')}`} className="text-[11.5px] text-red-600 dark:text-red-400">
-          {error}
-        </p>
-      ) : null}
-    </div>
   )
 }

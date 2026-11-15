@@ -4,16 +4,21 @@ import { getSupabaseServer } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 
-const contactSchema = z.object({
-  name: z.string().trim().min(2, 'Please share your name.').max(80),
-  email: z.string().trim().toLowerCase().email('That email looks invalid.'),
-  company: z.string().trim().max(120).optional().or(z.literal('')),
-  budget: z.string().trim().max(40).optional().or(z.literal('')),
+const schema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, 'يرجى كتابة اسمك (حرفان على الأقل).')
+    .max(80, 'الاسم طويل جداً (الحد الأقصى ٨٠ حرفاً).'),
+  email: z.string().trim().toLowerCase().email('يرجى إدخال بريد إلكتروني صحيح.'),
+  service: z.string().trim().max(60).optional().or(z.literal('')),
+  budget: z.string().trim().max(60).optional().or(z.literal('')),
   message: z
     .string()
     .trim()
-    .min(20, 'A little more context helps — at least 20 characters.')
-    .max(2000, 'Please keep it under 2000 characters.'),
+    .min(20, 'اكتب لمحة أوضح عن مشروعك (٢٠ حرفاً على الأقل).')
+    .max(1200, 'يرجى اختصار الرسالة لأقل من ١٢٠٠ حرف.'),
+  website: z.string().max(0).optional().or(z.literal('')),
 })
 
 export async function POST(request: Request) {
@@ -21,10 +26,13 @@ export async function POST(request: Request) {
   try {
     payload = await request.json()
   } catch {
-    return NextResponse.json({ ok: false, message: 'Invalid request body.' }, { status: 400 })
+    return NextResponse.json(
+      { ok: false, message: 'صيغة البيانات المرسلة غير صالحة.' },
+      { status: 400 },
+    )
   }
 
-  const parsed = contactSchema.safeParse(payload)
+  const parsed = schema.safeParse(payload)
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {}
     for (const issue of parsed.error.issues) {
@@ -32,59 +40,79 @@ export async function POST(request: Request) {
       if (!fieldErrors[key]) fieldErrors[key] = issue.message
     }
     return NextResponse.json(
-      { ok: false, message: 'Please check the highlighted fields.', fieldErrors },
+      { ok: false, message: 'يرجى مراجعة الحقول المحددة قبل الإرسال.', fieldErrors },
       { status: 422 },
     )
   }
 
-  // Persist first: Supabase, when configured, is the durable record of the
-  // enquiry. RLS allows inserts only, so the anon key cannot read anything back.
-  const supabase = await getSupabaseServer()
+  // Honeypot: real visitors never fill this hidden field.
+  if (parsed.data.website) {
+    return NextResponse.json({
+      ok: true,
+      message: 'وصلتنا رسالتك بنجاح. سنعود إليك قريباً.',
+    })
+  }
+
   let stored = false
   let storageFailed = false
 
+  // Optional Supabase persistence (active when env vars are set on Vercel/production).
+  const supabase = await getSupabaseServer()
   if (supabase) {
-    const { error } = await supabase.from('portfolio_messages').insert({
-      name: parsed.data.name,
-      email: parsed.data.email,
-      company: parsed.data.company || null,
-      budget: parsed.data.budget || null,
-      message: parsed.data.message,
-      source: 'portfolio',
-    })
-    if (error) storageFailed = true
-    else stored = true
+    try {
+      const { error } = await supabase.from('portfolio_messages').insert({
+        name: parsed.data.name,
+        email: parsed.data.email,
+        company: parsed.data.service || null,
+        budget: parsed.data.budget || null,
+        message: parsed.data.message,
+        source: 'website',
+      })
+      if (error) {
+        storageFailed = true
+        console.error('[contact] supabase insert failed', error)
+      } else {
+        stored = true
+      }
+    } catch (error) {
+      storageFailed = true
+      console.error('[contact] unexpected supabase error', error)
+    }
   }
 
-  // Then forward to a webhook (Slack, Resend, …) when one is configured.
-  const endpoint = process.env.CONTACT_WEBHOOK_URL
-  if (endpoint) {
+  // Optional webhook notification (Slack, Resend, Make, …).
+  const webhook = process.env.CONTACT_WEBHOOK_URL
+  if (webhook) {
     try {
-      await fetch(endpoint, {
+      await fetch(webhook, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ ...parsed.data, source: 'portfolio', receivedAt: new Date().toISOString() }),
+        body: JSON.stringify({
+          name: parsed.data.name,
+          email: parsed.data.email,
+          service: parsed.data.service || null,
+          budget: parsed.data.budget || null,
+          message: parsed.data.message,
+          source: 'website',
+          receivedAt: new Date().toISOString(),
+        }),
       })
-    } catch {
-      return NextResponse.json(
-        { ok: false, message: 'Could not reach the inbox. Please email me directly.' },
-        { status: 502 },
-      )
+    } catch (error) {
+      console.error('[contact] webhook dispatch failed', error)
     }
   } else if (!stored) {
-    // Surface the enquiry in server logs so an unconfigured deployment is still useful.
-    console.info('[contact] new enquiry', {
+    console.info('[contact] new inquiry received', {
       name: parsed.data.name,
       email: parsed.data.email,
-      budget: parsed.data.budget,
+      service: parsed.data.service || null,
+      budget: parsed.data.budget || null,
     })
   }
 
   return NextResponse.json({
     ok: true,
-    // Be honest: if storage was configured and failed, ask for an email too.
     message: storageFailed
-      ? 'Thanks — I received your note. If you do not hear back within a day, please email me directly.'
-      : 'Thanks — your note landed. I reply within one working day.',
+      ? 'تم استلام رسالتك. إن لم يصلك رد خلال ٢٤ ساعة، يسعدنا تواصلك المباشر على hello@voxa.studio.'
+      : 'وصلتنا تفاصيل مشروعك بنجاح. سنراجعها ونعود إليك خلال ٢٤ ساعة عمل.',
   })
 }

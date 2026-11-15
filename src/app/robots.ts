@@ -1,8 +1,16 @@
 import type { MetadataRoute } from 'next'
 
-/** Keep the pre-launch site out of search engines until the owner is ready. */
+const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://voxa.studio'
+
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [{ userAgent: '*', disallow: '/' }],
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/api/'],
+      },
+    ],
+    sitemap: `${base}/sitemap.xml`,
   }
 }
