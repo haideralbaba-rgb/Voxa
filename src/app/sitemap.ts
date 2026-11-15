@@ -1,6 +1,23 @@
 import type { MetadataRoute } from 'next'
+import { WORK_PROJECTS } from '@/lib/voxa-data'
 
-/** No public URLs are submitted while VOXA is pre-launch. */
+const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://voxa.studio'
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  return []
+  const now = new Date()
+
+  return [
+    {
+      url: base,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 1,
+    },
+    ...WORK_PROJECTS.map((project) => ({
+      url: `${base}/work/${project.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
+  ]
 }

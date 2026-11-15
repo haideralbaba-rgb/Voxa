@@ -1,303 +1,212 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
-import { ArrowDown, ArrowUpRight, Download, MapPin } from 'lucide-react'
-import { profile } from '@/lib/data/profile'
-import { ButtonLink } from '@/components/ui/Button'
-import { Art } from '@/components/ui/Art'
-import { Counter } from '@/components/ui/Counter'
-import { Orb } from '@/components/visual/Orb'
-import { ShaderBackdrop } from '@/components/visual/ShaderBackdrop'
-import { DURATION, EASE, SPRING } from '@/lib/motion'
-import { HeroBackdrop } from './HeroBackdrop'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useRef } from 'react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
+import { ArrowDown, ArrowUpLeft } from 'lucide-react'
+import { STUDIO } from '@/lib/voxa-data'
 
-function AvailabilityBadge() {
-  return (
-    <span className="inline-flex items-center gap-2.5 rounded-full border border-[var(--hairline)] bg-[var(--card)]/70 py-1.5 pl-2 pr-3.5 backdrop-blur-md">
-      <span className="relative grid size-4 place-items-center" aria-hidden>
-        <span className="absolute size-2 rounded-full bg-emerald-500" />
-        <span className="absolute size-2 animate-pulse-ring rounded-full bg-emerald-500/70" />
-      </span>
-      <span className="text-[12.5px] font-medium tracking-[-0.01em] text-[var(--fg)]/76">
-        {profile.availabilityLabel}
-      </span>
-    </span>
-  )
-}
-
-/** Headline words rise out of a clipped box, one after another. */
-function Headline({ reduced }: { reduced: boolean | null }) {
-  const words = profile.headline.split(' ')
-  const accentDelay = 0.16 + words.length * 0.05
-
-  return (
-    <h1
-      id="hero-heading"
-      aria-label={`${profile.headline} ${profile.headlineAccent}`}
-      className="mt-7 text-display-xl font-semibold leading-[0.92] tracking-[-0.045em] text-[var(--fg)]"
-    >
-      <span aria-hidden className="contents">
-        {words.map((word, index) => (
-          <span
-            key={`${word}-${index}`}
-            className="inline-block overflow-hidden pb-[0.05em] align-bottom"
-          >
-            <motion.span
-              className="inline-block"
-              initial={reduced ? false : { y: '115%' }}
-              animate={{ y: '0%' }}
-              transition={{
-                duration: DURATION.crawl,
-                ease: EASE.soft,
-                delay: 0.1 + index * 0.05,
-              }}
-            >
-              {word}
-              {index < words.length - 1 ? '\u00A0' : ''}
-            </motion.span>
-          </span>
-        ))}
-        <span className="inline-block overflow-hidden pb-[0.1em] align-bottom">
-          <motion.span
-            className="serif-accent inline-block text-accent"
-            initial={reduced ? false : { y: '115%' }}
-            animate={{ y: '0%' }}
-            transition={{ duration: DURATION.crawl, ease: EASE.soft, delay: accentDelay }}
-          >
-            {profile.headlineAccent}
-          </motion.span>
-        </span>
-      </span>
-    </h1>
-  )
-}
+const EASE_EXPO = [0.16, 1, 0.3, 1] as const
 
 export function Hero() {
+  const heroRef = useRef<HTMLElement>(null)
   const reduced = useReducedMotion()
-  const containerRef = useRef<HTMLElement | null>(null)
   const { scrollYProgress } = useScroll({
-    target: containerRef,
+    target: heroRef,
     offset: ['start start', 'end start'],
   })
-
-  // Three layers moving at three speeds: copy, portrait, ambient glow.
-  const smooth = useSpring(scrollYProgress, SPRING.scroll)
-  const copyY = useTransform(smooth, [0, 1], ['0%', '-6%'])
-  const copyOpacity = useTransform(smooth, [0, 0.9], [1, 0.15])
-  const portraitY = useTransform(smooth, [0, 1], ['0%', '16%'])
-  const portraitScale = useTransform(smooth, [0, 1], [1, 1.08])
-  const portraitRadius = useTransform(smooth, [0, 1], ['2.25rem', '3.5rem'])
+  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '10%'])
 
   return (
-    <section
-      ref={containerRef}
-      id="top"
-      aria-labelledby="hero-heading"
-      className="relative overflow-hidden pb-16 pt-32 md:pb-24 md:pt-40"
-    >
-      <HeroBackdrop scrollYProgress={scrollYProgress} />
+    <section ref={heroRef} id="top" className="relative overflow-x-clip pt-24 pb-16 md:pt-28 md:pb-24">
+      {/* Subtle 12-column architectural grid guides */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="container-vox h-full">
+          <div className="grid-guides h-full w-full border-x border-line" />
+        </div>
+      </div>
 
-      {/* Ambient shader rig: three drifting light fields under the grid, so the
-          spotlight has something to move through. */}
-      <ShaderBackdrop variant="halo" intensity={0.4} className="pointer-events-none absolute inset-0 -z-20" />
+      <div className="container-vox relative z-10">
+        {/* Top editorial meta-row */}
+        <motion.div
+          initial={reduced ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE_EXPO }}
+          className="meta-row flex-wrap"
+        >
+          <div className="inline-flex items-center gap-2.5">
+            <span className="live-dot" aria-hidden="true" />
+            <span className="text-xs text-ink">{STUDIO.availability}</span>
+          </div>
 
-      <div className="container-page">
-        <div className="grid items-end gap-12 lg:grid-cols-[1.35fr_0.65fr] lg:gap-16">
-          <motion.div style={reduced ? undefined : { y: copyY, opacity: copyOpacity }}>
-            <motion.div
-              initial={reduced ? false : { opacity: 0, y: 10, filter: 'blur(4px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ duration: DURATION.slow, ease: EASE.out, delay: 0.05 }}
-            >
-              <AvailabilityBadge />
-            </motion.div>
+          <span className="label hidden text-muted md:inline">INDEPENDENT DESIGN STUDIO</span>
 
-            <Headline reduced={reduced} />
+          <div className="flex items-center gap-3">
+            <span className="label text-blue">ISSUE 01</span>
+            <span className="label text-muted">/ 2026</span>
+          </div>
+        </motion.div>
 
-            <motion.p
-              initial={reduced ? false : { opacity: 0, y: 18, filter: 'blur(6px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ duration: DURATION.slow, ease: EASE.out, delay: 0.5 }}
-              className="mt-7 max-w-xl text-[15.5px] leading-[1.75] text-muted md:text-[17px]"
-            >
-              {profile.lede}
-            </motion.p>
+        {/* Monumental editorial headline */}
+        <div className="py-10 md:py-16 lg:py-20">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <h1 className="font-display text-[clamp(3rem,8.4vw,7.4rem)] font-semibold leading-[1.08] text-ink">
+              <span className="block overflow-hidden pb-1">
+                <motion.span
+                  className="block"
+                  initial={reduced ? false : { y: '105%' }}
+                  animate={{ y: '0%' }}
+                  transition={{ duration: 0.85, ease: EASE_EXPO }}
+                >
+                  نصوغ <span className="marker">الأفكار</span>
+                </motion.span>
+              </span>
+              <span className="block overflow-hidden pt-1">
+                <motion.span
+                  className="block"
+                  initial={reduced ? false : { y: '105%' }}
+                  animate={{ y: '0%' }}
+                  transition={{ duration: 0.85, delay: 0.1, ease: EASE_EXPO }}
+                >
+                  بوضوحٍ <span className="outline-text">لا يُنسى.</span>
+                </motion.span>
+              </span>
+            </h1>
 
             <motion.div
               initial={reduced ? false : { opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: DURATION.slow, ease: EASE.out, delay: 0.62 }}
-              className="mt-9 flex flex-wrap items-center gap-3"
+              transition={{ duration: 0.7, delay: 0.25, ease: EASE_EXPO }}
+              className="latin flex flex-col items-start gap-1 pb-2 lg:items-end"
             >
-              <ButtonLink href="#work" size="lg">
-                View selected work
-                <ArrowDown
-                  size={16}
-                  className="transition-transform duration-300 group-hover:translate-y-0.5"
-                  aria-hidden
-                />
-              </ButtonLink>
-              <ButtonLink href="#contact" size="lg" variant="secondary">
-                Start a project
-                <ArrowUpRight
-                  size={16}
-                  className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                  aria-hidden
-                />
-              </ButtonLink>
-              <a
-                href={profile.resumeHref}
-                className="group inline-flex h-13 items-center gap-2 rounded-full px-4 text-[14px] font-medium text-[var(--fg)]/62 transition-colors duration-300 hover:text-[var(--fg)]"
-              >
-                <Download size={15} aria-hidden />
-                Résumé
-              </a>
+              <span className="font-serif text-[clamp(1.65rem,2.9vw,2.65rem)] italic leading-none text-ink/90">
+                Editorial Craft &amp; Identity
+              </span>
+              <span className="label text-muted">{STUDIO.cityLatin} — EST. VOXA</span>
             </motion.div>
+          </div>
+        </div>
 
-            <motion.dl
-              initial={reduced ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.9, delay: 0.78 }}
-              className="mt-14 grid grid-cols-2 gap-x-6 gap-y-7 border-t border-[var(--hairline)] pt-7 sm:grid-cols-4"
-            >
-              {profile.stats.map((stat) => (
-                <div key={stat.label} className="flex flex-col-reverse gap-2">
-                  <dt className="text-[12px] font-medium uppercase tracking-[0.1em] text-muted">
-                    {stat.label}
-                  </dt>
-                  <dd className="text-[26px] font-semibold leading-none tracking-[-0.04em] text-[var(--fg)] md:text-[30px]">
-                    <Counter value={stat.value} />
-                  </dd>
-                </div>
-              ))}
-            </motion.dl>
+        {/* Lower 12-column editorial stage */}
+        <div className="grid grid-cols-1 gap-10 border-t border-line pt-10 lg:grid-cols-12 lg:gap-12 lg:pt-12">
+          {/* Right (start in RTL): narrative + CTAs + mini discipline index */}
+          <motion.div
+            initial={reduced ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.2, ease: EASE_EXPO }}
+            className="flex flex-col justify-between gap-10 lg:col-span-7"
+          >
+            <div className="space-y-8">
+              <p className="max-w-xl text-base leading-[2.05] text-muted md:text-lg">
+                <strong className="font-medium text-ink">فوكسـا</strong> استوديو تصميم مستقل من
+                كربلاء، يبني الهويات البصرية والمواقع التحريرية والتجارب الرقمية بشبكة صارمة،
+                طباعة عربية متقنة، وتفاصيل تُصنع لتدوم لا لتُستهلَك.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3.5">
+                <Link href="/#contact" className="btn btn-solid">
+                  <span>ابدأ مشروعك</span>
+                  <ArrowUpLeft size={16} />
+                </Link>
+                <Link href="/#work" className="btn btn-line">
+                  <span>استعرض المختارات</span>
+                  <ArrowDown size={15} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Quiet 3-column index strip */}
+            <div className="grid grid-cols-1 gap-5 border-t border-line pt-6 sm:grid-cols-3">
+              <div className="space-y-1">
+                <span className="label text-blue">01 / BRAND</span>
+                <p className="font-display text-sm font-medium text-ink">هويات وأنظمة علامات</p>
+                <p className="text-xs leading-[1.85] text-muted">صوت بصري واضح ومطبوعات ملموسة.</p>
+              </div>
+              <div className="space-y-1 sm:border-s sm:border-line sm:ps-5">
+                <span className="label text-blue">02 / DIGITAL</span>
+                <p className="font-display text-sm font-medium text-ink">مواقع وتجارب ويب</p>
+                <p className="text-xs leading-[1.85] text-muted">أداء فائق وتجربة عربية أصيلة.</p>
+              </div>
+              <div className="space-y-1 sm:border-s sm:border-line sm:ps-5">
+                <span className="label text-blue">03 / PRINT</span>
+                <p className="font-display text-sm font-medium text-ink">تحرير وتوجيه فني</p>
+                <p className="text-xs leading-[1.85] text-muted">إصدارات وتغليف بعناية معمارية.</p>
+              </div>
+            </div>
           </motion.div>
 
-          {/* Portrait — its own parallax layer, slightly faster than the copy */}
+          {/* Left (end in RTL): Featured editorial figure plate + rotating studio stamp */}
           <motion.div
-            initial={reduced ? false : { opacity: 0, scale: 0.94, filter: 'blur(14px)' }}
-            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            transition={{ duration: 1.2, ease: EASE.soft, delay: 0.25 }}
-            className="relative mx-auto w-full max-w-[22rem] lg:mx-0 lg:max-w-none"
+            initial={reduced ? false : { opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, delay: 0.28, ease: EASE_EXPO }}
+            className="relative lg:col-span-5"
           >
-            <motion.div
-              style={reduced ? undefined : { y: portraitY, scale: portraitScale }}
-              className="relative"
+            {/* Rotating Swiss circular stamp */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-8 -left-4 z-20 hidden h-24 w-24 items-center justify-center rounded-full border border-line-strong bg-paper/95 shadow-sm backdrop-blur-sm sm:flex"
             >
-              <div
-                className="absolute -inset-6 -z-10 rounded-[3rem] bg-gradient-to-br from-accent/22 via-transparent to-[#4c7d92]/18 blur-2xl"
-                aria-hidden
-              />
-              <motion.div
-                style={reduced ? undefined : { borderRadius: portraitRadius }}
-                className="relative aspect-square overflow-hidden rounded-[2.25rem] border border-[var(--hairline-strong)] shadow-[var(--shadow-lift)]"
-              >
-                <Art
-                  src={profile.avatar.src}
-                  alt={profile.avatar.alt}
-                  width={profile.avatar.width}
-                  height={profile.avatar.height}
-                  priority
-                  sizes="(max-width: 1024px) 82vw, 22rem"
-                  className="h-full w-full object-cover"
-                />
-                <div
-                  className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"
-                  aria-hidden
-                />
-                <div className="absolute inset-x-4 bottom-4 flex items-center justify-between rounded-2xl border border-white/15 bg-black/35 px-3.5 py-2.5 backdrop-blur-md">
-                  <div>
-                    <p className="text-[13px] font-medium text-white">{profile.name}</p>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/55">
-                      {profile.role}
-                    </p>
-                  </div>
-                  <span className="grid size-7 place-items-center rounded-full bg-white/15 text-white">
-                    <MapPin size={13} aria-hidden />
+              <svg viewBox="0 0 100 100" className="h-[88px] w-[88px] animate-spin-slow">
+                <defs>
+                  <path
+                    id="voxa-stamp-circle"
+                    d="M 50, 50 m -36, 0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0"
+                  />
+                </defs>
+                <text
+                  fill="currentColor"
+                  className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-ink"
+                >
+                  <textPath href="#voxa-stamp-circle">
+                    VOXA STUDIO • KARBALA • DESIGN &amp; CRAFT •
+                  </textPath>
+                </text>
+              </svg>
+              <span className="absolute h-2.5 w-2.5 rounded-full bg-lime ring-1 ring-ink/30" />
+            </div>
+
+            <Link
+              href="/work/sadeem-identity"
+              data-cursor="استكشف"
+              className="group block"
+            >
+              <div className="figure duotone aspect-[4/5] w-full">
+                <motion.div
+                  style={reduced ? undefined : { y: imageY }}
+                  className="relative h-[110%] w-full -top-[5%]"
+                >
+                  <Image
+                    src="/images/work/identity.jpg"
+                    alt="عمل مختار من فوكسـا — هوية سديم للمعمار ومطبوعات الورق القطني"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 42vw"
+                    className="object-cover group-hover:scale-[1.04]"
+                  />
+                </motion.div>
+
+                <div className="pointer-events-none absolute inset-x-4 bottom-4 flex items-center justify-between">
+                  <span className="label rounded-full bg-paper/90 px-3 py-1 text-[10px] text-ink backdrop-blur-sm">
+                    FEATURED / 01
+                  </span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#101011] text-[#efebe1] transition-colors duration-300 group-hover:bg-lime group-hover:text-[#101011]">
+                    <ArrowUpLeft size={15} />
                   </span>
                 </div>
-              </motion.div>
-
-              {/* The site's one 3D object, floating off the portrait so the
-                  composition has a second light source. */}
-              <div className="pointer-events-none absolute -right-12 -top-16 hidden lg:block">
-                <Orb tone="chromatic" size={104} interactive={false} />
               </div>
 
-              <motion.div
-                initial={reduced ? false : { opacity: 0, x: -14, y: 8 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                transition={{ duration: DURATION.slow, ease: EASE.out, delay: 0.9 }}
-                className="surface absolute -left-4 top-8 hidden items-center gap-2 rounded-full py-2 pl-2.5 pr-4 md:flex"
-              >
-                <span className="grid size-6 place-items-center rounded-full bg-[var(--fg)] font-mono text-[10px] font-semibold text-[var(--bg)]">
-                  10
+              <div className="mt-3.5 flex items-center justify-between gap-4 border-b border-line pb-3">
+                <span className="font-display text-sm font-medium text-ink transition-colors group-hover:text-blue">
+                  سَديم للمعمار — هوية ومطبوعات
                 </span>
-                <span className="text-[11.5px] font-medium text-[var(--fg)]/75">years of craft</span>
-              </motion.div>
-
-              <motion.div
-                initial={reduced ? false : { opacity: 0, x: 14, y: -8 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                transition={{ duration: DURATION.slow, ease: EASE.out, delay: 1.02 }}
-                className="surface absolute -right-3 bottom-24 hidden flex-col gap-1 rounded-2xl px-3.5 py-3 md:flex"
-              >
-                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                  Based in
-                </span>
-                <span className="text-[12.5px] font-medium text-[var(--fg)]">{profile.location}</span>
-                <span className="text-[11px] text-muted">{profile.timezone} · remote friendly</span>
-              </motion.div>
-            </motion.div>
+                <span className="label text-[10px] text-muted">FIG. 01 · 2026</span>
+              </div>
+            </Link>
           </motion.div>
         </div>
       </div>
-
-      <ClientsMarquee />
     </section>
-  )
-}
-
-/**
- * Client strip whose speed and direction follow the scroll: it leans forward
- * as you move down the page and eases to a stop when you settle — the same
- * trick used by the agency sites on 60fps' motion gallery.
- */
-function ClientsMarquee() {
-  const reduced = useReducedMotion()
-  const { scrollY } = useScroll()
-  // Scroll velocity, smoothed: the strip leans into the direction of travel.
-  const [velocity, setVelocity] = useState(0)
-  useMotionValueEvent(scrollY, 'change', (value) => {
-    setVelocity(Math.max(-1, Math.min(1, (value - scrollY.getPrevious()!) / 2)))
-  })
-  const skew = useSpring(velocity * 6, { stiffness: 90, damping: 26 })
-  const row = [...profile.clients, ...profile.clients]
-
-  return (
-    <div className="container-page mt-20 md:mt-28">
-      <div className="flex items-center gap-4">
-        <span className="eyebrow shrink-0">Trusted by</span>
-        <span className="h-px flex-1 bg-[var(--hairline)]" aria-hidden />
-      </div>
-      <div className="marquee-mask relative mt-6 overflow-hidden">
-        <motion.div
-          style={reduced ? undefined : { skewX: skew }}
-          className="flex w-max items-center gap-12 will-change-transform"
-          animate={reduced ? undefined : { x: ['0%', '-50%'] }}
-          transition={{ duration: 46, ease: 'linear', repeat: Infinity }}
-        >
-          {row.map((client, index) => (
-            <span
-              key={`${client}-${index}`}
-              className="whitespace-nowrap text-[17px] font-medium tracking-[-0.02em] text-[var(--fg)]/45 transition-colors duration-500 hover:text-[var(--fg)]/70 md:text-[19px]"
-            >
-              {client}
-            </span>
-          ))}
-        </motion.div>
-      </div>
-    </div>
   )
 }
