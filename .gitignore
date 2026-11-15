@@ -1,12 +1,10 @@
-node_modules
-.next
-out
-build
+node_modules/
+dist/
+.vercel/
 .env
 .env.local
-.env*.local
+.env.*.local
+!.env.example
 *.tsbuildinfo
-next-env.d.ts
-.vercel
 .DS_Store
 npm-debug.log*
